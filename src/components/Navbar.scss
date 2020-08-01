@@ -1,0 +1,30 @@
+.nav-link {
+  color: black !important;
+  position: relative;
+
+  &:before {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transform: translateX(-50%);
+    transition: 0.25s ease-in-out;
+  }
+  &:hover:before,
+  &.active:before {
+    width: 25px;
+  }
+}
+
+.main-links {
+  text-align: center;
+}
+
+@media (min-width: 992px) {
+  .main-links {
+    border-right: 1px solid #e2e2e2;
+  }
+}
