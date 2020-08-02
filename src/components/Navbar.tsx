@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 import './Navbar.scss';
@@ -19,10 +19,10 @@ const Navigation = () => {
 
         <Nav className="mr-auto">
           <LinkContainer to="/login">
-            <Button variant="outline-primary" className="ml-lg-1 mb-1 mb-lg-0">تسجيل الدخول</Button>
+            <Button variant="text-primary" className="ml-lg-1 mb-1 mb-lg-0">تسجيل الدخول</Button>
           </LinkContainer>
           <LinkContainer to="/register">
-            <Button variant="outline-primary">إنشاء حساب</Button>
+            <Button variant="text-primary">إنشاء حساب</Button>
           </LinkContainer>
         </Nav>
       </Navbar.Collapse>

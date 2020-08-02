@@ -1,13 +1,18 @@
-import React, { FC, ReactNode } from 'react';
+import * as React from 'react';
 
-interface Props {
-  children: ReactNode
-  paddingTop?: string | number
+interface SafeAreaProps {
+  paddingTop?: string | number;
+  fullHeight?: boolean;
 }
 
-const SafeArea: FC<Props> = ({ children, paddingTop }) => {
+const SafeArea: React.FC<SafeAreaProps> = ({ children, paddingTop, fullHeight }) => {
   return (
-    <div style={{ marginTop: 'calc(1rem + 40px)', paddingTop: paddingTop ?? 0 }}>
+    <div style={{
+      marginTop: 'calc(1rem + 40px)',
+      paddingTop: paddingTop ?? 0,
+      minHeight: fullHeight ? 'calc(100vh - 1rem - 40px)' : 'auto',
+      overflowX: 'hidden'
+    }}>
       {children}
     </div>
   )
