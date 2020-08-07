@@ -1,6 +1,7 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import { Route, RouteProps, Redirect } from 'react-router-dom';
-import { auth as firebaseAuth } from '../config/firebase';
+import { AuthContext } from '../store/AuthContext';
 
 export interface ProtectedRouteProps extends RouteProps {
   auth?: boolean;
@@ -11,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const user = firebaseAuth.currentUser;
+  const authCtx = useContext(AuthContext);
 
   return (
     <Route
@@ -21,7 +22,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         // Route requires Auth
         if (auth) {
           // User is Authenticated
-          if (user) {
+          if (authCtx?.user) {
             // @ts-ignore
             return <Component {...rest} {...props} />;
           }
@@ -36,7 +37,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             />
           );
         } else { // Route doesn't require Auth
-          if (!user) { // User is not Authenticated
+          if (!authCtx?.user) { // User is not Authenticated
             // @ts-ignore
             return <Component {...rest} {...props} />;
           }

@@ -2,13 +2,15 @@ import * as React from 'react';
 import { useRef, FormEvent } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
+import { auth } from '../../config/firebase';
 
 const Login = () => {
-  const email = useRef(null);
-  const password = useRef(null);
+  const email = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
 
   function handleLogin(event: FormEvent) {
-    // Handle Login Here
+    event.preventDefault();
+    auth.signInWithEmailAndPassword(email.current?.value!, password.current?.value!);
   }
 
   return (
