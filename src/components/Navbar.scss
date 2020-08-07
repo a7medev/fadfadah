@@ -23,6 +23,14 @@
   text-align: center;
 }
 
+.navbar-toggler {
+  border-radius: 0.5rem;
+  border: none;
+  padding: 0.3rem;
+  background: #eaebef;
+  outline: none;
+}
+
 @media (min-width: 992px) {
   .main-links {
     border-right: 1px solid #e2e2e2;

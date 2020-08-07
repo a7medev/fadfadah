@@ -3,3 +3,18 @@
   width: 90%;
   max-width: 300px;
 }
+
+@media screen and (max-width: 992px) {
+  .mailbox-img {
+    margin-top: -7%;
+    margin-bottom: -7%;
+    order: 1;
+
+    img {
+      max-width: 400px;
+    }
+  }
+  .content {
+    order: 2;
+  }
+}

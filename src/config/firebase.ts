@@ -6,14 +6,14 @@ import 'firebase/storage';
 import 'firebase/analytics';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyD4ptnavJGtdReyPnI3BxKSbXigpZp_XOY',
-  authDomain: 'saraha-eg.firebaseapp.com',
-  databaseURL: 'https://saraha-eg.firebaseio.com',
-  projectId: 'saraha-eg',
-  storageBucket: 'saraha-eg.appspot.com',
-  messagingSenderId: '827351082931',
-  appId: '1:827351082931:web:e93a4af347b4e91ffbcdc6',
-  measurementId: 'G-FRSF6QTS61'
+  apiKey: 'AIzaSyB9QiKhNpNd0-FXrxSlYShusU_95quET8I',
+  authDomain: 'fad-fadah.firebaseapp.com',
+  databaseURL: 'https://fad-fadah.firebaseio.com',
+  projectId: 'fad-fadah',
+  storageBucket: 'fad-fadah.appspot.com',
+  messagingSenderId: '514590012549',
+  appId: '1:514590012549:web:d679963f9c71faebba65ec',
+  measurementId: 'G-L6L6JWXE14'
 };
 
 // Initialize Firebase
