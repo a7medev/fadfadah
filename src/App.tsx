@@ -6,6 +6,7 @@ import SafeArea from './components/SafeArea';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import { AnimatePresence } from 'framer-motion';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
   const location = useLocation();
@@ -17,9 +18,9 @@ const App = () => {
       <SafeArea paddingTop="10px" fullHeight>
         <AnimatePresence exitBeforeEnter>
           <Switch location={location} key={location.pathname}>
-            <Route path="/" component={Home} exact />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
+            <ProtectedRoute path="/" component={Home} exact />
+            <ProtectedRoute path="/login" component={Login} />
+            <ProtectedRoute path="/register" component={Register} />
           </Switch>
         </AnimatePresence>
       </SafeArea>
