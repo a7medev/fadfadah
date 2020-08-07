@@ -1,7 +1,6 @@
 $font-family-sans-serif: "JF Flat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
 $primary: #00cf95;
-// $primary: #6f42c1;
 
 @import "~bootstrap/scss/bootstrap";
 
@@ -32,6 +31,10 @@ body {
 }
 
 @each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    border-color: transparent !important;
+  }
+
   .btn-text-#{$color} {
     @include button-outline-variant($value);
     background: rgba($value, 0.1);
@@ -42,13 +45,3 @@ body {
     }
   }
 }
-
-// .switch-wrapper {
-//   position: relative;
-
-//   & > div {
-//     position: absolute;
-//     width: 100%;
-//     transition: 1s;
-//   }
-// }
