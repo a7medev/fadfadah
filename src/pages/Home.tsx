@@ -12,11 +12,9 @@ const Home = () => {
         <Row>
           <Col className="content d-flex align-items-center justify-content-center">
             <div>
-              <h1 className="display-3">فضفضة</h1>
+              <h1 className="display-3">فَضْفَضَة</h1>
               <p className="lead text-black-50">
-                فضفضة يتيح لك الحصول على نقد بناء
-                <br />
-                من أصدقائك وزملائك في العمل.
+                فضفضة يسمح لك بالإفصاح عما بداخلك للآخرين.
               </p>
 
               <LinkContainer to="/login">
