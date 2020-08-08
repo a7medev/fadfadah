@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import PageTransition from '../components/PageTransition';
-import './Home.scss';
 import Mailbox from '../assets/images/mailbox-animated.svg';
+import './Home.scss';
 
 const Home = () => {
   return (
