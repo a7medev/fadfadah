@@ -7,6 +7,7 @@ $primary: #00cf95;
 body {
   background: #eaebef;
   text-align: right;
+  overflow-y: scroll;
 }
 
 .btn, .form-control {
@@ -43,5 +44,19 @@ body {
     &:hover {
       border-color: transparent;
     }
+  }
+}
+
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+.alert-dismissible {
+  padding-left: 4rem;
+  padding-right: 1.25rem;
+
+  .close {
+    left: 0;
+    right: auto;
   }
 }
