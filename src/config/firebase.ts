@@ -24,3 +24,10 @@ export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const functions = firebase.functions();
 export const storage = firebase.storage();
+
+export const messages = {
+  'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بحساب آخر بالفعل',
+  'auth/weak-password': 'يجب أن تحتوي كلمة المرور على 6 حروف أو أكثر',
+  'auth/invalid-email': 'رجاءاً أدخل بريد إلكتروني صالح',
+  'auth/network-request-failed': 'حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك'
+}
