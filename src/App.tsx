@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Route, Switch, useLocation } from 'react-router-dom';
+import { Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Navigation from './components/Navbar';
 import SafeArea from './components/SafeArea';
@@ -7,24 +7,24 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import { AnimatePresence } from 'framer-motion';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthContextProvider from './store/AuthContext';
 
 const App = () => {
-  const location = useLocation();
-
   return (
-    <>
+    <AuthContextProvider>
       <Navigation />
 
       <SafeArea paddingTop="10px" fullHeight>
         <AnimatePresence exitBeforeEnter>
-          <Switch location={location} key={location.pathname}>
+          <Switch>
             <ProtectedRoute path="/" component={Home} exact />
             <ProtectedRoute path="/login" component={Login} />
             <ProtectedRoute path="/register" component={Register} />
+            <ProtectedRoute auth path="/home" component={Home} />
           </Switch>
         </AnimatePresence>
       </SafeArea>
-    </>
+    </AuthContextProvider>
   );
 }
 
