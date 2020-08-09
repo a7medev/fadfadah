@@ -12,8 +12,8 @@ const AuthContextProvider: React.FC = ({ children }) => {
   const [user, setUser] = useState<firebase.User | null>(localUser);
 
   auth.onAuthStateChanged(user => {
-    localStorage.setItem('user', JSON.stringify(user));
-    setUser(() => user);
+    setUser(user)
+    localStorage.setItem('user', JSON.stringify(user))
   });
 
   return (
