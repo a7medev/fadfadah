@@ -8,6 +8,7 @@ import Register from './pages/auth/Register';
 import { AnimatePresence } from 'framer-motion';
 import ProtectedRoute from './components/ProtectedRoute';
 import AuthContextProvider from './store/AuthContext';
+import SignedHome from './pages/signed/Home';
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
             <ProtectedRoute path="/" component={Home} exact />
             <ProtectedRoute path="/login" component={Login} />
             <ProtectedRoute path="/register" component={Register} />
-            <ProtectedRoute auth path="/home" component={Home} />
+            <ProtectedRoute auth path="/home" component={SignedHome} />
           </Switch>
         </AnimatePresence>
       </SafeArea>
