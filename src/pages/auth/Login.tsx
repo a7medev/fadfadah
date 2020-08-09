@@ -3,17 +3,26 @@ import { useRef, FormEvent } from 'react';
 import { Container, Card, Form, Button } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
 import { auth } from '../../config/firebase';
+import { AuthContext } from '../../store/AuthContext';
 
 const Login = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
+  const authContext = React.useContext(AuthContext);
 
-  function handleLogin(event: FormEvent) {
+  async function handleLogin(event: FormEvent) {
     event.preventDefault();
-    auth.signInWithEmailAndPassword(
-      email.current?.value!,
-      password.current?.value!
-    );
+
+    try {
+      const { user } = await auth.signInWithEmailAndPassword(
+        email.current?.value!,
+        password.current?.value!
+      );
+  
+      authContext?.setUser(user);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -25,7 +34,7 @@ const Login = () => {
               <h3>تسجيل الدخول</h3>
             </Card.Title>
 
-            <form onSubmit={handleLogin}>
+            <Form onSubmit={handleLogin}>
               <Form.Group controlId="email">
                 <Form.Label>البريد الإلكتروني</Form.Label>
                 <Form.Control
@@ -44,7 +53,7 @@ const Login = () => {
               </Form.Group>
 
               <Button type="submit">تسجيل الدخول</Button>
-            </form>
+            </Form>
           </Card.Body>
         </Card>
       </Container>
