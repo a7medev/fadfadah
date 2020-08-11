@@ -4,6 +4,7 @@ import { motion, AnimatePresence, Variants, Transition } from 'framer-motion';
 
 export interface LoveButtonProps {
   love: boolean;
+  setLove: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const variants: Variants = {
@@ -14,7 +15,7 @@ const transition: Transition = {
   type: 'spring'
 }
 
-const LoveButton: React.FC<LoveButtonProps> = ({ love }) => {
+const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
   return (
     <>
     <AnimatePresence>
@@ -26,6 +27,7 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love }) => {
           initial="out"
           animate="in"
           exit="out"
+          onClick={() => setLove(false)}
         >
           <BsHeartFill fill="#ff1450" size="20px" />
         </motion.span>
@@ -40,6 +42,7 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love }) => {
           initial="out"
           animate="in"
           exit="out"
+          onClick={() => setLove(true)}
         >
           <BsHeart size="20px" />
         </motion.span>

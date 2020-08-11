@@ -1,17 +1,26 @@
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Message from '../types/Message';
 import { Card } from 'react-bootstrap';
 import { Timestamp } from '@firebase/firestore-types';
 import Moment from 'react-moment';
 import LoveButton from './LoveButton';
+import { db } from '../config/firebase';
 
 export interface MessageCardProps extends Message<Timestamp> {}
 
 const MessageCard: React.FC<MessageCardProps> = ({
+  id,
   content,
   createdAt,
-  love
+  love: initialLove
 }) => {
+  const [love, setLove] = useState(initialLove);
+
+  useEffect(() => {
+    db.collection('messages').doc(id).update({ love });
+  }, [id, love]);
+
   return (
     <Card body className="mb-4">
       <p style={{ fontSize: 20 }}>{content}</p>
@@ -21,7 +30,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
           {createdAt.toDate()}
         </Moment>
 
-        <LoveButton love={love} />
+        <LoveButton love={love} setLove={setLove} />
       </div>
     </Card>
   );
