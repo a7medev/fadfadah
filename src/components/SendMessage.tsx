@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useRef } from 'react';
+import { useRef, useContext } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { db } from '../config/firebase';
 import { firestore } from 'firebase/app';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
 import Message from '../types/Message';
+import { AuthContext } from '../store/AuthContext';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -13,12 +14,17 @@ export interface SendMessageProps {
 
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const messageContent = useRef<HTMLTextAreaElement>(null);
+
+  const { user: currentUser } = useContext(AuthContext)!;
+
   function sendMessage(event: React.FormEvent) {
     event.preventDefault();
 
     const message: Message<firestore.FieldValue> = {
       to: user?.uid,
+      from: currentUser?.uid ?? null,
       love: false,
+      allowRead: false,
       content: messageContent.current?.value!,
       createdAt: firestore.FieldValue.serverTimestamp(),
     };
@@ -26,7 +32,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     db.collection('messages')
       .add(message)
       .then(() => {
-        // Do something
+        console.log('message added')
       })
       .catch(err => {
         // Do something

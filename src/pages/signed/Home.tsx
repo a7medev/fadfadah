@@ -7,11 +7,12 @@ import NameIsNotSet from '../../components/signed/NameIsNotSet';
 import UsernameIsNotSet from '../../components/signed/UsernameIsNotSet';
 import UserCard from '../../components/UserCard';
 import MessagesLayout from '../../components/MessagesLayout';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { useCollectionDataOnce } from 'react-firebase-hooks/firestore';
 import { db, messages as firebaseMessages } from '../../config/firebase';
 import Message from '../../types/Message';
 import { Timestamp } from '@firebase/firestore-types';
 import Loader from '../../components/Loader';
+import { motion } from 'framer-motion';
 
 const SignedHome = () => {
   const { user, username, verified } = useContext(AuthContext)!;
@@ -24,8 +25,11 @@ const SignedHome = () => {
     !user?.emailVerified!
   );
 
-  const [messages, loadingMessages, messagesError] = useCollectionData<Message<Timestamp>>(
-    db.collection('messages').where('to', '==', user?.uid),
+  const [messages, loadingMessages, messagesError] = useCollectionDataOnce<Message<Timestamp>>(
+    db.collection('messages')
+      .where('to', '==', user?.uid)
+      .where('allowRead', '==', true)
+      .orderBy('createdAt', 'desc'),
     {
       idField: 'id'
     }
@@ -51,10 +55,21 @@ const SignedHome = () => {
       )}
 
       <h3 className="mt-4 mb-3">الرسائل المستلمة</h3>
-      {/* @ts-ignore */}
-      {messagesError && <Alert>{firebaseMessages[messagesError.code] ?? 'حدثت مشكلة ما'}</Alert>}
+      {messagesError && (
+        <Alert variant="danger">
+          {/* @ts-ignore */}
+          {firebaseMessages[messagesError.code] ?? 'حدثت مشكلة ما'}
+        </Alert>
+      )}
       {loadingMessages && <Loader />}
-      {messages && <MessagesLayout messages={messages} />}
+      {messages && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <MessagesLayout messages={messages} />
+        </motion.div>
+      )}
     </Container>
   );
 };
