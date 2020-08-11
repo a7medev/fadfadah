@@ -74,18 +74,27 @@ export const getUserByUsername = functions.https.onCall(
 
 export const belongMesssageToUser = functions.firestore
   .document('/messages/{messageId}')
-  .onCreate(doc => {
-    const userId: string | null = doc.data().from;
+  .onCreate(snap => {
+    const userId: string | null = snap.data().from;
 
     if (userId)
       return db
         .collection('users')
         .doc(userId)
         .collection('messages')
-        .doc(doc.id)
+        .doc(snap.id)
         .set({
-          messageId: doc.id
-        });
+          messageId: snap.id
+        })
+        .then(() =>
+          snap.ref.update({
+            from: null,
+            allowRead: true
+          })
+        );
 
-    return;
+    return snap.ref.update({
+      from: null,
+      allowRead: true
+    });
   });
