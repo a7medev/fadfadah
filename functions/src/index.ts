@@ -5,28 +5,34 @@ admin.initializeApp();
 const db = admin.firestore();
 
 export const isValidUsername = functions.https.onCall(
-  (username: string, context) => {
-    // Only unauthenticated users can check for username
-    if (!context.auth)
-      return db
-        .collection('usernames')
-        .doc(username)
-        .get()
-        .then(snap => !snap.exists)
-        .catch(err => console.error(err));
+  async (username: string, context) => {
+    // Only users without a username can check for username
+    const { size: hasUsername } = await db
+      .collection('usernames')
+      .where('userId', '==', context.auth?.uid)
+      .get();
 
-    return false;
+    if (hasUsername) return false;
+
+    return db
+      .collection('usernames')
+      .doc(username)
+      .get()
+      .then(snap => !snap.exists)
+      .catch(err => console.error(err));
   }
 );
 
 export const setUsername = functions.https.onCall(
   async (passedUsername: string, context) => {
-
     const username = passedUsername.trim();
 
     if (!context.auth || !/^[A-Z_0-9]+$/i.test(username)) return false;
 
-    const { size: hasUsername } = await db.collection('usernames').where('userId', '==', context.auth?.uid).get();
+    const { size: hasUsername } = await db
+      .collection('usernames')
+      .where('userId', '==', context.auth?.uid)
+      .get();
 
     if (hasUsername) return false;
 
@@ -35,3 +41,51 @@ export const setUsername = functions.https.onCall(
     return snap.ref.set({ userId: context.auth?.uid });
   }
 );
+
+export const getUserByUsername = functions.https.onCall(
+  async (username: string) => {
+    const doc = await db.collection('usernames').doc(username).get();
+
+    if (!doc.data()) return null;
+
+    const { userId } = doc.data()!;
+
+    const { uid, displayName, photoURL } = await admin.auth().getUser(userId);
+
+    let photoSuffix = '';
+    if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
+    if (photoURL?.includes('google')) photoSuffix = '=s64-c';
+
+    const { exists: verified } = await db
+      .collection('verified_users')
+      .doc(uid)
+      .get();
+
+    const retrievableUser = {
+      uid,
+      displayName,
+      photoURL: photoURL + photoSuffix,
+      verified
+    };
+
+    return retrievableUser;
+  }
+);
+
+export const belongMesssageToUser = functions.firestore
+  .document('/messages/{messageId}')
+  .onCreate(doc => {
+    const userId: string | null = doc.data().from;
+
+    if (userId)
+      return db
+        .collection('users')
+        .doc(userId)
+        .collection('messages')
+        .doc(doc.id)
+        .set({
+          messageId: doc.id
+        });
+
+    return;
+  });
