@@ -1,18 +1,80 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /usernames/{username} {
+      function isUsernameOfTheUser() {
+        return request.auth.uid == resource.data.userId;
+      }
+      allow read: if isUsernameOfTheUser();
+    }
 
-    // This rule allows anyone with your database reference to view, edit,
-    // and delete all data in your Firestore database. It is useful for getting
-    // started, but it is configured to expire after 30 days because it
-    // leaves your app open to attackers. At that time, all client
-    // requests to your Firestore database will be denied.
-    //
-    // Make sure to write security rules for your app before that time, or else
-    // all client requests to your Firestore database will be denied until you Update
-    // your rules
-    match /{document=**} {
-      allow read, write: if request.time < timestamp.date(2020, 9, 6);
+    match /verified_users/{userId} {
+      function userIsCheckingHimSelf() {
+        return request.auth.uid == userId;
+      }
+
+      allow read: if userIsCheckingHimSelf();
+    }
+
+    match /messages/{messageId} {
+      function allowedToRead() {
+        return resource.data.allowRead;
+      }
+      function userIsReciever() {
+        return resource.data.to == request.auth.uid;
+      }
+      // Reading a Message
+      allow read: if allowedToRead() &&
+        userIsReciever();
+
+      function fromIsValid() {
+        return request.resource.data.from == request.auth.uid;
+      }
+      function toIsValid() {
+        return request.resource.data.to != request.auth.uid;
+      }
+      function createdAtIsValid() {
+        return request.resource.data.createdAt == request.time;
+      }
+      function loveIsValid() {
+        return request.resource.data.love == false;
+      }
+      function allowReadIsValid() {
+        return request.resource.data.allowRead == false;
+      }
+      // Sending a Message
+      allow create: if fromIsValid() &&
+        toIsValid() &&
+        createdAtIsValid() &&
+        loveIsValid() &&
+        allowReadIsValid();
+      
+      function fromIsNotEdited() {
+        return resource.data.from == request.resource.data.from;
+      }
+      function toIsNotEdited() {
+        return resource.data.to == request.resource.data.to;
+      }
+      function contentIsNotEdited() {
+        return resource.data.content == request.resource.data.content;
+      }
+      function createdAtIsNotEdited() {
+        return resource.data.createdAt == request.resource.data.createdAt;
+      }
+
+      // Allow Reciever to edit the Love state
+      allow update: if userIsReciever() &&
+        fromIsNotEdited() &&
+        toIsNotEdited() &&
+        contentIsNotEdited() &&
+        createdAtIsNotEdited();
+
+      function userIsAuthor() {
+        return get(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId))
+          .data.messageId != messageId;
+      }
+      // Allow Author to delete the message he sent
+      allow delete: if userIsAuthor();
     }
   }
 }
