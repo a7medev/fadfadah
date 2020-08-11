@@ -4,6 +4,8 @@ import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
 import { auth, messages } from '../../config/firebase';
 import { AuthContext } from '../../store/AuthContext';
+import SignInFacebook from '../../components/auth/SignInFacebook';
+import SignInGoogle from '../../components/auth/SignInGoogle';
 
 const Register = () => {
   const fullName = useRef<HTMLInputElement>(null);
@@ -24,19 +26,6 @@ const Register = () => {
     
     const name = fullName.current?.value;
 
-    // // Validate username
-    // if (!/^[A-Z_0-9]+$/i.test(username.current?.value.trim()!))
-    //   return setError(
-    //     'اسم المستخدم يجب أن يحتوي على أحرف إنجليزية وأرقام و _ فقط'
-    //   );
-
-    // const isValidUsername = functions.httpsCallable('isValidUsername');
-    // const { data: validUsername } = await isValidUsername(
-    //   username.current?.value
-    // );
-
-    // if (!validUsername) return setError('اسم المستخدم غير متاح');
-
     try {
       const { user } = await auth.createUserWithEmailAndPassword(
         email.current?.value!,
@@ -50,14 +39,6 @@ const Register = () => {
       });
 
       user?.sendEmailVerification();
-
-      // authContext?.setUser(user);
-
-      // const setUsername = functions.httpsCallable('setUsername');
-      // const updatedUsername = await setUsername(username.current?.value);
-      // if (!updatedUsername) return setError('حدثت مشكلة أثناء تعيين اسم المسخدم الخاص بك')
-
-      // if (updatedUsername) authContext?.setUser(auth.currentUser);
     } catch (err) {
       console.log(err);
       // @ts-ignore
@@ -68,51 +49,54 @@ const Register = () => {
   return (
     <PageTransition>
       <Container>
-        <Card style={{ maxWidth: '600px' }} className="mx-auto my-3">
-          <Card.Body>
-            <Card.Title className="text-center">
-              <h3>إنشاء حساب</h3>
-            </Card.Title>
+        <Card body style={{ maxWidth: '600px' }} className="mx-auto my-3">
+          <Card.Title className="text-center">
+            <h3>إنشاء حساب</h3>
+          </Card.Title>
 
-            {error && (
-              <Alert
-                variant="danger"
-                onClose={() => setError(null)}
-                dismissible
-              >
-                {error}
-              </Alert>
-            )}
+          {error && (
+            <Alert
+              variant="danger"
+              onClose={() => setError(null)}
+              dismissible
+            >
+              {error}
+            </Alert>
+          )}
 
-            <Form onSubmit={handleRegister}>
-              <Form.Group controlId="name">
-                <Form.Label>الاسم كامل</Form.Label>
-                <Form.Control
-                  ref={fullName}
-                  type="text"
-                  placeholder="مثال: محمد عبدالله"
-                />
-              </Form.Group>
-              <Form.Group controlId="email">
-                <Form.Label>البريد الإلكتروني</Form.Label>
-                <Form.Control
-                  ref={email}
-                  type="email"
-                  placeholder="مثال: muhammed@example.com"
-                />
-              </Form.Group>
-              <Form.Group controlId="password">
-                <Form.Label>كلمة المرور</Form.Label>
-                <Form.Control
-                  ref={password}
-                  type="password"
-                  placeholder="يجب أن تحتوي على 6 أحرف على الأقل"
-                />
-              </Form.Group>
+          <Form onSubmit={handleRegister}>
+            <Form.Group controlId="name">
+              <Form.Label>الاسم كامل</Form.Label>
+              <Form.Control
+                ref={fullName}
+                type="text"
+                placeholder="مثال: محمد عبدالله"
+              />
+            </Form.Group>
+            <Form.Group controlId="email">
+              <Form.Label>البريد الإلكتروني</Form.Label>
+              <Form.Control
+                ref={email}
+                type="email"
+                placeholder="مثال: muhammed@example.com"
+              />
+            </Form.Group>
+            <Form.Group controlId="password">
+              <Form.Label>كلمة المرور</Form.Label>
+              <Form.Control
+                ref={password}
+                type="password"
+                placeholder="يجب أن تحتوي على 6 أحرف على الأقل"
+              />
+            </Form.Group>
 
-              <Button type="submit">إنشاء حساب</Button>
-            </Form>
-          </Card.Body>
+            <Button block type="submit">إنشاء حساب</Button>
+          </Form>
+            
+          <hr />
+          
+          <SignInFacebook setError={setError} />
+          <SignInGoogle setError={setError} />
         </Card>
       </Container>
     </PageTransition>

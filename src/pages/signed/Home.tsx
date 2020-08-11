@@ -1,59 +1,56 @@
 import * as React from 'react';
-import { useRef, useContext, FormEvent } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../../store/AuthContext';
-import { Form, Container, Card, Button } from 'react-bootstrap';
-import { auth } from '../../config/firebase';
+import { Container } from 'react-bootstrap';
+import EmailNotVerifiedMessage from '../../components/signed/EmailNotVerifiedMessage';
+import NameIsNotSet from '../../components/signed/NameIsNotSet';
+import UsernameIsNotSet from '../../components/signed/UsernameIsNotSet';
+import UserCard from '../../components/UserCard';
+import MessagesLayout from '../../components/MessagesLayout';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { db } from '../../config/firebase';
+import Message from '../../types/Message';
+import { Timestamp } from '@firebase/firestore-types';
 
 const SignedHome = () => {
-  const { user, setUser } = useContext(AuthContext)!;
-  const fullName = useRef<HTMLInputElement>(null);
+  const { user, username, verified } = useContext(AuthContext)!;
 
-  function changeDisplayName(event: FormEvent) {
-    event.preventDefault();
+  let photoSuffix = '';
+  if (user?.photoURL?.includes('facebook')) photoSuffix = '?height=64';
+  if (user?.photoURL?.includes('google')) photoSuffix = '=s64-c';
 
-    auth.currentUser
-      ?.updateProfile({
-        displayName: fullName.current?.value!
-      })
-      .then(() =>
-        setUser(prevUser => ({
-          ...prevUser!,
-          displayName: fullName.current?.value!
-        }))
-      )
-      .catch(err => {
-        console.error(err);
-        alert(err.message);
-      });
-  }
+  const [emailNotVerified, setEmailNotVerified] = useState(
+    !user?.emailVerified!
+  );
+
+  const [messages, loadingMessages, messagesError] = useCollectionData<Message<Timestamp>>(
+    db.collection('messages').where('to', '==', user?.uid),
+    {
+      idField: 'id'
+    }
+  );
 
   return (
     <Container>
-      {!user?.displayName ? (
-        <Card style={{ maxWidth: '600px' }} className="mx-auto my-3">
-          <Card.Body>
-            <Card.Title>
-              <h5>يبدو أن الحساب لا يحتوي على اسم</h5>
-            </Card.Title>
-            <Card.Subtitle className="text-muted mb-3">
-              يحدث ذلك غالباً بسبب مشاكل في الشبكة أثناء إنشاء الحساب
-            </Card.Subtitle>
-            <Form onSubmit={changeDisplayName}>
-              <Form.Group className="mb-2">
-                <Form.Control
-                  ref={fullName}
-                  type="text"
-                  placeholder="اكتب اسمك هنا"
-                />
-              </Form.Group>
-
-              <Button type="submit">حفظ الاسم</Button>
-            </Form>
-          </Card.Body>
-        </Card>
-      ) : (
-        <h1>مرحباً {user?.displayName}!</h1>
+      {emailNotVerified && user?.email && (
+        <EmailNotVerifiedMessage setEmailNotVerified={setEmailNotVerified} />
       )}
+      {!user?.displayName && <NameIsNotSet />}
+      {!username && <UsernameIsNotSet />}
+      {user && username && (
+        <UserCard
+          user={{
+            uid: user.uid,
+            displayName: user.displayName!,
+            photoURL: user.photoURL! + photoSuffix,
+            verified
+          }}
+          username={username}
+        />
+      )}
+
+      <h3 className="mt-4 mb-3">الرسائل المستلمة</h3>
+      {messages && <MessagesLayout messages={messages} />}
     </Container>
   );
 };

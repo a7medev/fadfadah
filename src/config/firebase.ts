@@ -25,10 +25,13 @@ export const db = firebase.firestore();
 export const functions = firebase.functions();
 export const storage = firebase.storage();
 
+db.enablePersistence();
+
 export const messages = {
   'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بحساب آخر بالفعل',
   'auth/weak-password': 'يجب أن تحتوي كلمة المرور على 6 حروف أو أكثر',
   'auth/invalid-email': 'رجاءاً أدخل بريد إلكتروني صالح',
   'auth/network-request-failed': 'حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك',
-  'auth/user-not-found': 'هذا المستخدم غير موجود'
+  'auth/user-not-found': 'هذا المستخدم غير موجود',
+  'auth/wrong-password': 'كلمة المرور التي أدخلتها خاطئة'
 }

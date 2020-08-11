@@ -1,14 +1,19 @@
 import * as React from 'react';
-import { useRef, FormEvent } from 'react';
-import { Container, Card, Form, Button } from 'react-bootstrap';
+import { useState, useRef, useContext, FormEvent } from 'react';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
-import { auth } from '../../config/firebase';
+import { auth, messages } from '../../config/firebase';
 import { AuthContext } from '../../store/AuthContext';
+import SignInFacebook from '../../components/auth/SignInFacebook';
+import SignInGoogle from '../../components/auth/SignInGoogle';
 
 const Login = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
-  const authContext = React.useContext(AuthContext);
+
+  const [error, setError] = useState<string | null>(null);
+
+  const authContext = useContext(AuthContext);
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
@@ -18,43 +23,58 @@ const Login = () => {
         email.current?.value!,
         password.current?.value!
       );
-  
+
       authContext?.setUser(user);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      // @ts-ignore
+      setError(messages[err.code] || 'حدثت مشكلة ما');
     }
   }
 
   return (
     <PageTransition>
       <Container>
-        <Card style={{ maxWidth: '600px' }} className="mx-auto my-3">
-          <Card.Body>
-            <Card.Title className="text-center">
-              <h3>تسجيل الدخول</h3>
-            </Card.Title>
+        <Card body style={{ maxWidth: 600 }} className="mx-auto my-3">
+          <Card.Title className="text-center">
+            <h3>تسجيل الدخول</h3>
+          </Card.Title>
 
-            <Form onSubmit={handleLogin}>
-              <Form.Group controlId="email">
-                <Form.Label>البريد الإلكتروني</Form.Label>
-                <Form.Control
-                  ref={email}
-                  type="email"
-                  placeholder="اكتب بريد حسابك الإلكتروني"
-                />
-              </Form.Group>
-              <Form.Group controlId="password">
-                <Form.Label>كلمة المرور</Form.Label>
-                <Form.Control
-                  ref={password}
-                  type="password"
-                  placeholder="اكتب كلمة مرور حسابك"
-                />
-              </Form.Group>
+          {error && (
+            <Alert
+              variant="danger"
+              onClose={() => setError(null)}
+              dismissible
+            >
+              {error}
+            </Alert>
+          )}
 
-              <Button type="submit">تسجيل الدخول</Button>
-            </Form>
-          </Card.Body>
+          <Form onSubmit={handleLogin}>
+            <Form.Group controlId="email">
+              <Form.Label>البريد الإلكتروني</Form.Label>
+              <Form.Control
+                ref={email}
+                type="email"
+                placeholder="اكتب بريد حسابك الإلكتروني"
+              />
+            </Form.Group>
+            <Form.Group controlId="password">
+              <Form.Label>كلمة المرور</Form.Label>
+              <Form.Control
+                ref={password}
+                type="password"
+                placeholder="اكتب كلمة مرور حسابك"
+              />
+            </Form.Group>
+
+            <Button block type="submit">تسجيل الدخول</Button>
+          </Form>
+
+          <hr />
+
+          <SignInFacebook setError={setError} />
+          <SignInGoogle setError={setError} />
         </Card>
       </Container>
     </PageTransition>

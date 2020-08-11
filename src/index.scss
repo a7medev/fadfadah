@@ -2,6 +2,11 @@ $font-family-sans-serif: "JF Flat", -apple-system, BlinkMacSystemFont, "Segoe UI
 
 $primary: #00cf95;
 
+$theme-colors: (
+  "blue": #007bff,
+  "red": #ea4335
+);
+
 @import "~bootstrap/scss/bootstrap";
 
 body {
@@ -29,6 +34,7 @@ body {
 .card {
   border-radius: 1rem;
   border: 0;
+  border-bottom: 2px solid $primary;
 }
 
 @each $color, $value in $theme-colors {
@@ -59,4 +65,12 @@ body {
     left: 0;
     right: auto;
   }
+}
+
+.loader {
+  width: 20px;
+  height: 20px;
+  background: $primary;
+  border-radius: 50%;
+  margin: 100px auto 10px;
 }
