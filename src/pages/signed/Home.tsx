@@ -1,16 +1,17 @@
 import * as React from 'react';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../store/AuthContext';
-import { Container } from 'react-bootstrap';
+import { Container, Alert } from 'react-bootstrap';
 import EmailNotVerifiedMessage from '../../components/signed/EmailNotVerifiedMessage';
 import NameIsNotSet from '../../components/signed/NameIsNotSet';
 import UsernameIsNotSet from '../../components/signed/UsernameIsNotSet';
 import UserCard from '../../components/UserCard';
 import MessagesLayout from '../../components/MessagesLayout';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { db } from '../../config/firebase';
+import { db, messages as firebaseMessages } from '../../config/firebase';
 import Message from '../../types/Message';
 import { Timestamp } from '@firebase/firestore-types';
+import Loader from '../../components/Loader';
 
 const SignedHome = () => {
   const { user, username, verified } = useContext(AuthContext)!;
@@ -50,6 +51,9 @@ const SignedHome = () => {
       )}
 
       <h3 className="mt-4 mb-3">الرسائل المستلمة</h3>
+      {/* @ts-ignore */}
+      {messagesError && <Alert>{firebaseMessages[messagesError.code] ?? 'حدثت مشكلة ما'}</Alert>}
+      {loadingMessages && <Loader />}
       {messages && <MessagesLayout messages={messages} />}
     </Container>
   );
