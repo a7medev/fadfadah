@@ -9,6 +9,11 @@ $theme-colors: (
 
 @import "~bootstrap/scss/bootstrap";
 
+*::selection {
+  background: $primary;
+  color: white;
+}
+
 body {
   background: #eaebef;
   text-align: right;
@@ -35,6 +40,7 @@ body {
   border-radius: 1rem;
   border: 0;
   border-bottom: 2px solid $primary;
+  box-shadow: 0 1rem 2rem -1rem rgba($primary, 0.15);
 }
 
 @each $color, $value in $theme-colors {
