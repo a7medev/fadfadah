@@ -10,18 +10,20 @@ export interface MessagesLayoutProps {
 }
 
 const MessagesLayout: React.FC<MessagesLayoutProps> = ({ messages }) => {
-  return (
-    <Masonry
-      options={{ originLeft: false }}
-      style={{ marginLeft: -15, marginRight: -15 }}
-    >
-      {messages.map(message => (
-        <Col xs="12" md="6" lg="4" className="mb-4" key={message.id}>
-          <MessageCard {...message} />
-        </Col>
-      ))}
-    </Masonry>
-  );
+  return messages.length ? (
+      <Masonry
+        options={{ originLeft: false }}
+        style={{ marginLeft: -15, marginRight: -15 }}
+      >
+        {messages.map(message => (
+          <Col xs="12" md="6" lg="4" className="mb-4" key={message.id}>
+            <MessageCard {...message} />
+          </Col>
+        ))}
+      </Masonry>
+    ) : (
+      <p className="h1 text-center text-muted my-4">لا يوجد رسائل</p>
+    );
 };
 
 export default MessagesLayout;
