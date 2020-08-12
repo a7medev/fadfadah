@@ -42,33 +42,38 @@ export const setUsername = functions.https.onCall(
   }
 );
 
-export const getUserByUsername = functions.https.onCall(
-  async (username: string) => {
-    const doc = await db.collection('usernames').doc(username).get();
+async function getUserById(userId: string) {
+  const { uid, displayName, photoURL } = await admin.auth().getUser(userId);
 
-    if (!doc.data()) return null;
+  let photoSuffix = '';
+  if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
+  if (photoURL?.includes('google')) photoSuffix = '=s64-c';
 
-    const { userId } = doc.data()!;
+  const { exists: verified } = await db
+    .collection('verified_users')
+    .doc(uid)
+    .get();
 
-    const { uid, displayName, photoURL } = await admin.auth().getUser(userId);
+  const retrievableUser = {
+    uid,
+    displayName,
+    photoURL: photoURL + photoSuffix,
+    verified
+  };
 
-    let photoSuffix = '';
-    if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
-    if (photoURL?.includes('google')) photoSuffix = '=s64-c';
+  return retrievableUser;
+}
 
-    const { exists: verified } = await db
-      .collection('verified_users')
-      .doc(uid)
-      .get();
-
-    const retrievableUser = {
-      uid,
-      displayName,
-      photoURL: photoURL + photoSuffix,
-      verified
-    };
-
-    return retrievableUser;
+export const getUserData = functions.https.onCall(
+  async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
+    if (type === 'username') {
+      const doc = await db.collection('usernames').doc(id).get();
+      if (!doc.data()) return null;
+      const { userId } = doc.data()!;
+      return getUserById(userId);
+    }
+    else if (type === 'uid') return getUserById(id);
+    else return null;
   }
 );
 

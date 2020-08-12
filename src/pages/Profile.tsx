@@ -29,8 +29,8 @@ const Profile: React.FC<ProfileProps> = ({
 
   useEffect(() => {
     if (username !== currentUsername) {
-      const getUserByUsername = functions.httpsCallable('getUserByUsername');
-      getUserByUsername(username)
+      const getUserData = functions.httpsCallable('getUserData');
+      getUserData({ id: username, type: 'username'})
         .then(result => {
           setError(null);
           setLoading(false);
