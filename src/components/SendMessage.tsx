@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useRef, useContext } from 'react';
-import { Card, Form, Button } from 'react-bootstrap';
-import { db } from '../config/firebase';
+import { useState, useRef, useContext } from 'react';
+import { Card, Form, Button, Alert } from 'react-bootstrap';
+import { db, messages } from '../config/firebase';
 import { firestore } from 'firebase/app';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
@@ -14,7 +14,7 @@ export interface SendMessageProps {
 
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const messageContent = useRef<HTMLTextAreaElement>(null);
-
+  const [error, setError] = useState<string | null>(null);
   const { user: currentUser } = useContext(AuthContext)!;
 
   function sendMessage(event: React.FormEvent) {
@@ -29,13 +29,19 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       createdAt: firestore.FieldValue.serverTimestamp(),
     };
 
+    if (message.content.length <= 5 || message.content.length >= 500)
+      return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف')
+
     db.collection('messages')
       .add(message)
       .then(() => {
-        console.log('message added')
+        setError(null);
+        messageContent.current?.form?.reset();
       })
       .catch(err => {
-        // Do something
+        console.log('HERE', err.code);
+        // @ts-ignore
+        setError(messages[err.code]);
       });
   }
 
@@ -48,11 +54,11 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
         لن يعرف {user?.displayName} أنك من أرسلها
       </Card.Subtitle>
 
-      {/* {error && (
+      {error && (
         <Alert variant="danger" onClose={() => setError(null)} dismissible>
           {error}
         </Alert>
-      )} */}
+      )}
 
       <Form onSubmit={sendMessage}>
         <Form.Group className="mb-2">
