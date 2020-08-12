@@ -4,7 +4,7 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 const db = admin.firestore();
 
-export const isValidUsername = functions.https.onCall(
+export const usernameIsAvailable = functions.https.onCall(
   async (username: string, context) => {
     // Only users without a username can check for username
     const { size: hasUsername } = await db
@@ -74,7 +74,7 @@ export const getUserByUsername = functions.https.onCall(
 
 export const belongMesssageToUser = functions.firestore
   .document('/messages/{messageId}')
-  .onCreate(snap => {
+  .onCreate(async snap => {
     const userId: string | null = snap.data().from;
 
     if (userId)
@@ -97,4 +97,15 @@ export const belongMesssageToUser = functions.firestore
       from: null,
       allowRead: true
     });
+  });
+
+export const unbelongMessageToUser = functions.firestore
+  .document('/messages/{messageId}')
+  .onDelete(async (_, { params }) => {
+    const { docs } = await db
+      .collectionGroup('messages')
+      .where('messageId', '==', params.messageId)
+      .get();
+
+    return docs.map(doc => doc.ref.delete());
   });

@@ -19,8 +19,8 @@ const UsernameIsNotSet = () => {
       return setError('اسم المستخدم يجب أن يحتوي على أحرف إنجليزية وأرقام و _ فقط');
     
     try {
-      const isValidUsername = functions.httpsCallable('isValidUsername');
-      const { data: validUsername } = await isValidUsername(username.current?.value);
+      const usernameIsAvailable = functions.httpsCallable('usernameIsAvailable');
+      const { data: validUsername } = await usernameIsAvailable(username.current?.value);
   
       if (!validUsername) return setError('اسم المستخدم غير متاح');
   
