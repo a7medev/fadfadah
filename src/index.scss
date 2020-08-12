@@ -1,13 +1,17 @@
-$font-family-sans-serif: "JF Flat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+$font-family-sans-serif: 'JF Flat', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
 $primary: #00cf95;
 
 $theme-colors: (
-  "blue": #007bff,
-  "red": #ea4335
+  'facebook': #2d88ff,
+  'google': #ea4335,
+  'twitter': #1da1f2,
+  'whatsapp': #25d366
 );
 
-@import "~bootstrap/scss/bootstrap";
+@import '~bootstrap/scss/bootstrap';
 
 *::selection {
   background: $primary;
@@ -20,7 +24,8 @@ body {
   overflow-y: scroll;
 }
 
-.btn, .form-control {
+.btn,
+.form-control {
   border-radius: 0.4rem;
   border-width: 2px;
   box-shadow: 0 0 !important;
@@ -52,7 +57,7 @@ body {
     @include button-outline-variant($value);
     background: rgba($value, 0.1);
     border-color: transparent;
-    
+
     &:hover {
       border-color: transparent;
     }
@@ -79,4 +84,45 @@ body {
   background: $primary;
   border-radius: 50%;
   margin: 100px auto 10px;
+}
+
+.modal-content {
+  border-radius: 1rem;
+  border: 0;
+}
+.modal-header {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  display: flex;
+  justify-content: center;
+
+  .close {
+    margin: -0.65rem auto -0.6rem -1rem;
+    text-shadow: none;
+    outline: none;
+  }
+}
+.modal-footer {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+// Dropdowns
+.dropdown-menu {
+  top: 5px !important;
+  border-radius: 0.5rem;
+  border: 1px solid #eee;
+  text-align: right;
+}
+.dropdown-toggle.btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+
+  &::after {
+    position: relative;
+    top: 3px;
+  }
 }

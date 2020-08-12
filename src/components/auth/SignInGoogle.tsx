@@ -23,7 +23,7 @@ const SignInGoogle: React.FC<SignInGoogleProps> = ({ setError }) => {
   }, [setError])
 
   return (
-    <Button block variant="red" onClick={loginWithGoogle}>
+    <Button block variant="google" onClick={loginWithGoogle}>
       <FaGoogle className="ml-2" />
       الدخول باستخدم جوجــــــل
     </Button>
