@@ -15,7 +15,6 @@ const EmailNotVerifiedMessage: React.FC<EmailNotVerifiedMessageProps> = ({ setEm
   return (
     <Alert
       variant="warning"
-      style={{ maxWidth: '600px' }}
       className="mx-auto mb-2"
     >
       <p className="mb-2">
