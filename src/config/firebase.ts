@@ -35,5 +35,6 @@ export const messages = {
   'auth/user-not-found': 'هذا المستخدم غير موجود',
   'auth/wrong-password': 'كلمة المرور التي أدخلتها خاطئة',
   'auth/popup-closed-by-user': 'لقد قمت بإغلاق النافذة المنبثقة',
-  'auth/cancelled-popup-request': 'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة'
+  'auth/cancelled-popup-request': 'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',
+  'permission-denied': 'غير مصرح لك بالقيام بذلك'
 }
