@@ -42,12 +42,18 @@ service cloud.firestore {
       function allowReadIsValid() {
         return request.resource.data.allowRead == false;
       }
+      function contentIsValid() {
+        return request.resource.data.content is string &&
+          request.resource.data.content.size() >= 5 &&
+          request.resource.data.content.size() <= 500;
+      }
       // Sending a Message
       allow create: if fromIsValid() &&
         toIsValid() &&
         createdAtIsValid() &&
         loveIsValid() &&
-        allowReadIsValid();
+        allowReadIsValid() &&
+        contentIsValid();
       
       function fromIsNotEdited() {
         return resource.data.from == request.resource.data.from;
