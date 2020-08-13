@@ -32,7 +32,6 @@ const SignedHome = () => {
     db
       .collection('messages')
       .where('to', '==', user?.uid)
-      .where('allowRead', '==', true)
       .orderBy('createdAt', 'desc'),
     {
       idField: 'id'

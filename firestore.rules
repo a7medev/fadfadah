@@ -17,15 +17,11 @@ service cloud.firestore {
     }
 
     match /messages/{messageId} {
-      function allowedToRead() {
-        return resource.data.allowRead;
-      }
       function userIsReciever() {
         return resource.data.to == request.auth.uid;
       }
       // Reading a Message
-      allow read: if allowedToRead() &&
-        userIsReciever();
+      allow read: if userIsReciever();
       
       function fromIsNotEdited() {
         return resource.data.from == request.resource.data.from;
