@@ -16,7 +16,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ messages }) => {
         style={{ marginLeft: -15, marginRight: -15 }}
       >
         {messages.map(message => (
-          <Col xs="12" md="6" lg="4" className="mb-4" key={message.id}>
+          <Col xs="12" md="6" lg="4" key={message.id}>
             <MessageCard {...message} />
           </Col>
         ))}
