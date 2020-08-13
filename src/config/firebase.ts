@@ -7,7 +7,7 @@ import 'firebase/analytics';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB9QiKhNpNd0-FXrxSlYShusU_95quET8I',
-  authDomain: 'fad-fadah.firebaseapp.com',
+  authDomain: 'fadfadah.me',
   databaseURL: 'https://fad-fadah.firebaseio.com',
   projectId: 'fad-fadah',
   storageBucket: 'fad-fadah.appspot.com',
