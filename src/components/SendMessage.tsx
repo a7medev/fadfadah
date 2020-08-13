@@ -1,12 +1,9 @@
 import * as React from 'react';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { db, messages } from '../config/firebase';
-import { firestore } from 'firebase/app';
+import { functions } from '../config/firebase';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
-import Message from '../types/Message';
-import { AuthContext } from '../store/AuthContext';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -15,33 +12,27 @@ export interface SendMessageProps {
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const messageContent = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const { user: currentUser } = useContext(AuthContext)!;
 
   function sendMessage(event: React.FormEvent) {
     event.preventDefault();
 
-    const message: Message<firestore.FieldValue> = {
+    const message = {
       to: user?.uid,
-      from: currentUser?.uid ?? null,
-      love: false,
-      allowRead: false,
-      content: messageContent.current?.value!,
-      createdAt: firestore.FieldValue.serverTimestamp(),
+      content: messageContent.current?.value!
     };
 
     if (message.content.length <= 5 || message.content.length >= 500)
-      return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف')
+      return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
 
-    db.collection('messages')
-      .add(message)
+    const sendMessage = functions.httpsCallable('sendMessage');
+    sendMessage(message)
       .then(() => {
         setError(null);
         messageContent.current?.form?.reset();
       })
       .catch(err => {
-        console.log('HERE', err.code);
-        // @ts-ignore
-        setError(messages[err.code]);
+        console.dir(err);
+        setError(err.message ?? 'حدثت مشكلة ما');
       });
   }
 

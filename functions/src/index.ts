@@ -3,6 +3,49 @@ import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 const db = admin.firestore();
+const auth = admin.auth();
+
+export const sendMessage = functions.https.onCall(async ({ content, to }, context) => {
+  if (!content || !to)
+    throw new functions.https.HttpsError('invalid-argument', 'رجاءاً تأكد من إدخال بيانات صحيحة');
+
+  if (content.trim().length <= 5 || content.trim().length >= 500)
+    throw new functions.https.HttpsError('invalid-argument', 'يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
+
+  try {
+    const recieverExists = await auth.getUser(to);
+  
+    if (!recieverExists)
+      throw new functions.https.HttpsError('invalid-argument', 'المستخدم الذي تحاول مراسلته غير موجود');
+  } catch (err) {
+    console.error(err);
+    throw new functions.https.HttpsError('invalid-argument', 'المستخدم الذي تحاول مراسلته غير موجود');
+  }
+
+  const doc = {
+    to,
+    content: content.trim(),
+    love: false,
+    createdAt: new Date()
+  };
+
+  const snap = await db.collection('messages').add(doc)
+
+  if (context.auth?.uid)
+    db.collection('users')
+      .doc(context.auth?.uid)
+      .collection('messages')
+      .doc(snap.id)
+      .set({
+        messageId: snap.id
+      })
+      .catch(err => {
+        console.error(err);
+        throw new functions.https.HttpsError('unknown', 'حدثت مشكلة ما');
+      });
+  
+  return true;
+});
 
 export const usernameIsAvailable = functions.https.onCall(
   async (username: string, context) => {
@@ -43,25 +86,31 @@ export const setUsername = functions.https.onCall(
 );
 
 async function getUserById(userId: string) {
-  const { uid, displayName, photoURL } = await admin.auth().getUser(userId);
+  if (!userId) return null;
 
-  let photoSuffix = '';
-  if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
-  if (photoURL?.includes('google')) photoSuffix = '=s64-c';
+  try {
+    const { uid, displayName, photoURL } = await auth.getUser(userId);
+    let photoSuffix = '';
+    if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
+    if (photoURL?.includes('google')) photoSuffix = '=s64-c';
 
-  const { exists: verified } = await db
-    .collection('verified_users')
-    .doc(uid)
-    .get();
+    const { exists: verified } = await db
+      .collection('verified_users')
+      .doc(uid)
+      .get();
 
-  const retrievableUser = {
-    uid,
-    displayName,
-    photoURL: photoURL + photoSuffix,
-    verified
-  };
+    const retrievableUser = {
+      uid,
+      displayName,
+      photoURL: photoURL + photoSuffix,
+      verified
+    };
 
-  return retrievableUser;
+    return retrievableUser;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
 }
 
 export const getUserData = functions.https.onCall(
@@ -71,38 +120,10 @@ export const getUserData = functions.https.onCall(
       if (!doc.data()) return null;
       const { userId } = doc.data()!;
       return getUserById(userId);
-    }
-    else if (type === 'uid') return getUserById(id);
+    } else if (type === 'uid') return getUserById(id);
     else return null;
   }
 );
-
-export const belongMesssageToUser = functions.firestore
-  .document('/messages/{messageId}')
-  .onCreate(async snap => {
-    const userId: string | null = snap.data().from;
-
-    if (userId)
-      return db
-        .collection('users')
-        .doc(userId)
-        .collection('messages')
-        .doc(snap.id)
-        .set({
-          messageId: snap.id
-        })
-        .then(() =>
-          snap.ref.update({
-            from: null,
-            allowRead: true
-          })
-        );
-
-    return snap.ref.update({
-      from: null,
-      allowRead: true
-    });
-  });
 
 export const unbelongMessageToUser = functions.firestore
   .document('/messages/{messageId}')
