@@ -49,7 +49,7 @@ const Profile: React.FC<ProfileProps> = ({
         {loading ? (
           <Loader style={{ marginTop: 150, marginBottom: 20 }} />
         ) : error ? (
-          <Alert variant="danger" onClose={() => setError(null)} dismissible>
+          <Alert variant="danger">
             {error}
           </Alert>
         ) : user ? (
