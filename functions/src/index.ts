@@ -227,17 +227,18 @@ export const blockUser = functions.https.onCall(
   }
 );
 
-export const removeUserData = functions.auth.user().onDelete(async user => {
-  const promises: Promise<any>[] = [];
-  promises.push(db.collection('users').doc(user.uid).delete());
-  promises.push(db.collection('verified_users').doc(user.uid).delete());
-  promises.push(
-    db
-      .collection('usernames')
-      .where('userId', '==', user.uid)
-      .get()
-      .then(({ docs }) => docs.map(doc => doc.ref.delete))
-  );
-
-  return Promise.all(promises);
+export const removeUserData = functions.auth.user().onDelete(user => {
+  db.collection('users')
+    .doc(user.uid)
+    .delete()
+    .catch(err => console.error(err));
+  db.collection('verified_users')
+    .doc(user.uid)
+    .delete()
+    .catch(err => console.error(err));
+  db.collection('messages')
+    .where('to', '==', user.uid)
+    .get()
+    .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
+    .catch(err => console.error(err));
 });
