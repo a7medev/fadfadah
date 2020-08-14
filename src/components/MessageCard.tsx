@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Message from '../types/Message';
 import { Card } from 'react-bootstrap';
 import { Timestamp } from '@firebase/firestore-types';
@@ -16,9 +16,16 @@ const MessageCard: React.FC<MessageCardProps> = ({
   love: initialLove
 }) => {
   const [love, setLove] = useState(initialLove);
+  const firstRender = useRef(true);
 
   useEffect(() => {
-    db.collection('messages').doc(id).update({ love });
+    if (firstRender.current)
+      firstRender.current = false;
+    else {
+      db.collection('messages')
+        .doc(id)
+        .update({ love });
+    }
   }, [id, love]);
 
   return (
