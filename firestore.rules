@@ -22,10 +22,7 @@ service cloud.firestore {
       }
       // Reading a Message
       allow read: if userIsReciever();
-      
-      function fromIsNotEdited() {
-        return resource.data.from == request.resource.data.from;
-      }
+
       function toIsNotEdited() {
         return resource.data.to == request.resource.data.to;
       }
@@ -38,17 +35,15 @@ service cloud.firestore {
 
       // Allow Reciever to edit the Love state
       allow update: if userIsReciever() &&
-        fromIsNotEdited() &&
         toIsNotEdited() &&
         contentIsNotEdited() &&
         createdAtIsNotEdited();
 
       function userIsAuthor() {
-        return get(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId))
-          .data.messageId != messageId;
+        return exists(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId));
       }
-      // Allow Author to delete the message he sent
-      allow delete: if userIsAuthor();
+      // Allow Author & Reciever to delete a message
+      allow delete: if userIsAuthor() || userIsReciever();
     }
   }
 }
