@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import ProtectedRoute from './components/ProtectedRoute';
 import SignedHome from './pages/signed/Home';
 import Profile from './pages/Profile';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
             <ProtectedRoute path="/register" component={Register} />
             <ProtectedRoute auth path="/home" component={SignedHome} />
             <Route path="/u/:username" component={Profile} />
+            <Route path="/privacy-policy" component={PrivacyPolicy} />
           </Switch>
         </AnimatePresence>
       </SafeArea>
