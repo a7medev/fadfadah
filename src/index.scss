@@ -13,6 +13,12 @@ $theme-colors: (
 
 @import '~bootstrap/scss/bootstrap';
 
+// Using Custom Font
+@font-face {
+  font-family: 'JF Flat';
+  src: url('/fonts/jf-flat.ttf') format('truetype');
+}
+
 *::selection {
   background: $primary;
   color: white;
@@ -45,7 +51,7 @@ body {
   border-radius: 1rem;
   border: 0;
   border-bottom: 2px solid $primary;
-  box-shadow: 0 1rem 2rem -1rem rgba($primary, 0.15);
+  box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.2);
 }
 
 @each $color, $value in $theme-colors {
@@ -62,6 +68,11 @@ body {
       border-color: transparent;
     }
   }
+}
+
+.close {
+  text-shadow: none;
+  outline: none;
 }
 
 .alert {
@@ -100,15 +111,17 @@ body {
 
   .close {
     margin: -0.65rem auto -0.6rem -1rem;
-    text-shadow: none;
-    outline: none;
   }
 }
 .modal-footer {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
-
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 600px;
+  }
+}
 // Dropdowns
 .dropdown-menu {
   top: 5px !important;
@@ -120,9 +133,9 @@ body {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  padding: 0;
 
   &::after {
-    position: relative;
-    top: 3px;
+    content: none;
   }
 }
