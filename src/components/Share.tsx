@@ -40,37 +40,45 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
               readOnly
             />
           </Form.Group>
-          <Button
-            variant="facebook"
-            className="mx-1"
-            href={`https://www.facebook.com/share.php?u=${link}`}
-            target="_blank"
-          >
-            <FaFacebook size="1.1em" className="ml-2" />
-            فيسبوك
-          </Button>
-          <Button
-            variant="twitter"
-            className="mx-1"
-            target="_blank"
-            href={`https://twitter.com/intent/tweet?url=${link}`}
-          >
-            <FaTwitter size="1.1em" className="ml-2" />
-            تويتر
-          </Button>
-          <Button
-            variant="whatsapp"
-            className="mx-1"
-            href={`whatsapp://send?text=${link}`}
-            data-action="share/whatsapp/share"
-          >
-            <FaWhatsapp size="1.1em" className="ml-2" />
-            واتساب
-          </Button>
-          <Button variant="dark" className="mx-1" onClick={copyToClipboard}>
-            <BsClipboard size="1.1em" className="ml-2" />
-            نسخ
-          </Button>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+            alignItems: 'center',
+            gap: 5
+          }}>
+            <Button
+              variant="facebook"
+              href={`https://www.facebook.com/share.php?u=${link}`}
+              target="_blank"
+            >
+              <FaFacebook size="1.1em" className="ml-2" />
+              فيسبوك
+            </Button>
+            <Button
+              variant="twitter"
+              target="_blank"
+              href={`https://twitter.com/intent/tweet?url=${link}`}
+            >
+              <FaTwitter size="1.1em" className="ml-2" />
+              تويتر
+            </Button>
+            <Button
+              variant="whatsapp"
+              href={`whatsapp://send?text=${link}`}
+              data-action="share/whatsapp/share"
+            >
+              <FaWhatsapp size="1.1em" className="ml-2" />
+              واتساب
+            </Button>
+            <Button
+              variant="dark"
+              onClick={copyToClipboard}
+            >
+              <BsClipboard size="1.1em" className="ml-2" />
+              نسخ
+            </Button>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="text-dark" onClick={() => setShow(false)}>
