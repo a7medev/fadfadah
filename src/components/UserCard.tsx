@@ -79,7 +79,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, username }) => {
 
           <Dropdown.Menu>
             <Share activator={ShareActivator} link={link} />
-            {username !== currentUsername && (
+            {currentUsername && username !== currentUsername && (
               <Block activator={BlockActivator} id={username} type="username" />
             )}
           </Dropdown.Menu>
