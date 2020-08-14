@@ -184,6 +184,12 @@ export const blockUser = functions.https.onCall(
         'unauthenticated',
         'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
       );
+    
+    if (context.auth.uid === id)
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'لا يمكنك القيام بحظر نفسك'
+      );
 
     function block(uid: string) {
       return db
