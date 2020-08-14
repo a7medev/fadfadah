@@ -1,0 +1,29 @@
+.message-box {
+  position: fixed !important;
+  top: -100%;
+  left: 50%;
+  max-width: 500px;  
+  width: 100%;
+  transform: translate(-50%);
+  box-shadow: 0 1rem 4rem -1rem rgba(0, 0, 0, 0.2);
+  transition: top 0.5s;
+
+  &.show {
+    top: 5rem;
+  }
+
+  .modal-header {
+    padding: 0.4rem;
+  }
+  .modal-title {
+    font-size: 1.1rem;
+  }
+  .modal-body {
+    padding: 0.4rem !important;
+    padding-bottom: 0 !important;
+  }
+  .modal-footer {
+    padding-top: 0;
+    border: 0;
+  }
+}
