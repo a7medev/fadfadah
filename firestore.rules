@@ -1,6 +1,20 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    match /non_existing/{id} {
+      allow read;
+    }
+    match /users/{userId} {
+      function isTheUser() {
+        return request.auth.uid == userId;
+      }
+      allow read: if isTheUser();
+
+      match /messages/{messageId} {
+        allow read: if isTheUser();
+      }
+    }
+
     match /usernames/{username} {
       function isUsernameOfTheUser() {
         return request.auth.uid == resource.data.userId;
@@ -20,8 +34,11 @@ service cloud.firestore {
       function userIsReciever() {
         return resource.data.to == request.auth.uid;
       }
+      function userIsAuthor() {
+        return exists(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId));
+      }
       // Reading a Message
-      allow read: if userIsReciever();
+      allow read: if userIsAuthor() || userIsReciever();
 
       function toIsNotEdited() {
         return resource.data.to == request.resource.data.to;
@@ -39,9 +56,6 @@ service cloud.firestore {
         contentIsNotEdited() &&
         createdAtIsNotEdited();
 
-      function userIsAuthor() {
-        return exists(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId));
-      }
       // Allow Author & Reciever to delete a message
       allow delete: if userIsAuthor() || userIsReciever();
     }
