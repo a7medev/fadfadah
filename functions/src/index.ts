@@ -5,6 +5,58 @@ admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 
+async function getUserById(userId: string) {
+  if (!userId) return null;
+
+  try {
+    const { uid, displayName, photoURL } = await auth.getUser(userId);
+    let photoSuffix = '';
+    if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
+    if (photoURL?.includes('google')) photoSuffix = '=s64-c';
+
+    const { exists: verified } = await db
+      .collection('verified_users')
+      .doc(uid)
+      .get();
+
+    const retrievableUser = {
+      uid,
+      displayName,
+      photoURL: photoURL + photoSuffix,
+      verified
+    };
+
+    return retrievableUser;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+async function getUIDByUsername(username: string) {
+  const doc = await db
+    .collection('usernames')
+    .doc(username.toLowerCase())
+    .get();
+  if (!doc.data()) return null;
+  const { userId } = doc.data()!;
+
+  return userId;
+}
+
+async function getUIDByMessageId(messageId: string) {
+  const {
+    docs: [message]
+  } = await db
+    .collectionGroup('messages')
+    .where('messageId', '==', messageId)
+    .get();
+
+  const userId = message?.ref.parent.parent?.id;
+
+  return userId;
+}
+
 export const sendMessage = functions.https.onCall(
   async ({ content, to }, context) => {
     if (!content || !to)
@@ -114,45 +166,6 @@ export const setUsername = functions.https.onCall(
   }
 );
 
-async function getUserById(userId: string) {
-  if (!userId) return null;
-
-  try {
-    const { uid, displayName, photoURL } = await auth.getUser(userId);
-    let photoSuffix = '';
-    if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
-    if (photoURL?.includes('google')) photoSuffix = '=s64-c';
-
-    const { exists: verified } = await db
-      .collection('verified_users')
-      .doc(uid)
-      .get();
-
-    const retrievableUser = {
-      uid,
-      displayName,
-      photoURL: photoURL + photoSuffix,
-      verified
-    };
-
-    return retrievableUser;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-}
-
-async function getUIDByUsername(username: string) {
-  const doc = await db
-    .collection('usernames')
-    .doc(username.toLowerCase())
-    .get();
-  if (!doc.data()) return null;
-  const { userId } = doc.data()!;
-
-  return userId;
-}
-
 export const getUserData = functions.https.onCall(
   async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
     if (type === 'username') {
@@ -184,7 +197,7 @@ export const blockUser = functions.https.onCall(
         'unauthenticated',
         'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
       );
-    
+
     if (context.auth.uid === id)
       throw new functions.https.HttpsError(
         'invalid-argument',
@@ -208,19 +221,12 @@ export const blockUser = functions.https.onCall(
         return block(uid);
       case 'messageId':
         /** Locating the message in the author's subcollection of messages */
-        const {
-          docs: [message]
-        } = await db
-          .collectionGroup('messages')
-          .where('messageId', '==', id)
-          .get();
+        const authorId = await getUIDByMessageId(id);
 
-        const authorId = message.ref.parent.parent?.id;
-
-        if (!message || !authorId)
+        if (!authorId)
           throw new functions.https.HttpsError(
             'not-found',
-            'المستخدم الذي أرسل هذه الرسالة غير موجود ولا يمكننا حظره'
+            'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا حظره، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
           );
 
         return block(authorId);
@@ -248,3 +254,32 @@ export const removeUserData = functions.auth.user().onDelete(user => {
     .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
     .catch(err => console.error(err));
 });
+
+export const sendWhoRequest = functions.https.onCall(
+  async (messageId: string, context) => {
+    if (!context.auth)
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'ثم بالدخول إلى حسابك للاستمتاع بكافة مميزات فضفضة'
+      );
+
+    const authorId = await getUIDByMessageId(messageId);
+
+    if (!authorId)
+      throw new functions.https.HttpsError(
+        'not-found',
+        'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا معرفة من يكون، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
+      );
+
+    if (!authorId)
+      db.collection('users')
+        .doc(authorId)
+        .collection('who_requests')
+        .add({
+          from: context.auth.uid,
+          on: messageId
+        });
+    
+    return true;
+  }
+);
