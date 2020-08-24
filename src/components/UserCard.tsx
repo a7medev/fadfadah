@@ -7,10 +7,10 @@ import Share from './Share';
 import Block from './Block';
 import { AuthContext } from '../store/AuthContext';
 import {
-  BsReplyFill,
   BsFillPersonDashFill,
   BsThreeDotsVertical
 } from 'react-icons/bs';
+import { MdShare } from 'react-icons/md';
 
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,7 +18,7 @@ export interface ShareActivatorProps {
 const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => setShow(true)}>
     <p className="ml-auto mb-0">مشاركة</p>
-    <BsReplyFill size="1.2em" />
+    <MdShare size="1.2em" />
   </Dropdown.Item>
 );
 
@@ -34,14 +34,13 @@ const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
 
 export interface UserCardProps {
   user: MiniUser;
-  username: string;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, username }) => {
+const UserCard: React.FC<UserCardProps> = ({ user }) => {
   const { protocol, host } = window.location;
-  const link = `${protocol}//${host}/u/${username}`;
+  const link = `${protocol}//${host}/u/${user.username}`;
 
-  const { username: currentUsername } = useContext(AuthContext)!;
+  const { username } = useContext(AuthContext)!;
 
   return (
     <Card className="mb-2">
@@ -56,31 +55,31 @@ const UserCard: React.FC<UserCardProps> = ({ user, username }) => {
                 : '/images/avatar.svg'
             }
             alt={user.displayName ?? 'لا يوجد اسم'}
-            className="rounded-circle border"
-            style={{ width: 64, height: 64 }}
+            className="rounded-circle shadow-sm"
+            style={{ width: 55, height: 55 }}
           />
           <div className="mr-3">
             <Card.Title>
-              <h4>
+              <h5>
                 {user.displayName ?? 'لا يوجد اسم'}
                 {user.verified && (
-                  <VerifiedIcon size="20px" className="text-primary mr-2" />
+                  <VerifiedIcon size="18px" className="text-primary mr-2" />
                 )}
-              </h4>
+              </h5>
             </Card.Title>
-            <Card.Subtitle className="text-muted">@{username}</Card.Subtitle>
+            {user.username && <Card.Subtitle className="text-muted">@{user.username}</Card.Subtitle>}
           </div>
         </div>
 
         <Dropdown>
           <Dropdown.Toggle variant="text-dark">
-            <BsThreeDotsVertical size="1.3em" />
+            <BsThreeDotsVertical size="1em" />
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
             <Share activator={ShareActivator} link={link} />
-            {currentUsername && username !== currentUsername && (
-              <Block activator={BlockActivator} id={username} type="username" />
+            {username && user.username !== username && (
+              <Block activator={BlockActivator} id={user.username ?? ''} type="username" />
             )}
           </Dropdown.Menu>
         </Dropdown>

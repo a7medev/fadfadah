@@ -30,6 +30,16 @@ service cloud.firestore {
       allow read: if userIsCheckingHimSelf();
     }
 
+    match /devices/{token} {
+      function userIdIsValid() {
+        return request.auth.uid == request.resource.data.userId;
+      }
+      function tokenIsValid() {
+        return token == request.resource.data.token;
+      }
+      allow create, update: if tokenIsValid() && userIdIsValid();
+    }
+
     match /messages/{messageId} {
       function userIsReciever() {
         return resource.data.to == request.auth.uid;

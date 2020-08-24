@@ -4,6 +4,7 @@ import { Card, Form, Button, Alert } from 'react-bootstrap';
 import { functions } from '../config/firebase';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
+import MessageBox from './MessageBox';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -12,6 +13,7 @@ export interface SendMessageProps {
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const messageContent = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
 
   function sendMessage(event: React.FormEvent) {
     event.preventDefault();
@@ -28,11 +30,12 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     sendMessage(message)
       .then(() => {
         setError(null);
+        setMessage('تم إرسال الرسالة بنجاح');
         messageContent.current?.form?.reset();
       })
       .catch(err => {
         console.dir(err);
-        setError(err.message ?? 'حدثت مشكلة ما');
+        setError(err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما');
       });
   }
 
@@ -50,6 +53,13 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
           {error}
         </Alert>
       )}
+
+      <MessageBox
+        show={!!message}
+        onClose={() => setMessage(null)}
+        title="رسالة من الموقع"
+        text={message!}
+      />
 
       <Form onSubmit={sendMessage}>
         <Form.Group className="mb-2">

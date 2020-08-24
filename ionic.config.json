@@ -1,0 +1,7 @@
+{
+  "name": "فضفضة",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}

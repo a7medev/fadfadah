@@ -32,7 +32,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
             // @ts-ignore
             <Component {...rest} {...props} />
           ) : (
-            <Redirect to="/home" />
+            <Redirect to="/inbox" />
           );
         }
       }}

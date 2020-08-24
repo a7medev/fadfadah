@@ -4,6 +4,7 @@ import * as admin from 'firebase-admin';
 admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
+const messaging = admin.messaging();
 
 async function getUserById(userId: string) {
   if (!userId) return null;
@@ -55,6 +56,20 @@ async function getUIDByMessageId(messageId: string) {
   const userId = message?.ref.parent.parent?.id;
 
   return userId;
+}
+
+async function sendNotification(
+  userId: string,
+  payload: admin.messaging.MessagingPayload
+) {
+  const devices = await db
+    .collection('devices')
+    .where('userId', '==', userId)
+    .get();
+  const tokens: string[] = devices.docs.map(doc => doc.data().token);
+
+  // Send Notifications
+  messaging.sendToDevice(tokens, payload).catch(err => console.error(err));
 }
 
 export const sendMessage = functions.https.onCall(
@@ -111,7 +126,16 @@ export const sendMessage = functions.https.onCall(
 
     const snap = await db.collection('messages').add(doc);
 
-    if (context.auth?.uid)
+    sendNotification(to, {
+      notification: {
+        title: 'فضفضة: رسالة جديدة',
+        body: content.length > 30 ? content.substring(0, 30) + '...' : content,
+        icon: '/icons/android-chrome-192x192.png',
+        clickAction: `/inbox?goto=${snap.id}`
+      }
+    }).catch(err => console.error(err));
+
+    if (context.auth?.uid) {
       db.collection('users')
         .doc(context.auth?.uid)
         .collection('messages')
@@ -123,6 +147,7 @@ export const sendMessage = functions.https.onCall(
           console.error(err);
           throw new functions.https.HttpsError('unknown', 'حدثت مشكلة ما');
         });
+    }
 
     return true;
   }
@@ -198,27 +223,27 @@ export const blockUser = functions.https.onCall(
         'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
       );
 
-    if (context.auth.uid === id)
-      throw new functions.https.HttpsError(
-        'invalid-argument',
-        'لا يمكنك القيام بحظر نفسك'
-      );
+    function block(uid: string, isSender: boolean) {
+      if (context.auth?.uid === id)
+        throw new functions.https.HttpsError(
+          'invalid-argument',
+          'لا يمكنك القيام بحظر نفسك'
+        );
 
-    function block(uid: string) {
       return db
         .collection('users')
         .doc(context.auth!.uid)
         .collection('blocked')
         .doc(uid)
-        .set({ userId: uid });
+        .set({ userId: uid, isSender });
     }
 
     switch (type) {
       case 'uid':
-        return block(id);
+        return block(id, false);
       case 'username':
         const uid = await getUIDByUsername(id);
-        return block(uid);
+        return block(uid, false);
       case 'messageId':
         /** Locating the message in the author's subcollection of messages */
         const authorId = await getUIDByMessageId(id);
@@ -229,7 +254,7 @@ export const blockUser = functions.https.onCall(
             'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا حظره، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
           );
 
-        return block(authorId);
+        return block(authorId, true);
       default:
         throw new functions.https.HttpsError(
           'invalid-argument',
@@ -271,15 +296,43 @@ export const sendWhoRequest = functions.https.onCall(
         'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا معرفة من يكون، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
       );
 
-    if (!authorId)
-      db.collection('users')
-        .doc(authorId)
-        .collection('who_requests')
-        .add({
-          from: context.auth.uid,
-          on: messageId
-        });
-    
+    db.collection('users')
+      .doc(authorId)
+      .collection('who_requests')
+      .add({
+        on: messageId,
+        sentAt: new Date()
+      })
+      .catch(err => console.error(err));
+
     return true;
   }
 );
+
+export const sendLoveNotification = functions.firestore
+  .document('/messages/{messageId}')
+  .onUpdate(async change => {
+    const message = change.after.data();
+    // Love State Changed
+    if (message.love && message.love !== change.before.data().love) {
+      const reciever = await getUserById(message.to);
+
+      const senderId = await getUIDByMessageId(change.after.id);
+      const sender = await getUserById(senderId!);
+
+      const body = `أَحَبَّ ${reciever?.displayName} رسالتك "${
+        message.content.length > 30
+          ? message.content.substring(0, 30) + '...'
+          : message.content
+      }"`;
+
+      sendNotification(sender?.uid ?? '', {
+        notification: {
+          body,
+          title: 'فضفضة',
+          icon: reciever?.photoURL ?? '/images/avatar.svg',
+          clickAction: `/outbox?goto=${change.after.id}`
+        }
+      }).catch(err => console.error(err));
+    }
+  });

@@ -47,6 +47,11 @@ body {
   }
 }
 
+// Custom Control
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0;
+}
+
 .card {
   border-radius: 1rem;
   border: 0;
@@ -130,12 +135,160 @@ body {
   text-align: right;
 }
 .dropdown-toggle.btn {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   padding: 0;
 
   &::after {
     content: none;
+  }
+}
+
+// Custom Select
+.custom-select {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: none !important;
+  background: #fff
+    url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%23343a40' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e")
+    no-repeat left 0.75rem center/8px 10px;
+  padding: 0.375rem 0.75rem 0.375rem 1.75rem;
+}
+
+// Custom Switch
+.custom-switch {
+  padding-right: 2.25rem;
+  padding-left: 0;
+
+  .custom-control-label {
+    &::before {
+      left: auto;
+      right: -2.25rem;
+    }
+    &::after {
+      left: auto;
+      right: calc(-2.25rem + 2px);
+    }
+  }
+}
+.custom-control-input:checked ~ .custom-control-label {
+  &::before {
+    border-color: $primary;
+    background: $primary;
+  }
+  &::after {
+    transform: translateX(-0.75rem) !important;
+  }
+}
+
+// Dark Theme
+.dark {
+  background: $gray-900;
+  color: white;
+
+  // HR
+  hr {
+    border-color: $gray-700;
+  }
+
+  // Muted Text
+  .text-muted {
+    color: $gray-500 !important;
+  }
+
+  // Black 50 Text
+  .text-black-50 {
+    @extend .text-white-50;
+  }
+
+  // Dark Buttons to Light
+  .btn-dark {
+    @extend .btn-light;
+  }
+  .btn-text-dark {
+    @extend .btn-text-light;
+  }
+  .btn-outline-dark {
+    @extend .btn-outline-light;
+  }
+
+  // Form Control
+  .form-control {
+    background: $gray-700;
+    border-color: $gray-700 !important;
+    color: white;
+
+    &:focus {
+      background: $gray-800;
+    }
+    &::placeholder {
+      color: $gray-500;
+    }
+  }
+
+  // Navbar
+  .navbar {
+    background: $gray-800 !important;
+    @extend .navbar-dark;
+
+    .bar {
+      background: white;
+    }
+  }
+  .main-links {
+    border-color: $gray-700;
+  }
+  .navbar-collapse {
+    background: $gray-800;
+  }
+  .nav-link {
+    color: white !important;
+  }
+
+  // Cards
+  .card {
+    background: $gray-800;
+    color: white;
+    box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.05);
+  }
+
+  // Dropdowns
+  .dropdown-menu {
+    background: $gray-800;
+    border-color: $gray-700;
+  }
+  .dropdown-item {
+    color: white;
+    &:hover, &:focus {
+      background: $gray-700;
+    }
+  }
+
+  // Modals
+  .modal-content {
+    background: $gray-800;
+  }
+  .modal-header,
+  .modal-footer {
+    border-color: $gray-700;
+  }
+
+  // Custom Switch
+  .custom-switch {
+    .custom-control-label {
+      &::before {
+        border-color: $gray-600;
+        background: $gray-600;
+      }
+      &::after {
+        background: $gray-900;
+      }
+    }
+  }
+
+  .custom-control-input:checked ~ .custom-control-label::before {
+    border-color: $primary;
+    background: $primary;
   }
 }

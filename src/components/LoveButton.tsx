@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BsHeartFill, BsHeart } from 'react-icons/bs';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { motion, AnimatePresence, Variants, Transition } from 'framer-motion';
 
 export interface LoveButtonProps {
@@ -8,11 +8,12 @@ export interface LoveButtonProps {
 }
 
 const variants: Variants = {
-  in: { scale: 1 },
-  out: { scale: 0 }
+  in: { scale: 1, x: '-50%', y: '-50%', transition: { duration: 0.3 } },
+  out: { scale: 0, x: '-50%', y: '-50%', transition: { duration: 0.3 } }
 }
 const transition: Transition = {
-  type: 'spring'
+  type: 'spring',
+  stiffness: 10
 }
 
 const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
@@ -21,7 +22,7 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
     <AnimatePresence>
       {love && (
         <motion.span
-          style={{ position: 'absolute', left: '20px' }}
+          style={{ position: 'absolute', left: '50%', top: '50%' }}
           variants={variants}
           transition={transition}
           initial="out"
@@ -29,14 +30,14 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
           exit="out"
           onClick={() => setLove(false)}
         >
-          <BsHeartFill fill="#ff1450" size="20px" />
+          <MdFavorite fill="#ff1450" size="1.5em" />
         </motion.span>
       )}
     </AnimatePresence>
     <AnimatePresence>
       {!love && (
         <motion.span
-          style={{ position: 'absolute', left: '20px' }}
+          style={{ position: 'absolute', left: '50%', top: '50%' }}
           variants={variants}
           transition={transition}
           initial="out"
@@ -44,7 +45,7 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
           exit="out"
           onClick={() => setLove(true)}
         >
-          <BsHeart size="20px" />
+          <MdFavoriteBorder color="#777" size="1.5em" />
         </motion.span>
       )}
     </AnimatePresence>

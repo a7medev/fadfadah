@@ -2,8 +2,9 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/functions';
-import 'firebase/storage';
+import 'firebase/messaging';
 import 'firebase/analytics';
+import 'firebase/performance';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB9QiKhNpNd0-FXrxSlYShusU_95quET8I',
@@ -19,13 +20,14 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
+firebase.performance();
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const functions = firebase.functions();
-export const storage = firebase.storage();
+export const messaging = firebase.messaging();
 
-db.enablePersistence();
+db.enablePersistence({ synchronizeTabs: true });
 
 export const messages = {
   'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بحساب آخر بالفعل',
@@ -38,3 +40,6 @@ export const messages = {
   'auth/cancelled-popup-request': 'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',
   'permission-denied': 'غير مصرح لك بالقيام بذلك'
 }
+
+// @ts-ignore
+window.db = db;

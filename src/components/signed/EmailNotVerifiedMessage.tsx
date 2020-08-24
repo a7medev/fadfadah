@@ -18,8 +18,7 @@ const EmailNotVerifiedMessage: React.FC<EmailNotVerifiedMessageProps> = ({ setEm
       className="mx-auto mb-2"
     >
       <p className="mb-2">
-        رجاءاً قم بإثبات ملكية البريد الإلكتروني لتتمكن من استخدام فضفضة
-        بكامل مميزاته
+        رجاءاً قم بإثبات ملكية البريد الإلكتروني للاستمتاع بجميع مميزات فضفضة
       </p>
 
       <Button size="sm" variant="dark" onClick={sendEmailVerification}>

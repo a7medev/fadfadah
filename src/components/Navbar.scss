@@ -31,12 +31,62 @@
   border-radius: 0.5rem !important;
   border: none !important;
   padding: 0.3rem !important;
-  background: #eaebef !important;
+  background: none !important;
+  // background: #eaebef !important;
   outline: none !important;
+
+  .bar {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: #333;
+    position: relative;
+    right: 7px;
+    transition: 0.25s ease-in-out;
+    transition-property: transform, opacity, right;
+
+    &:nth-child(1) {
+      transform: rotate(45deg) translateX(10px);
+    }
+    &:nth-child(2) {
+      margin: 5px 0;
+      opacity: 0;
+      right: 10px;
+    }
+    &:nth-child(3) {
+      transform: rotate(-45deg) translateX(10px);
+    }
+  }
+  &.collapsed {
+    .bar {
+      transform: none;
+      opacity: 1;
+      right: 0;
+    }
+  }
 }
 
 @media (min-width: 992px) {
   .main-links {
     border-right: 1px solid #e2e2e2;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .offcanvas-collapse {
+    position: fixed;
+    top: 56px;
+    bottom: 0;
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    overflow-y: auto;
+    background-color: white;
+    transition: transform .3s ease-in-out;
+    transform: translateX(-100%);
+
+    &.open {
+      transform: translateX(1rem);
+    }
   }
 }

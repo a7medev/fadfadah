@@ -30,7 +30,7 @@ const Profile: React.FC<ProfileProps> = ({
   useEffect(() => {
     if (username !== currentUsername) {
       const getUserData = functions.httpsCallable('getUserData');
-      getUserData({ id: username, type: 'username'})
+      getUserData({ id: username, type: 'username' })
         .then(result => {
           setError(null);
           setLoading(false);
@@ -40,7 +40,7 @@ const Profile: React.FC<ProfileProps> = ({
           setLoading(false);
           setError('حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك');
         });
-    } else history.replace('/home');
+    } else history.replace('/inbox');
   }, [username, currentUsername, history]);
 
   return (
@@ -49,12 +49,10 @@ const Profile: React.FC<ProfileProps> = ({
         {loading ? (
           <Loader style={{ marginTop: 150, marginBottom: 20 }} />
         ) : error ? (
-          <Alert variant="danger">
-            {error}
-          </Alert>
+          <Alert variant="danger">{error}</Alert>
         ) : user ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-            <UserCard user={user} username={username} />
+            <UserCard user={{ ...user, username }} />
 
             <SendMessage user={user} />
           </motion.div>
@@ -65,7 +63,7 @@ const Profile: React.FC<ProfileProps> = ({
             className="text-center"
           >
             <p className="text-muted h2 mt-5 mb-3">هذا المستخدم غير موجود</p>
-            <LinkContainer to="/home">
+            <LinkContainer to="/inbox">
               <Button>
                 <BsArrowRightShort className="ml-1" size="1.5em" />
                 عودة إلى الرئيسية

@@ -6,6 +6,7 @@ import { auth, messages } from '../../config/firebase';
 import { AuthContext } from '../../store/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
   const fullName = useRef<HTMLInputElement>(null);
@@ -23,7 +24,7 @@ const Register = () => {
     // Validate full name
     if (!/^\p{L}+( \p{L}+)*$/u.test(fullName.current?.value.trim()!))
       return setError('رجاءاً أدخل اسماً صالحاً');
-    
+
     const name = fullName.current?.value;
 
     try {
@@ -32,11 +33,16 @@ const Register = () => {
         password.current?.value!
       );
 
-      user?.updateProfile({
-        displayName: name!
-      }).then(() => {
-        authContext?.setUser(prevUser => ({ ...prevUser!, displayName: name! }))
-      });
+      user
+        ?.updateProfile({
+          displayName: name!
+        })
+        .then(() => {
+          authContext?.setUser(prevUser => ({
+            ...prevUser!,
+            displayName: name!
+          }));
+        });
 
       user?.sendEmailVerification();
     } catch (err) {
@@ -55,11 +61,7 @@ const Register = () => {
           </Card.Title>
 
           {error && (
-            <Alert
-              variant="danger"
-              onClose={() => setError(null)}
-              dismissible
-            >
+            <Alert variant="danger" onClose={() => setError(null)} dismissible>
               {error}
             </Alert>
           )}
@@ -90,13 +92,22 @@ const Register = () => {
               />
             </Form.Group>
 
-            <Button block type="submit">إنشاء حساب</Button>
+            <Button block type="submit">
+              إنشاء حساب
+            </Button>
           </Form>
-            
+
           <hr />
-          
+
           <SignInFacebook setError={setError} />
           <SignInGoogle setError={setError} />
+
+          <hr />
+
+          <p className="mb-0">
+            عند تسجيلك بالموقع، فإنك توافق على{' '}
+            <Link to="/privacy-policy">سياسة الخصوصية</Link> بموقع فضفضة
+          </p>
         </Card>
       </Container>
     </PageTransition>

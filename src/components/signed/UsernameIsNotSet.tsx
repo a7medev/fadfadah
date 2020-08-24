@@ -46,7 +46,7 @@ const UsernameIsNotSet = () => {
           <h5>قم بإعداد اسم مستخدم</h5>
         </Card.Title>
         <Card.Subtitle className="text-danger mb-3">
-          عدم وجود اسم مستخدم سيمنع الأشخاص من إرسال الرسائل لك
+          عدم وجود اسم مستخدم سيمنع الأشخاص من إرسال الرسائل إليك
         </Card.Subtitle>
 
         {error && (

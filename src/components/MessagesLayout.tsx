@@ -7,9 +7,10 @@ import { Timestamp } from '@firebase/firestore-types';
 
 export interface MessagesLayoutProps {
   messages: Message<Timestamp>[];
+  outbox?: boolean;
 }
 
-const MessagesLayout: React.FC<MessagesLayoutProps> = ({ messages }) => {
+const MessagesLayout: React.FC<MessagesLayoutProps> = ({ messages, outbox }) => {
   return messages.length ? (
       <Masonry
         options={{ originLeft: false }}
@@ -17,7 +18,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({ messages }) => {
       >
         {messages.map(message => (
           <Col xs="12" md="6" lg="4" key={message.id}>
-            <MessageCard {...message} />
+            <MessageCard {...message} outbox={outbox} />
           </Col>
         ))}
       </Masonry>
