@@ -291,4 +291,17 @@ body {
     border-color: $primary;
     background: $primary;
   }
+
+  // Alerts
+  @each $color, $value in $theme-colors {
+    .alert-#{$color} {
+      background-color: rgba($value, 0.3);
+      color: lighten($value, 30%);
+    }
+  }
+
+  // Close
+  .close {
+    color: white;
+  }
 }
