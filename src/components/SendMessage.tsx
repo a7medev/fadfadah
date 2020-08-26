@@ -23,7 +23,10 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       content: messageContent.current?.value!
     };
 
-    if (message.content.length <= 5 || message.content.length >= 500)
+    if (
+      message.content.trim().length < 5 ||
+      message.content.trim().length > 500
+    )
       return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
 
     const sendMessage = functions.httpsCallable('sendMessage');
@@ -35,7 +38,9 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       })
       .catch(err => {
         console.dir(err);
-        setError(err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما');
+        setError(
+          err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
+        );
       });
   }
 
