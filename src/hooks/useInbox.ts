@@ -18,7 +18,6 @@ function useInbox(
     .collection('messages')
     .where('to', '==', userId)
     .orderBy('createdAt', 'desc')
-    .limit(12);
 
   useEffect(() => {
     if (!userId) {
@@ -29,6 +28,7 @@ function useInbox(
     }
 
     ref
+      .limit(12)
       .get()
       .then(snap => {
         last.current = snap.docs[snap.docs.length - 1];
@@ -39,7 +39,9 @@ function useInbox(
             ...(doc.data() as Message<Timestamp>)
           }))
         );
+
         setLoading(false);
+        setError(null);
       })
       .catch(err => setError(err));
 
@@ -49,9 +51,9 @@ function useInbox(
       const deleted = changes.filter(change => change.type === 'removed');
 
       deleted.forEach(snap => {
-        setInbox(prevInbox => [
-          ...prevInbox.filter(message => message.id !== snap.doc.id)
-        ]);
+        setInbox(prevInbox =>
+          prevInbox.filter(message => message.id !== snap.doc.id)
+        );
       });
     });
 
@@ -63,6 +65,7 @@ function useInbox(
     setLoadingMore(true);
 
     ref
+      .limit(12)
       .startAfter(last.current)
       .get()
       .then(snap => {

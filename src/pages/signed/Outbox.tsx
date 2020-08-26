@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useEffect, useContext } from 'react';
-import { Container, Alert } from 'react-bootstrap';
+import { Container, Alert, Button } from 'react-bootstrap';
 import MessagesLayout from '../../components/MessagesLayout';
 import { messages as firebaseMessages } from '../../config/firebase';
 import Loader from '../../components/Loader';
@@ -21,7 +21,7 @@ export interface OutboxProps extends RouteComponentProps {}
 
 const Outbox: React.FC<OutboxProps> = ({ location }) => {
   const { user } = useContext(AuthContext)!;
-  const [outbox, loadingOutbox, outboxError] = useOutbox(user?.uid);
+  const [outbox, loadMore, hasMore, loadingMore, loadingOutbox, outboxError] = useOutbox(user?.uid);
   const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   useEffect(() => {
@@ -34,21 +34,32 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
       <Container>
         <SignedUserCard />
 
-        <h4 className="mt-4 mb-3">
-          الرسائل المرسلة
-        </h4>
+        <h4 className="mt-4 mb-3">الرسائل المرسلة</h4>
+  
         {outboxError && (
           <Alert variant="danger">
             {/* @ts-ignore */}
             {firebaseMessages[outboxError.code] ?? 'حدثت مشكلة ما'}
           </Alert>
         )}
-        {!loadingOutbox && (
+        {loadingOutbox && <Loader />}
+        {!loadingOutbox && outbox && (
           <motion.div initial="out" animate="in" variants={fadeVariants}>
             <MessagesLayout messages={outbox} outbox />
+            <div className="text-center">
+              {hasMore && !loadingMore && (
+                <Button
+                  variant="text-primary"
+                  className="rounded-pill"
+                  onClick={() => loadMore()}
+                >
+                  عرض المزيد
+                </Button>
+              )}
+              {loadingMore && <Loader />}
+            </div>
           </motion.div>
         )}
-        {loadingOutbox && <Loader />}
       </Container>
     </PageTransition>
   );

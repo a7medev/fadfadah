@@ -141,7 +141,8 @@ export const sendMessage = functions.https.onCall(
         .collection('messages')
         .doc(snap.id)
         .set({
-          messageId: snap.id
+          messageId: snap.id,
+          createdAt: new Date()
         })
         .catch(err => {
           console.error(err);
