@@ -49,9 +49,9 @@ function useInbox(
       const deleted = changes.filter(change => change.type === 'removed');
 
       deleted.forEach(snap => {
-        setInbox(prevInbox => ({
+        setInbox(prevInbox => [
           ...prevInbox.filter(message => message.id !== snap.doc.id)
-        }));
+        ]);
       });
     });
 
