@@ -43,6 +43,19 @@ function useInbox(
       })
       .catch(err => setError(err));
 
+    const unsub = ref.onSnapshot(snap => {
+      const changes = snap.docChanges();
+
+      const deleted = changes.filter(change => change.type === 'removed');
+
+      deleted.forEach(snap => {
+        setInbox(prevInbox => ({
+          ...prevInbox.filter(message => message.id !== snap.doc.id)
+        }));
+      });
+    });
+
+    return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -53,14 +66,10 @@ function useInbox(
       .startAfter(last.current)
       .get()
       .then(snap => {
-
         last.current = snap.docs[snap.docs.length - 1];
 
         setInbox(prevInbox => {
-          if (snap.docs.length === 0) {
-            setHasMore(false);
-            return prevInbox;
-          }
+          if (snap.docs.length < 12) setHasMore(false);
 
           return [
             ...prevInbox,
@@ -68,7 +77,7 @@ function useInbox(
               id: doc.id,
               ...(doc.data() as Message<Timestamp>)
             }))
-          ]
+          ];
         });
 
         setLoadingMore(false);
