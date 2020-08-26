@@ -13,6 +13,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Settings from './pages/signed/Settings';
 import Outbox from './pages/signed/Outbox';
 import Inbox from './pages/signed/Inbox';
+import NotFound from './pages/NotFound';
 
 const App = () => {
   useLayoutEffect(() => {
@@ -37,6 +38,7 @@ const App = () => {
             <ProtectedRoute auth path="/settings" component={Settings} />
             <Route path="/u/:username" component={Profile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />
+            <Route component={NotFound} />
           </Switch>
         </AnimatePresence>
       </SafeArea>
