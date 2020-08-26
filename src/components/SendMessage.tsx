@@ -15,9 +15,11 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  const sendButton = useRef<HTMLButtonElement>(null);
+
   function sendMessage(event: React.FormEvent) {
     event.preventDefault();
-
+    
     const message = {
       to: user?.uid,
       content: messageContent.current?.value!
@@ -29,6 +31,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     )
       return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
 
+    sendButton.current!.disabled = true;
     const sendMessage = functions.httpsCallable('sendMessage');
     sendMessage(message)
       .then(() => {
@@ -41,7 +44,10 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
         setError(
           err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
         );
-      });
+      })
+      .finally(() => {
+        sendButton.current!.disabled = false;
+      })
   }
 
   return (
@@ -76,7 +82,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
           />
         </Form.Group>
 
-        <Button type="submit">إرسال</Button>
+        <Button type="submit" ref={sendButton}>إرسال</Button>
       </Form>
     </Card>
   );
