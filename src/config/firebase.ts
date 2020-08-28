@@ -40,6 +40,3 @@ export const messages = {
   'auth/cancelled-popup-request': 'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',
   'permission-denied': 'غير مصرح لك بالقيام بذلك'
 }
-
-// @ts-ignore
-window.db = db;
