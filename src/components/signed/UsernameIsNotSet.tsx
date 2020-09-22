@@ -4,7 +4,7 @@ import { Card, Alert, Form, Button } from 'react-bootstrap';
 import { messages, functions } from '../../config/firebase';
 import { AuthContext } from '../../store/AuthContext';
 
-const UsernameIsNotSet = () => {
+const UsernameIsNotSet: React.FC = () => {
   const username = useRef<HTMLInputElement>(null);
 
   const { setUsername: setLocalUsername } = useContext(AuthContext)!;

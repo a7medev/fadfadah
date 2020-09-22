@@ -19,13 +19,21 @@ const firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-firebase.performance();
 
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const functions = firebase.functions();
 export const messaging = firebase.messaging();
+export const analytics = firebase.analytics();
+export const performance = firebase.performance();
+
+// if (window.location.hostname === 'localhost') {
+//   db.settings({
+//     host: 'localhost:8080',
+//     ssl: false
+//   });
+//   firebase.functions().useFunctionsEmulator('http://localhost:5001');
+// }
 
 db.enablePersistence({ synchronizeTabs: true });
 
@@ -33,10 +41,16 @@ export const messages = {
   'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بحساب آخر بالفعل',
   'auth/weak-password': 'يجب أن تحتوي كلمة المرور على 6 حروف أو أكثر',
   'auth/invalid-email': 'رجاءاً أدخل بريد إلكتروني صالح',
-  'auth/network-request-failed': 'حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك',
+  'auth/network-request-failed':
+    'حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك',
   'auth/user-not-found': 'هذا المستخدم غير موجود',
-  'auth/wrong-password': 'كلمة المرور التي أدخلتها خاطئة',
+  'auth/wrong-password': 'كلمة المرور غير صحيحة',
   'auth/popup-closed-by-user': 'لقد قمت بإغلاق النافذة المنبثقة',
-  'auth/cancelled-popup-request': 'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',
+  'auth/cancelled-popup-request':
+    'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',
+  'auth/user-mismatch':
+    ' البريد الإلكتروني أو كلمة المرور لا تتوافق مع المستخدم',
+  'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
+  'auth/invalid-verification-code': 'رمز التأكيد غير صحيح',
   'permission-denied': 'غير مصرح لك بالقيام بذلك'
-}
+};

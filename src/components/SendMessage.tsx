@@ -1,10 +1,12 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { functions } from '../config/firebase';
+import { functions, performance } from '../config/firebase';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
 import MessageBox from './MessageBox';
+import { AuthContext } from '../store/AuthContext';
+import CreateMessageDto from '../types/CreateMessageDto';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -15,15 +17,23 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
+  const { user: currentUser } = useContext(AuthContext)!;
+
+  const anonymous = useRef<HTMLInputElement>(null);
+
   const sendButton = useRef<HTMLButtonElement>(null);
 
   function sendMessage(event: React.FormEvent) {
     event.preventDefault();
-    
-    const message = {
-      to: user?.uid,
-      content: messageContent.current?.value!
+
+    const isAnonymous = anonymous.current!.checked;
+    const message: CreateMessageDto = {
+      to: user.uid,
+      content: messageContent.current?.value!,
+      isAnonymous
     };
+
+    if (!isAnonymous && currentUser) message.from = currentUser?.uid;
 
     if (
       message.content.trim().length < 5 ||
@@ -33,13 +43,20 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
 
     sendButton.current!.disabled = true;
     const sendMessage = functions.httpsCallable('sendMessage');
+    const sendMessageTrace = performance.trace('sendMessage');
+
+    sendMessageTrace.start();
+    sendMessageTrace.putAttribute('isAnonymous', `${isAnonymous}`);
+
     sendMessage(message)
       .then(() => {
         setError(null);
         setMessage('تم إرسال الرسالة بنجاح');
         messageContent.current?.form?.reset();
+        sendMessageTrace.putAttribute('sent', 'true');
       })
       .catch(err => {
+        sendMessageTrace.putAttribute('sent', 'false');
         console.dir(err);
         setError(
           err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
@@ -47,7 +64,8 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       })
       .finally(() => {
         sendButton.current!.disabled = false;
-      })
+        sendMessageTrace.stop();
+      });
   }
 
   return (
@@ -81,8 +99,12 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
             placeholder="اكتب رسالتك هنا"
           />
         </Form.Group>
+        <Form.Switch ref={anonymous} label="رسالة مجهولة المصدر" />
+        <Form.Group></Form.Group>
 
-        <Button type="submit" ref={sendButton}>إرسال</Button>
+        <Button type="submit" ref={sendButton}>
+          إرسال
+        </Button>
       </Form>
     </Card>
   );

@@ -15,7 +15,7 @@ import Outbox from './pages/signed/Outbox';
 import Inbox from './pages/signed/Inbox';
 import NotFound from './pages/NotFound';
 
-const App = () => {
+const App: React.FC = () => {
   useLayoutEffect(() => {
     const darkModeOn = !!localStorage.getItem('darkMode');
 

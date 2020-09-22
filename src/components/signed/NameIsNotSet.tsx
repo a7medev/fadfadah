@@ -4,7 +4,7 @@ import { Card, Alert, Form, Button } from 'react-bootstrap';
 import { auth, messages } from '../../config/firebase';
 import { AuthContext } from '../../store/AuthContext';
 
-const NameIsNotSet = () => {
+const NameIsNotSet: React.FC = () => {
   const fullName = useRef<HTMLInputElement>(null);
 
   const { setUser } = useContext(AuthContext)!;

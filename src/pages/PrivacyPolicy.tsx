@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Container, Card } from 'react-bootstrap';
 import PageTransition from '../components/PageTransition';
 
-const PrivacyPolicy = () => {
+const PrivacyPolicy: React.FC = () => {
   return (
     <PageTransition>
       <Container dir="ltr" className="text-left">

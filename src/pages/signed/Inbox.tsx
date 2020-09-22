@@ -64,7 +64,7 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
                   عرض المزيد
                 </Button>
               )}
-              {loadingMore && <Loader />}
+              {loadingMore && <Loader small />}
             </div>
           </motion.div>
         )}

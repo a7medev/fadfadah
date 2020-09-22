@@ -7,7 +7,7 @@ import { AuthContext } from '../../store/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 
-const Login = () => {
+const Login: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 

@@ -9,11 +9,20 @@ import {
 
 function useOutbox(
   userId?: string
-): [Message<Timestamp>[], () => void, boolean, boolean, boolean, Error | null] {
+): [
+  Message<Timestamp>[],
+  () => void,
+  boolean,
+  boolean,
+  boolean,
+  boolean,
+  Error | null
+] {
   const [outbox, setOutbox] = useState<Message<Timestamp>[]>([]);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [offline, setOffline] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const last = useRef<DocumentData>();
@@ -37,14 +46,24 @@ function useOutbox(
       .then(async snap => {
         last.current = snap.docs[snap.docs.length - 1];
 
+        if (snap.docs.length < 12) setHasMore(false);
+
         const messages = await getMessages(snap);
 
-        setOutbox(messages);
+        setOutbox(
+          messages.filter(message => message !== null) as Message<Timestamp>[]
+        );
 
         messages && setLoading(false);
         messages && setError(null);
       })
-      .catch(err => setError(err));
+      .catch(err => {
+        setLoading(false);
+
+        if (err.code === 'unavailable') return setOffline(true);
+
+        setError(err);
+      });
 
     const unsub = ref.onSnapshot(snap => {
       const changes = snap.docChanges();
@@ -58,7 +77,7 @@ function useOutbox(
       });
     });
 
-    return unsub;
+    return () => unsub();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -66,8 +85,13 @@ function useOutbox(
     return Promise.all(
       snap.docs.map(async ({ id }) => {
         const doc = await db.collection('messages').doc(id).get();
-        const message = { ...(doc.data() as Message<Timestamp>), id: doc.id };
-        return message;
+
+        if (doc.exists) {
+          const message = { ...(doc.data() as Message<Timestamp>), id: doc.id };
+          return message;
+        }
+
+        return null;
       })
     );
   }
@@ -87,7 +111,12 @@ function useOutbox(
         setOutbox(prevOutbox => {
           if (snap.docs.length < 12) setHasMore(false);
 
-          return [...prevOutbox, ...messages];
+          return [
+            ...prevOutbox,
+            ...(messages.filter(message => message !== null) as Message<
+              Timestamp
+            >[])
+          ];
         });
 
         setLoadingMore(false);
@@ -95,7 +124,7 @@ function useOutbox(
       .catch(err => setError(err));
   }
 
-  return [outbox, loadMore, hasMore, loadingMore, loading, error];
+  return [outbox, loadMore, hasMore, loadingMore, loading, offline, error];
 }
 
 export default useOutbox;

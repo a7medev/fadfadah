@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
 import { FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
-import { BsClipboard } from 'react-icons/bs';
+import { FiClipboard } from 'react-icons/fi';
 import { Button, Modal, Form } from 'react-bootstrap';
 
 export interface ShareProps {
@@ -75,7 +75,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
               variant="dark"
               onClick={copyToClipboard}
             >
-              <BsClipboard size="1.1em" className="ml-2" />
+              <FiClipboard size="1.1em" className="ml-2" />
               نسخ
             </Button>
           </div>

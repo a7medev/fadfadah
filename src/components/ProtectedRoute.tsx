@@ -12,7 +12,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const authCtx = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
 
   return (
     <Route
@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
       render={props => {
         // Route requires Auth
         if (auth) {
-          return authCtx?.user ? (
+          return authContext?.user ? (
             // @ts-ignore
             <Component {...rest} {...props} />
           ) : (
@@ -28,7 +28,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
           );
         } else {
           // Route doesn't require Auth
-          return !authCtx?.user ? (
+          return !authContext?.user ? (
             // @ts-ignore
             <Component {...rest} {...props} />
           ) : (

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { createContext, useState, useEffect } from 'react';
 import { auth, db, messaging } from '../config/firebase';
+import UserData from '../types/UserData';
 
 export const AuthContext = createContext<{
   user: firebase.User | null;
@@ -8,6 +9,8 @@ export const AuthContext = createContext<{
   username?: string | null;
   setUsername: React.Dispatch<React.SetStateAction<string | null | undefined>>;
   verified?: boolean;
+  userData?: UserData;
+  setUserData: React.Dispatch<React.SetStateAction<UserData | undefined>>;
 } | null>(null);
 
 const AuthContextProvider: React.FC = ({ children }) => {
@@ -15,6 +18,8 @@ const AuthContextProvider: React.FC = ({ children }) => {
     localStorage.getItem('user') ?? 'null'
   );
   const [user, setUser] = useState<firebase.User | null>(localUser);
+
+  const [userData, setUserData] = useState<UserData>();
 
   const [username, setUsername] = useState<string | null>();
 
@@ -29,7 +34,14 @@ const AuthContextProvider: React.FC = ({ children }) => {
         localStorage.removeItem('user');
         localStorage.removeItem('username');
         localStorage.removeItem('verified');
-        messaging.deleteToken();
+
+        messaging
+          .getToken()
+          .then(token => {
+            messaging.deleteToken();
+            db.collection('devices').doc(token).delete();
+          })
+          .catch(err => console.error(err));
         return;
       }
 
@@ -39,11 +51,18 @@ const AuthContextProvider: React.FC = ({ children }) => {
         .then(token =>
           db.collection('devices').doc(token).set({
             userId: auth.currentUser?.uid,
+            device: token,
             token
           })
         )
         .catch(err => {
           console.error(err);
+        });
+      db.collection('users')
+        .doc(user.uid)
+        .get()
+        .then(snap => {
+          setUserData({ id: snap.id, ...(snap.data() as UserData) });
         });
 
       db.collection('usernames')
@@ -70,7 +89,15 @@ const AuthContextProvider: React.FC = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, setUser, username, setUsername, verified }}
+      value={{
+        user,
+        setUser,
+        username,
+        setUsername,
+        verified,
+        userData,
+        setUserData
+      }}
     >
       {children}
     </AuthContext.Provider>

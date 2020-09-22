@@ -5,7 +5,7 @@ import PageTransition from '../components/PageTransition';
 import Mailbox from '../assets/images/mailbox-animated.svg';
 import './Home.scss';
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <PageTransition>
       <Container className="text-center">

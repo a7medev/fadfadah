@@ -8,7 +8,7 @@ import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 import { Link } from 'react-router-dom';
 
-const Register = () => {
+const Register: React.FC = () => {
   const fullName = useRef<HTMLInputElement>(null);
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);

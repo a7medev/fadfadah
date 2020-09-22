@@ -11,6 +11,7 @@ import SignedUserCard from '../../components/signed/UserCard';
 import { AuthContext } from '../../store/AuthContext';
 import { RouteComponentProps } from 'react-router-dom';
 import qs from 'qs';
+import Offline from '../../components/icons/Offline';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -21,7 +22,7 @@ export interface OutboxProps extends RouteComponentProps {}
 
 const Outbox: React.FC<OutboxProps> = ({ location }) => {
   const { user } = useContext(AuthContext)!;
-  const [outbox, loadMore, hasMore, loadingMore, loadingOutbox, outboxError] = useOutbox(user?.uid);
+  const [outbox, loadMore, hasMore, loadingMore, loadingOutbox, outboxOffline, outboxError] = useOutbox(user?.uid);
   const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   useEffect(() => {
@@ -35,6 +36,8 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
         <SignedUserCard />
 
         <h4 className="mt-4 mb-3">الرسائل المرسلة</h4>
+
+        {outboxOffline && <Offline />}
   
         {outboxError && (
           <Alert variant="danger">
@@ -43,7 +46,7 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
           </Alert>
         )}
         {loadingOutbox && <Loader />}
-        {!loadingOutbox && outbox && (
+        {!loadingOutbox && !outboxOffline && outbox && (
           <motion.div initial="out" animate="in" variants={fadeVariants}>
             <MessagesLayout messages={outbox} outbox />
             <div className="text-center">
@@ -56,7 +59,7 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
                   عرض المزيد
                 </Button>
               )}
-              {loadingMore && <Loader />}
+              {loadingMore && <Loader small />}
             </div>
           </motion.div>
         )}

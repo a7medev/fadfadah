@@ -1,5 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import Settings from '../types/Settings';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -102,6 +103,16 @@ export const sendMessage = functions.https.onCall(
       );
     }
 
+    const settingsSnap = await db.collection('users').doc(to).get();
+    const settings: Settings = settingsSnap.data()?.settings;
+
+    if (settings.airplaneMode) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'لا يمكن لأحدٍ مراسلة هذا المستخدم في الوقت الحالي'
+      );
+    }
+
     if (context.auth) {
       const { exists: userIsBlocked } = await db
         .collection('users')
@@ -115,6 +126,11 @@ export const sendMessage = functions.https.onCall(
           'permission-denied',
           'لا يمكنك مراسلة هذا المستخدم بعد الآن'
         );
+    } else if (settings.blockUnsignedMessages) {
+      throw new functions.https.HttpsError(
+        'permission-denied',
+        'رجاءاً قم بالتسجيل في فضفضة لتتمكن من مراسلة هذا المستخدم'
+      );
     }
 
     const doc = {
@@ -265,17 +281,41 @@ export const blockUser = functions.https.onCall(
   }
 );
 
+export const setupUserAccount = functions.auth.user().onCreate(user => {
+  db.collection('users')
+    .doc(user.uid)
+    .set({
+      settings: {
+        blockUnsignedMessages: false,
+        airplaneMode: false
+      }
+    })
+    .catch(err => console.error(err));
+});
+
 export const removeUserData = functions.auth.user().onDelete(user => {
+  // Delete User's data like: Setttings, Messages he sent ...etc
   db.collection('users')
     .doc(user.uid)
     .delete()
     .catch(err => console.error(err));
+
+  // Delete User's verified status
   db.collection('verified_users')
     .doc(user.uid)
     .delete()
     .catch(err => console.error(err));
+
+  // Delete the messages are sent to the User
   db.collection('messages')
     .where('to', '==', user.uid)
+    .get()
+    .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
+    .catch(err => console.error(err));
+
+  // Delete User's signed devices and FCM tokens
+  db.collection('devices')
+    .where('userId', '==', user.uid)
     .get()
     .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
     .catch(err => console.error(err));
@@ -286,7 +326,7 @@ export const sendWhoRequest = functions.https.onCall(
     if (!context.auth)
       throw new functions.https.HttpsError(
         'unauthenticated',
-        'ثم بالدخول إلى حسابك للاستمتاع بكافة مميزات فضفضة'
+        'قم بالدخول إلى حسابك للاستمتاع بكافة مميزات فضفضة'
       );
 
     const authorId = await getUIDByMessageId(messageId);

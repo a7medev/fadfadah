@@ -33,6 +33,8 @@ function useInbox(
       .then(snap => {
         last.current = snap.docs[snap.docs.length - 1];
 
+        if (snap.docs.length < 12) setHasMore(false);
+
         setInbox(
           snap.docs.map(doc => ({
             id: doc.id,
@@ -43,7 +45,10 @@ function useInbox(
         setLoading(false);
         setError(null);
       })
-      .catch(err => setError(err));
+      .catch(err => {
+        setLoading(false);
+        setError(err);
+      });
 
     const unsub = ref.onSnapshot(snap => {
       const changes = snap.docChanges();
@@ -57,7 +62,7 @@ function useInbox(
       });
     });
 
-    return unsub;
+    return () => unsub();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -71,8 +76,9 @@ function useInbox(
       .then(snap => {
         last.current = snap.docs[snap.docs.length - 1];
 
+        if (snap.docs.length < 12) setHasMore(false);
+
         setInbox(prevInbox => {
-          if (snap.docs.length < 12) setHasMore(false);
 
           return [
             ...prevInbox,

@@ -16,7 +16,7 @@ $theme-colors: (
 // Using Custom Font
 @font-face {
   font-family: 'JF Flat';
-  src: url('/fonts/jf-flat.ttf') format('truetype');
+  src: url('./assets/fonts/jf-flat.ttf') format('truetype');
 }
 
 *::selection {
@@ -31,25 +31,47 @@ body {
 }
 
 .btn,
-.form-control {
+.form-control,
+.custom-file-input ~ .custom-file-label {
   border-radius: 0.4rem;
   border-width: 2px;
   box-shadow: 0 0 !important;
 }
 
-.form-control {
+.custom-control-input ~ .custom-control-label::before {
+  box-shadow: 0 0 !important;
+}
+
+.form-control,
+.custom-file-label {
   border-color: #f2f2f2 !important;
   background: #f2f2f2;
   transition: background-color 0.25s ease-in-out;
+}
 
-  &:focus {
+.form-control:focus {
+  background: white;
+}
+
+// Custom File Input
+.custom-file-input {
+  &:focus ~ .custom-file-label {
     background: white;
   }
 }
 
-// Custom Control
-.custom-control-input:focus ~ .custom-control-label::before {
-  box-shadow: 0 0;
+.custom-file-label {
+  border-right-width: 2px;
+
+  &::after {
+    right: auto;
+    left: 0;
+    border: 0;
+    border-radius: 0.3rem;
+    height: calc(1.4em + 0.75rem);
+    background: $primary;
+    color: white;
+  }
 }
 
 .card {
@@ -100,6 +122,12 @@ body {
   background: $primary;
   border-radius: 50%;
   margin: 100px auto 10px;
+
+  &.small {
+    width: 12px;
+    height: 12px;
+    margin: 65px auto 5px;
+  }
 }
 
 .modal-content {
@@ -133,6 +161,9 @@ body {
   border-radius: 0.5rem;
   border: 1px solid #eee;
   text-align: right;
+}
+.dropdown-item {
+  align-items: center;
 }
 .dropdown-toggle.btn {
   width: 30px;
@@ -214,16 +245,23 @@ body {
   }
 
   // Form Control
-  .form-control {
+  .form-control,
+  .custom-file-label {
     background: $gray-700;
     border-color: $gray-700 !important;
     color: white;
-
+  }
+  .form-control {
     &:focus {
       background: $gray-800;
     }
     &::placeholder {
       color: $gray-500;
+    }
+  }
+  .custom-file-input {
+    &:focus ~ .custom-file-label {
+      background: $gray-800;
     }
   }
 
@@ -260,7 +298,8 @@ body {
   }
   .dropdown-item {
     color: white;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: $gray-700;
     }
   }
@@ -303,5 +342,26 @@ body {
   // Close
   .close {
     color: white;
+  }
+
+  // Tooltip
+  .tooltip {
+    .tooltip-inner {
+      color: black;
+      background-color: white;
+    }
+
+    &.bs-tooltip-top .arrow::before {
+      border-top-color: white;
+    }
+    &.bs-tooltip-bottom .arrow::before {
+      border-bottom-color: white;
+    }
+    &.bs-tooltip-right .arrow::before {
+      border-right-color: white;
+    }
+    &.bs-tooltip-left .arrow::before {
+      border-left-color: white;
+    }
   }
 }

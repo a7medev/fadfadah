@@ -10,7 +10,7 @@ import {
   BsFillPersonDashFill,
   BsThreeDotsVertical
 } from 'react-icons/bs';
-import { MdShare } from 'react-icons/md';
+import { FiShare2 } from 'react-icons/fi';
 
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,7 +18,7 @@ export interface ShareActivatorProps {
 const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => setShow(true)}>
     <p className="ml-auto mb-0">مشاركة</p>
-    <MdShare size="1.2em" />
+    <FiShare2 size="1.2em" />
   </Dropdown.Item>
 );
 

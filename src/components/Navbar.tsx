@@ -5,8 +5,9 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { AuthContext } from '../store/AuthContext';
 import './Navbar.scss';
 import { auth } from '../config/firebase';
+import Logo from '../assets/images/logo.svg';
 
-const Navigation = () => {
+const Navigation: React.FC = () => {
   const { user } = useContext(AuthContext)!;
 
   const [collapseOffCanvas, setCollapseOffCanvas] = useState(false);
@@ -33,7 +34,7 @@ const Navigation = () => {
         <Navbar.Brand>
           <img
             alt="فضفضة"
-            src="/icons/android-chrome-192x192.png"
+            src={Logo}
             width="30"
             height="30"
             className="d-inline-block align-top ml-2"

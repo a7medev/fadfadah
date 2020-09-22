@@ -9,12 +9,13 @@ import { db, functions } from '../config/firebase';
 import {
   BsThreeDotsVertical,
   BsFillPersonDashFill,
-  BsTrashFill,
   BsFillQuestionCircleFill
 } from 'react-icons/bs';
+import { FiTrash2 } from 'react-icons/fi';
 import Block from './Block';
 import StaticLoveButton from './StaticLoveButton';
 import MessageBox from './MessageBox';
+import { motion, Variants } from 'framer-motion';
 
 export interface BlockActivatorProps {
   block: () => void;
@@ -31,6 +32,11 @@ const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 export interface MessageCardProps extends Message<Timestamp> {
   outbox?: boolean;
 }
+
+const fadeVariants: Variants = {
+  out: { opacity: 0 },
+  in: { opacity: 1 }
+};
 
 const MessageCard: React.FC<MessageCardProps> = ({
   id,
@@ -66,7 +72,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
   }
 
   return (
-    <>
+    <motion.div initial="out" animate="in" variants={fadeVariants}>
       <MessageBox title="رسالة من الموقع" text={message!} show={!!message} onClose={() => setMessage(null)} />
       <Card className="mb-3" id={id}>
         <Card.Body className="pb-2">
@@ -117,14 +123,14 @@ const MessageCard: React.FC<MessageCardProps> = ({
                   onClick={deleteMessage}
                 >
                   <p className="ml-auto mb-0">حذف</p>
-                  <BsTrashFill size="1.2em" />
+                  <FiTrash2 size="1.2em" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </div>
         </Card.Body>
       </Card>
-    </>
+    </motion.div>
   );
 };
 

@@ -19,7 +19,7 @@ const slideVaraints: Variants = {
   }
 };
 
-const SignedUserCard = () => {
+const SignedUserCard: React.FC = () => {
   const { user, username, verified } = useContext(AuthContext)!;
 
   let photoSuffix = '';
