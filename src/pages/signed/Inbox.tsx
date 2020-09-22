@@ -11,6 +11,7 @@ import { AuthContext } from '../../store/AuthContext';
 import { RouteComponentProps } from 'react-router-dom';
 import qs from 'qs';
 import useInbox from '../../hooks/useInbox';
+import { Helmet } from 'react-helmet';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -39,6 +40,10 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>الرسائل المستلمة | فضفضة</title>
+      </Helmet>
+
       <Container>
         <SignedUserCard />
 

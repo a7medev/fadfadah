@@ -12,6 +12,7 @@ import { AuthContext } from '../store/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
 import { BsArrowRightShort } from 'react-icons/bs';
 import PageTransition from '../components/PageTransition';
+import { Helmet } from 'react-helmet';
 
 export interface ProfileProps
   extends RouteComponentProps<{ username: string }> {}
@@ -45,6 +46,10 @@ const Profile: React.FC<ProfileProps> = ({
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>{user ? `${user.displayName} | ` : ''}فضفضة</title>
+      </Helmet>
+
       <Container>
         {loading ? (
           <Loader style={{ marginTop: 150, marginBottom: 20 }} />

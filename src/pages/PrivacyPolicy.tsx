@@ -1,10 +1,15 @@
 import * as React from 'react';
 import { Container, Card } from 'react-bootstrap';
 import PageTransition from '../components/PageTransition';
+import { Helmet } from 'react-helmet';
 
 const PrivacyPolicy: React.FC = () => {
   return (
     <PageTransition>
+      <Helmet>
+        <title>سياسة الخصوصية | فضفضة</title>
+      </Helmet>
+
       <Container dir="ltr" className="text-left">
         <Card body className="p-4">
           <h1>Privacy Policy for Fadfadah</h1>

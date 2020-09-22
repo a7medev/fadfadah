@@ -7,6 +7,7 @@ import { AuthContext } from '../../store/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
 
 const Register: React.FC = () => {
   const fullName = useRef<HTMLInputElement>(null);
@@ -54,6 +55,10 @@ const Register: React.FC = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>إنشاء حساب | فضفضة</title>        
+      </Helmet>
+
       <Container>
         <Card body style={{ maxWidth: '600px' }} className="mx-auto my-3">
           <Card.Title className="text-center">

@@ -7,6 +7,7 @@ import MessageBox from '../../components/MessageBox';
 import { db, auth, messages } from '../../config/firebase';
 import { auth as appAuth } from 'firebase/app';
 import 'firebase/auth';
+import { Helmet } from 'react-helmet';
 
 const Settings: React.FC = () => {
   const initialDarkModeOn = !!localStorage.getItem('darkMode');
@@ -150,6 +151,9 @@ const Settings: React.FC = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>الإعدادات | فضفضة</title>
+      </Helmet>
       <Container className="pt-2">
         <h3 className="mb-3">الإعدادات</h3>
         <hr />

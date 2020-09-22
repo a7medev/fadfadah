@@ -4,10 +4,15 @@ import { LinkContainer } from 'react-router-bootstrap';
 import PageTransition from '../components/PageTransition';
 import Mailbox from '../assets/images/mailbox-animated.svg';
 import './Home.scss';
+import { Helmet } from 'react-helmet';
 
 const Home: React.FC = () => {
   return (
     <PageTransition>
+      <Helmet>
+        <title>فضفضة | افصح عما بداخلك للآخرين.</title>
+      </Helmet>
+
       <Container className="text-center">
         <Row>
           <Col className="content d-flex align-items-center justify-content-center">

@@ -12,6 +12,7 @@ import { AuthContext } from '../../store/AuthContext';
 import { RouteComponentProps } from 'react-router-dom';
 import qs from 'qs';
 import Offline from '../../components/icons/Offline';
+import { Helmet } from 'react-helmet';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -32,6 +33,10 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>الرسائل المرسلة | فضفضة</title>
+      </Helmet>
+
       <Container>
         <SignedUserCard />
 

@@ -6,6 +6,7 @@ import { auth, messages } from '../../config/firebase';
 import { AuthContext } from '../../store/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
+import { Helmet } from 'react-helmet';
 
 const Login: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
@@ -34,6 +35,10 @@ const Login: React.FC = () => {
 
   return (
     <PageTransition>
+      <Helmet>
+        <title>تسجيل الدخول | فضفضة</title>        
+      </Helmet>
+
       <Container>
         <Card body style={{ maxWidth: 600 }} className="mx-auto my-3">
           <Card.Title className="text-center">
