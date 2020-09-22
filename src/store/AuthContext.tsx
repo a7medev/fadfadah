@@ -38,8 +38,12 @@ const AuthContextProvider: React.FC = ({ children }) => {
         messaging
           .getToken()
           .then(token => {
-            messaging.deleteToken();
-            db.collection('devices').doc(token).delete();
+            const promises: Promise<any>[] = [];
+            const p1 = messaging.deleteToken();
+            promises.push(p1);
+            const p2 = db.collection('devices').doc(token).delete();
+            promises.push(p2);
+            return Promise.all(promises);
           })
           .catch(err => console.error(err));
         return;
