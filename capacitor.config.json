@@ -1,8 +1,0 @@
-{
-  "appId": "me.fadfadah.app",
-  "appName": "فضفضة",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "build",
-  "cordova": {}
-}
