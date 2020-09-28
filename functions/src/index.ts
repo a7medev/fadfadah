@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import Settings from '../types/Settings';
+import type Settings from '../types/Settings';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -73,6 +73,18 @@ async function sendNotification(
   messaging.sendToDevice(tokens, payload).catch(err => console.error(err));
 }
 
+export const initUserAccount = functions.auth.user().onCreate(user => {
+  return db.collection('users')
+    .doc(user.uid)
+    .set({
+      settings: {
+        blockUnsignedMessages: false,
+        airplaneMode: false
+      }
+    })
+    .catch(err => console.error(err));
+});
+
 export const sendMessage = functions.https.onCall(
   async ({ content, to }, context) => {
     if (!content || !to)
@@ -81,7 +93,7 @@ export const sendMessage = functions.https.onCall(
         'رجاءاً تأكد من إدخال بيانات صحيحة'
       );
 
-    if (content.trim().length <= 5 || content.trim().length >= 500)
+    if (content.trim().length < 5 || content.trim().length > 500)
       throw new functions.https.HttpsError(
         'invalid-argument',
         'يجب أن تحتوي الرسالة على 5 إلى 500 حرف'
@@ -280,18 +292,6 @@ export const blockUser = functions.https.onCall(
     }
   }
 );
-
-export const setupUserAccount = functions.auth.user().onCreate(user => {
-  db.collection('users')
-    .doc(user.uid)
-    .set({
-      settings: {
-        blockUnsignedMessages: false,
-        airplaneMode: false
-      }
-    })
-    .catch(err => console.error(err));
-});
 
 export const removeUserData = functions.auth.user().onDelete(user => {
   // Delete User's data like: Setttings, Messages he sent ...etc
