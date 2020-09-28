@@ -44,6 +44,6 @@ const App: React.FC = () => {
       </SafeArea>
     </>
   );
-}
+};
 
 export default App;
