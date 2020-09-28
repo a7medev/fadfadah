@@ -56,7 +56,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
             }
             alt={user.displayName ?? 'لا يوجد اسم'}
             className="rounded-circle shadow-sm"
-            style={{ width: 55, height: 55 }}
+            style={{ width: 55, height: 55, objectFit: 'cover' }}
           />
           <div className="mr-3">
             <Card.Title>
