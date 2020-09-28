@@ -74,7 +74,8 @@ async function sendNotification(
 }
 
 export const initUserAccount = functions.auth.user().onCreate(user => {
-  return db.collection('users')
+  return db
+    .collection('users')
     .doc(user.uid)
     .set({
       settings: {
@@ -86,11 +87,17 @@ export const initUserAccount = functions.auth.user().onCreate(user => {
 });
 
 export const sendMessage = functions.https.onCall(
-  async ({ content, to }, context) => {
+  async ({ content, to, isAnonymous }, context) => {
     if (!content || !to)
       throw new functions.https.HttpsError(
         'invalid-argument',
         'رجاءاً تأكد من إدخال بيانات صحيحة'
+      );
+
+    if (!isAnonymous && !context.auth)
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'لابد من تسجيل الدخول لإرسال رسائل غير مجهولة'
       );
 
     if (content.trim().length < 5 || content.trim().length > 500)
@@ -145,19 +152,27 @@ export const sendMessage = functions.https.onCall(
       );
     }
 
-    const doc = {
+    const doc: {
+      to: string;
+      from?: string;
+      content: string;
+      love: boolean;
+      createdAt: Date;
+    } = {
       to,
       content: content.trim(),
       love: false,
       createdAt: new Date()
     };
 
+    if (!isAnonymous) doc.from = context.auth!.uid;
+
     const snap = await db.collection('messages').add(doc);
 
     sendNotification(to, {
       notification: {
         title: 'فضفضة: رسالة جديدة',
-        body: content.length > 30 ? content.substring(0, 30) + '...' : content,
+        body: content.length > 100 ? content.substring(0, 100) + '...' : content,
         icon: '/icons/android-chrome-192x192.png',
         clickAction: `/inbox?goto=${snap.id}`
       }

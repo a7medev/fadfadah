@@ -19,14 +19,13 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
 
   const { user: currentUser } = useContext(AuthContext)!;
 
-  const anonymous = useRef<HTMLInputElement>(null);
+  const [isAnonymous, setIsAnonymous] = useState(true);
 
   const sendButton = useRef<HTMLButtonElement>(null);
 
   function sendMessage(event: React.FormEvent) {
     event.preventDefault();
 
-    const isAnonymous = anonymous.current!.checked;
     const message: CreateMessageDto = {
       to: user.uid,
       content: messageContent.current?.value!,
@@ -99,8 +98,17 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
             placeholder="اكتب رسالتك هنا"
           />
         </Form.Group>
-        <Form.Switch ref={anonymous} label="رسالة مجهولة المصدر" />
-        <Form.Group></Form.Group>
+
+        {currentUser && (
+          <Form.Group>
+            <Form.Switch
+              id="is-anonymous-switch"
+              checked={isAnonymous}
+              onChange={() => setIsAnonymous(prev => !prev)}
+              label="رسالة مجهولة المصدر"
+            />
+          </Form.Group>
+        )}
 
         <Button type="submit" ref={sendButton}>
           إرسال
