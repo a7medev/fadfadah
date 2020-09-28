@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { useContext } from 'react';
+import { useState, useContext } from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
 import VerifiedIcon from './icons/Verified';
 import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';
 import { AuthContext } from '../store/AuthContext';
-import {
-  BsFillPersonDashFill,
-  BsThreeDotsVertical
-} from 'react-icons/bs';
+import { BsFillPersonDashFill, BsThreeDotsVertical } from 'react-icons/bs';
 import { FiShare2 } from 'react-icons/fi';
+import avatar from '../assets/images/avatar.svg';
 
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,22 +40,24 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
   const { username } = useContext(AuthContext)!;
 
+  const [photo, setPhoto] = useState(
+    user.photoURL && user.photoURL !== 'null' && user.photoURL !== 'undefined'
+      ? user.photoURL
+      : avatar
+  );
+
   return (
     <Card className="mb-2">
       <Card.Body className="d-flex user-data">
         <div className="d-flex align-items-center flex-grow-1">
           <img
-            src={
-              user.photoURL &&
-              user.photoURL !== 'null' &&
-              user.photoURL !== 'undefined'
-                ? user.photoURL
-                : '/images/avatar.svg'
-            }
+            src={photo}
+            onError={() => setPhoto(avatar)}
             alt={user.displayName ?? 'لا يوجد اسم'}
             className="rounded-circle shadow-sm"
             style={{ width: 55, height: 55, objectFit: 'cover' }}
           />
+
           <div className="mr-3">
             <Card.Title>
               <h5>
@@ -67,7 +67,11 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
                 )}
               </h5>
             </Card.Title>
-            {user.username && <Card.Subtitle className="text-muted">@{user.username}</Card.Subtitle>}
+            {user.username && (
+              <Card.Subtitle className="text-muted">
+                @{user.username}
+              </Card.Subtitle>
+            )}
           </div>
         </div>
 
@@ -79,7 +83,11 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
           <Dropdown.Menu>
             <Share activator={ShareActivator} link={link} />
             {username && user.username !== username && (
-              <Block activator={BlockActivator} id={user.username ?? ''} type="username" />
+              <Block
+                activator={BlockActivator}
+                id={user.username ?? ''}
+                type="username"
+              />
             )}
           </Dropdown.Menu>
         </Dropdown>
