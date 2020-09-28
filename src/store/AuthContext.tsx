@@ -50,12 +50,11 @@ const AuthContextProvider: React.FC = ({ children }) => {
       }
 
       messaging
-        .requestPermission()
-        .then(() => messaging.getToken())
+        .getToken()
         .then(token =>
           db.collection('devices').doc(token).set({
             userId: auth.currentUser?.uid,
-            device: token,
+            device: token.split(':').shift(),
             token
           })
         )
