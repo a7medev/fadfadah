@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
+import { storage } from '../../config/firebase';
 
 export interface AccountProps {
   user: firebase.User | null;
@@ -8,16 +9,16 @@ export interface AccountProps {
 }
 
 const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
-  const [photoFileText, setPhotoFileText] = useState<string>(
-    'اضغط لتحديد ملف الصورة'
-  );
+  const [photoFileText, setPhotoFileText] = useState('اضغط لتحديد ملف الصورة');
+  const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
 
   const saveDataButton = useRef<HTMLButtonElement>(null);
   const displayName = useRef<HTMLInputElement>(null);
 
-  function handlePhotoChange(event: any) {
-    const photoFile = event.target.files[0];
+  async function handlePhotoChange(event: any) {
+    const photoFile: File = event.target.files[0];
     setPhotoFileText(photoFile ? photoFile.name : 'اضغط لتحديد ملف الصورة');
+    setPhotoFile(photoFile);
   }
 
   function changeAccountData(event: React.FormEvent) {
@@ -25,19 +26,58 @@ const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
 
     saveDataButton.current!.disabled = true;
 
+    if (!user) return;
+
+    // Changing the name
     const nameIsChanged =
-      (user?.displayName ?? '') !== displayName.current?.value;
+      (user.displayName ?? '') !== displayName.current?.value;
 
     if (nameIsChanged) {
       user
-        ?.updateProfile({
+        .updateProfile({
           displayName: displayName.current?.value
         })
         .then(() => {
-          setMessage('تم تحديث البيانات بنجاح');
+          setMessage('تم تحديث الاسم بنجاح');
         })
         .catch(() => {
-          setMessage('حدثت مشكلة أثناء محاولة تحديث البيانات');
+          setMessage('حدثت مشكلة أثناء محاولة تحديث الاسم');
+        })
+        .finally(() => {
+          if (!photoFile) saveDataButton.current!.disabled = false;
+        });
+    } else if (!photoFile) {
+      saveDataButton.current!.disabled = false;
+    }
+
+    // Changing the profile photo
+    if (photoFile) {
+      const isImage = /image\/.+/.test(photoFile.type);
+
+      if (!isImage || !user) {
+        setMessage('رجاءاً تأكد من تحديد ملف الصورة صالح');
+        saveDataButton.current!.disabled = false;
+        return;
+      }
+
+      const storageRef = storage.ref(
+        `${user.uid}/profile_photo/${photoFile.name}`
+      );
+      const task = storageRef.put(photoFile);
+
+      task
+        .then(task => task.ref.getDownloadURL())
+        .then(photoURL =>
+          user.updateProfile({
+            photoURL
+          })
+        )
+        .then(() => {
+          setMessage('تم تحديث الصورة الشخصية بنجاح');
+        })
+        .catch(err => {
+          console.error('Error uploading profile photo', err);
+          setMessage('حدثت مشكلة أثناء محاولة تحديث الصورة الشخصية');
         })
         .finally(() => {
           saveDataButton.current!.disabled = false;

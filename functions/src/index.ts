@@ -1,10 +1,15 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
+import * as path from 'path';
+import * as fs from 'fs-extra';
+import * as os from 'os';
+import * as sharp from 'sharp';
 import type Settings from '../types/Settings';
 
 admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
+const storage = admin.storage();
 const messaging = admin.messaging();
 
 async function getUserById(userId: string) {
@@ -15,6 +20,7 @@ async function getUserById(userId: string) {
     let photoSuffix = '';
     if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
     if (photoURL?.includes('google')) photoSuffix = '=s64-c';
+    if (photoURL?.includes('firebase')) photoSuffix = '';
 
     const { exists: verified } = await db
       .collection('verified_users')
@@ -172,7 +178,8 @@ export const sendMessage = functions.https.onCall(
     sendNotification(to, {
       notification: {
         title: 'فضفضة: رسالة جديدة',
-        body: content.length > 100 ? content.substring(0, 100) + '...' : content,
+        body:
+          content.length > 100 ? content.substring(0, 100) + '...' : content,
         icon: '/icons/android-chrome-192x192.png',
         clickAction: `/inbox?goto=${snap.id}`
       }
@@ -391,4 +398,48 @@ export const sendLoveNotification = functions.firestore
         }
       }).catch(err => console.error(err));
     }
+  });
+
+export const resizeProfilePhoto = functions.storage
+  .object()
+  .onFinalize(async object => {
+    const bucket = storage.bucket(object.bucket);
+    const filePath = object.name!;
+
+    // Check if it's a profile photo path
+    const profilePhotoPath = /^[^/]+\/profile_photo\/[^/]+$/;
+    if (!profilePhotoPath.test(filePath)) return false;
+
+    const fileName = filePath.split('/').pop()!;
+    const bucketDir = path.dirname(filePath);
+
+    const workingDir = path.join(os.tmpdir(), 'profile_photos');
+    const tmpFilePath = path.join(workingDir, 'source.png');
+
+    if (fileName.includes('__photo__@')) return false;
+
+    await fs.ensureDir(workingDir);
+
+    await bucket.file(filePath).download({
+      destination: tmpFilePath
+    });
+
+    const photoName = `__photo__@${fileName}`;
+    const photoPath = path.join(workingDir, photoName);
+
+    await sharp(tmpFilePath).resize(100, 100).toFile(photoPath);
+
+    await bucket.upload(photoPath, {
+      destination: path.join(bucketDir, photoName)
+    });
+
+    await fs.remove(workingDir);
+
+    const userId = filePath.split('/').shift()!;
+
+    const photoURL = `https://firebasestorage.googleapis.com/v0/b/fad-fadah.appspot.com/o/${userId}%2Fprofile_photo%2F${photoName}?alt=media`;
+
+    return auth.updateUser(userId, {
+      photoURL
+    });
   });

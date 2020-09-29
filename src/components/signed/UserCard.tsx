@@ -25,6 +25,7 @@ const SignedUserCard: React.FC = () => {
   let photoSuffix = '';
   if (user?.photoURL?.includes('facebook')) photoSuffix = '?height=64';
   if (user?.photoURL?.includes('google')) photoSuffix = '=s64-c';
+  if (user?.photoURL?.includes('firebase')) photoSuffix = '';
 
   const [emailNotVerified, setEmailNotVerified] = useState(
     !user?.emailVerified!
