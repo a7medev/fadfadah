@@ -87,12 +87,17 @@ body {
   }
 
   .btn-text-#{$color} {
-    @include button-outline-variant($value);
     background: rgba($value, 0.1);
-    border-color: transparent;
+    color: $value;
 
     &:hover {
-      border-color: transparent;
+      background: rgba($value, 0.2);
+      color: darken($value, 5%);
+    }
+
+    &.active {
+      background: $value;
+      color: color-yiq($value);
     }
   }
 }
