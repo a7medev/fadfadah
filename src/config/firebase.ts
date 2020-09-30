@@ -9,7 +9,7 @@ import 'firebase/performance';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyB9QiKhNpNd0-FXrxSlYShusU_95quET8I',
-  authDomain: 'fadfadah.me',
+  authDomain: 'fad-fadah.firebaseapp.com',
   databaseURL: 'https://fad-fadah.firebaseio.com',
   projectId: 'fad-fadah',
   storageBucket: 'fad-fadah.appspot.com',
