@@ -268,7 +268,7 @@ export const getUserData = functions.https.onCall(
   async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
     if (type === 'username') {
       const userId = await getUIDByUsername(id);
-      return userId ? { ...getUserById(userId), username: id } : null;
+      return userId ? { ...(await getUserById(userId)), username: id } : null;
     } else if (type === 'uid') {
       return getUserById(id, { withUsername: true });
     } else {
