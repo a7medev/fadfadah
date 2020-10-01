@@ -7,6 +7,7 @@ import MiniUser from '../types/MiniUser';
 import MessageBox from './MessageBox';
 import { AuthContext } from '../store/AuthContext';
 import CreateMessageDto from '../types/CreateMessageDto';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -92,8 +93,8 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       <Form onSubmit={sendMessage}>
         <Form.Group className="mb-2">
           <Form.Control
-            as="textarea"
-            style={{ minHeight: 150 }}
+            as={TextareaAutosize}
+            minRows={5}
             ref={messageContent}
             placeholder="اكتب رسالتك هنا"
           />
