@@ -1,6 +1,6 @@
 {
-  "short_name": "فضفضة",
   "name": "فضفضة",
+  "categories": ["social", "messaging"],
   "icons": [
     {
       "src": "favicon-16x16.png",
@@ -32,6 +32,21 @@
       "sizes": "930x930",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "lang": "ar",
+  "shortcuts": [
+    {
+      "name": "الرسائل المستلمة",
+      "url": "/inbox"
+    },
+    {
+      "name": "الرسائل المرسلة",
+      "url": "/outbox"
+    },
+    {
+      "name": "الإعدادات",
+      "url": "/settings"
     }
   ],
   "start_url": ".",
