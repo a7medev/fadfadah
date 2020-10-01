@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import Message from '../types/Message';
-import { Card, Dropdown } from 'react-bootstrap';
+import { Button, Card, Dropdown } from 'react-bootstrap';
 import { Timestamp } from '@firebase/firestore-types';
 import Moment from 'react-moment';
 import LoveButton from './LoveButton';
@@ -16,6 +16,8 @@ import Block from './Block';
 import StaticLoveButton from './StaticLoveButton';
 import MessageBox from './MessageBox';
 import { motion, Variants } from 'framer-motion';
+import MiniUser from '../types/MiniUser';
+import UserData from './UserData';
 
 export interface BlockActivatorProps {
   block: () => void;
@@ -28,6 +30,7 @@ const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
 );
 
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
+const getUserData = functions.httpsCallable('getUserData');
 
 export interface MessageCardProps extends Message<Timestamp> {
   outbox?: boolean;
@@ -42,6 +45,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
   id,
   content,
   createdAt,
+  from,
   love: initialLove,
   outbox
 }) => {
@@ -49,6 +53,8 @@ const MessageCard: React.FC<MessageCardProps> = ({
   const firstRender = useRef(true);
 
   const [message, setMessage] = useState<string | null>(null);
+
+  const [author, setAuthor] = useState<MiniUser | null>(null);
 
   useEffect(() => {
     if (firstRender.current) firstRender.current = false;
@@ -64,21 +70,57 @@ const MessageCard: React.FC<MessageCardProps> = ({
   async function whoIsTheAuthor() {
     try {
       const result = await sendWhoRequest(id);
-      if (result)
-        setMessage('تم إرسال طلب معرفة المرسل إلى صاحب الرسالة');
+      if (result) setMessage('تم إرسال طلب معرفة المرسل إلى صاحب الرسالة');
     } catch (err) {
-      setMessage(err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما')
+      setMessage(
+        err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
+      );
+    }
+  }
+
+  async function getAuthor() {
+    try {
+      const author = await getUserData({ id: from, type: 'username' });
+      setAuthor(author.data);
+    } catch (err) {
+      setMessage(
+        err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
+      );
     }
   }
 
   return (
     <motion.div initial="out" animate="in" variants={fadeVariants}>
-      <MessageBox title="رسالة من الموقع" text={message!} show={!!message} onClose={() => setMessage(null)} />
+      <MessageBox
+        title="رسالة من الموقع"
+        text={message!}
+        show={!!message}
+        onClose={() => setMessage(null)}
+      />
       <Card className="mb-3" id={id}>
-        <Card.Body className="pb-2">
-          <p style={{ fontSize: 18, whiteSpace: 'pre-line' }}>
-            {content}
-          </p>
+        <Card.Body className={`pb-2 ${from ? 'pt-2' : ''}`}>
+          {from && (
+            <>
+              {author ? (
+                <UserData user={author} />
+              ) : (
+                <div className="d-flex align-items-center justify-content-between">
+                  <i className="text-muted">مُرسل هذه الرسالة معروف</i>
+
+                  <Button
+                    variant="text-dark"
+                    size="sm"
+                    onClick={() => getAuthor()}
+                  >
+                    إظهار المرسل
+                  </Button>
+                </div>
+              )}
+              <hr className="mt-2" />
+            </>
+          )}
+
+          <p style={{ fontSize: 18, whiteSpace: 'pre-line' }}>{content}</p>
           <hr className="mb-2" />
           <div className="d-flex justify-content-between position-relative">
             <Moment
@@ -109,13 +151,15 @@ const MessageCard: React.FC<MessageCardProps> = ({
                       id={id!}
                       type="messageId"
                     />
-                    <Dropdown.Item
-                      className="d-inline-flex"
-                      onClick={() => whoIsTheAuthor()}
-                    >
-                      <p className="ml-auto mb-0">من المرسل ؟</p>
-                      <BsFillQuestionCircleFill size="1.2em" />
-                    </Dropdown.Item>
+                    {!from && (
+                      <Dropdown.Item
+                        className="d-inline-flex"
+                        onClick={() => whoIsTheAuthor()}
+                      >
+                        <p className="ml-auto mb-0">من المرسل ؟</p>
+                        <BsFillQuestionCircleFill size="1.2em" />
+                      </Dropdown.Item>
+                    )}
                   </>
                 )}
                 <Dropdown.Item
