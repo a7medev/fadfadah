@@ -1,5 +1,6 @@
 {
   "name": "فضفضة",
+  "orientation": "portrait",
   "categories": ["social", "messaging"],
   "icons": [
     {
@@ -29,28 +30,52 @@
     },
     {
       "src": "icons/maskable.png",
-      "sizes": "930x930",
+      "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ],
   "lang": "ar",
   "shortcuts": [
     {
       "name": "الرسائل المستلمة",
-      "url": "/inbox"
+      "url": "/inbox",
+      "icons": [
+        {
+          "src": "icons/messages.png",
+          "type": "image/png",
+          "sizes": "64x64",
+          "purpose": "any maskable"
+        }
+      ]
     },
     {
       "name": "الرسائل المرسلة",
-      "url": "/outbox"
+      "url": "/outbox",
+      "icons": [
+        {
+          "src": "icons/messages.png",
+          "type": "image/png",
+          "sizes": "64x64",
+          "purpose": "any maskable"
+        }
+      ]
     },
     {
       "name": "الإعدادات",
-      "url": "/settings"
+      "url": "/settings",
+      "icons": [
+        {
+          "src": "icons/settings.png",
+          "type": "image/png",
+          "sizes": "64x64",
+          "purpose": "any maskable"
+        }
+      ]
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#00cf95",
-  "background_color": "#ffffff"
+  "theme_color": "#48c48b",
+  "background_color": "#48c48b"
 }
