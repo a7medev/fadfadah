@@ -23,7 +23,7 @@ const UserData: React.FC<UserDataProps> = ({ user }) => {
       <div className="flex-grow-1 mr-2">
         <p className="mb-n1">
           {user.displayName ?? 'لا يوجد اسم'}
-          {!user.verified && (
+          {user.verified && (
             <VerifiedIcon size="14px" className="text-primary mr-1" />
           )}
         </p>

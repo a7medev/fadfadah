@@ -55,6 +55,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
   const [message, setMessage] = useState<string | null>(null);
 
   const [author, setAuthor] = useState<MiniUser | null>(null);
+  const getAuthorButton = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (firstRender.current) firstRender.current = false;
@@ -77,8 +78,11 @@ const MessageCard: React.FC<MessageCardProps> = ({
       );
     }
   }
+  
 
   async function getAuthor() {
+    getAuthorButton.current!.disabled = true;
+
     try {
       const author = await getUserData({ id: from, type: 'uid' });
       setAuthor(author.data);
@@ -86,6 +90,8 @@ const MessageCard: React.FC<MessageCardProps> = ({
       setMessage(
         err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
       );
+    } finally {
+      getAuthorButton.current!.disabled = false;
     }
   }
 
@@ -110,6 +116,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
                   <Button
                     variant="text-dark"
                     size="sm"
+                    ref={getAuthorButton}
                     onClick={() => getAuthor()}
                   >
                     إظهار المرسل
