@@ -40,11 +40,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
   const { username } = useContext(AuthContext)!;
 
-  const [photo, setPhoto] = useState(
-    user.photoURL && user.photoURL !== 'null' && user.photoURL !== 'undefined'
-      ? user.photoURL
-      : avatar
-  );
+  const [photo, setPhoto] = useState(user.photoURL ? user.photoURL : avatar);
 
   return (
     <Card className="mb-2">
