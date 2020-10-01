@@ -12,7 +12,10 @@ const auth = admin.auth();
 const storage = admin.storage();
 const messaging = admin.messaging();
 
-async function getUserById(userId: string) {
+async function getUserById(
+  userId: string,
+  options?: { withUsername?: boolean }
+) {
   if (!userId) return null;
 
   try {
@@ -27,12 +30,31 @@ async function getUserById(userId: string) {
       .doc(uid)
       .get();
 
-    const retrievableUser = {
+    let username: string | null = null;
+
+    if (options?.withUsername) {
+      const snap = await db
+        .collection('usernames')
+        .where('userId', '==', userId)
+        .get();
+
+      username = snap.docs[0]?.id ?? null;
+    }
+
+    const retrievableUser: {
+      uid: string;
+      displayName: string | undefined;
+      photoURL: string;
+      verified: boolean;
+      username?: string | null;
+    } = {
       uid,
       displayName,
       photoURL: photoURL + photoSuffix,
       verified
     };
+
+    if (options?.withUsername) retrievableUser.username = username;
 
     return retrievableUser;
   } catch (err) {
@@ -246,9 +268,12 @@ export const getUserData = functions.https.onCall(
   async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
     if (type === 'username') {
       const userId = await getUIDByUsername(id);
-      return userId ? getUserById(userId) : null;
-    } else if (type === 'uid') return getUserById(id);
-    else return null;
+      return userId ? { ...getUserById(userId), username: id } : null;
+    } else if (type === 'uid') {
+      return getUserById(id, { withUsername: true });
+    } else {
+      return null;
+    }
   }
 );
 
