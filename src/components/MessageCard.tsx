@@ -80,7 +80,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
 
   async function getAuthor() {
     try {
-      const author = await getUserData({ id: from, type: 'username' });
+      const author = await getUserData({ id: from, type: 'uid' });
       setAuthor(author.data);
     } catch (err) {
       setMessage(
