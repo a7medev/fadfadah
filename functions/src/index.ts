@@ -384,12 +384,26 @@ export const sendWhoRequest = functions.https.onCall(
         'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا معرفة من يكون، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
       );
 
+    const author = await getUserById(authorId);
+
     db.collection('users')
       .doc(authorId)
       .collection('who_requests')
       .add({
         on: messageId,
         sentAt: new Date()
+      })
+      .then(snap => {
+        sendNotification(authorId, {
+          notification: {
+            title: 'فضفضة',
+            body: `يريد ${
+              author?.displayName ?? 'مستخدم بلا اسم'
+            } أن يعرف من أنت على رسالة أرسلتها إليه`,
+            icon: author?.photoURL ?? '/images/avatar.svg',
+            clickAction: `/who-requests?goto=${snap.id}`
+          }
+        });
       })
       .catch(err => console.error(err));
 
