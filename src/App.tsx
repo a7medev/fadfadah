@@ -1,27 +1,22 @@
 import * as React from 'react';
-import { useLayoutEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
-import Home from './pages/Home';
+import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
 import SafeArea from './components/SafeArea';
+import Home from './pages/Home';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
-import { AnimatePresence } from 'framer-motion';
-import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Settings from './pages/signed/Settings';
 import Outbox from './pages/signed/Outbox';
 import Inbox from './pages/signed/Inbox';
 import NotFound from './pages/NotFound';
+import useDarkMode from './hooks/useDarkMode';
 
 const App: React.FC = () => {
-  useLayoutEffect(() => {
-    const darkModeOn = !!localStorage.getItem('darkMode');
-
-    if (darkModeOn)
-      document.body.classList.add('dark');
-  }, []);
+  useDarkMode();
 
   return (
     <>

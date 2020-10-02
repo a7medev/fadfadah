@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import { db } from '../../config/firebase';
+import useDarkMode from '../../hooks/useDarkMode';
 import UserData from '../../types/UserData';
 
 export interface PrefrencesProps {
@@ -15,21 +16,31 @@ const Prefrences: React.FC<PrefrencesProps> = ({
   userData,
   setUserData
 }) => {
-  const initialDarkModeOn = !!localStorage.getItem('darkMode');
-  const [darkModeOn, setDarkModeOn] = useState(initialDarkModeOn);
+  const [darkModeOn, setDarkModeOn, detectTheme] = useDarkMode();
+
+  const initialAutoDetectTheme = !localStorage.getItem('darkMode');
+  const [autoDetectThemeOn, setAutoDetectThemeOn] = useState(
+    initialAutoDetectTheme
+  );
 
   function changeTheme(event: React.FormEvent) {
+    if (autoDetectThemeOn) return;
+
     const darkModeOn = (event.target as HTMLInputElement).checked;
 
     setDarkModeOn(darkModeOn);
 
-    if (darkModeOn) {
-      document.body.classList.add('dark');
-      localStorage.setItem('darkMode', 'on');
-    } else {
-      document.body.classList.remove('dark');
-      localStorage.removeItem('darkMode');
-    }
+    localStorage.setItem('darkMode', `${darkModeOn}`);
+  }
+
+  function changeAutoDetectTheme(event: React.FormEvent) {
+    const autoDetectThemeOn = (event.target as HTMLInputElement).checked;
+
+    if (autoDetectThemeOn) localStorage.removeItem('darkMode');
+    else localStorage.setItem('darkMode', `${darkModeOn}`);
+
+    setAutoDetectThemeOn(autoDetectThemeOn);
+    setDarkModeOn(detectTheme);
   }
 
   function changeBlockUnsignedMessages(event: React.FormEvent) {
@@ -90,9 +101,21 @@ const Prefrences: React.FC<PrefrencesProps> = ({
         </Form.Text>
       </Form.Group>
 
+      <Form.Group controlId="auto-detect-theme">
+        <Form.Switch
+          label="تحديد المظهر تلقائياً"
+          checked={autoDetectThemeOn}
+          onChange={changeAutoDetectTheme}
+        />
+        <Form.Text className="text-muted">
+          سيقوم فضفضة بتحديد مظهره حسب إعدادات الجهاز
+        </Form.Text>
+      </Form.Group>
+
       <Form.Group controlId="dark-mode">
         <Form.Switch
-          label="الوضع المظلم"
+          label="المظهر المظلم"
+          disabled={autoDetectThemeOn}
           checked={darkModeOn}
           onChange={changeTheme}
         />
@@ -100,6 +123,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
           سيفعل هذا عرض فضفضة بألوان داكنةٍ مريحةٍ للعين
         </Form.Text>
       </Form.Group>
+
       <Form.Group controlId="airplane-mode" className="mb-0">
         <Form.Switch
           label="وضع الطيران"
