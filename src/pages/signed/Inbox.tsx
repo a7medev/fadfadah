@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { Container, Alert, Button } from 'react-bootstrap';
 import MessagesLayout from '../../components/MessagesLayout';
 import { messages as firebaseMessages } from '../../config/firebase';
@@ -7,7 +7,6 @@ import Loader from '../../components/Loader';
 import { motion, Variants } from 'framer-motion';
 import PageTransition from '../../components/PageTransition';
 import SignedUserCard from '../../components/signed/UserCard';
-import { AuthContext } from '../../store/AuthContext';
 import { RouteComponentProps } from 'react-router-dom';
 import qs from 'qs';
 import useInbox from '../../hooks/useInbox';
@@ -21,8 +20,6 @@ const fadeVariants: Variants = {
 export interface InboxProps extends RouteComponentProps {}
 
 const Inbox: React.FC<InboxProps> = ({ location }) => {
-  const { user } = useContext(AuthContext)!;
-
   const [
     inbox,
     loadMore,
@@ -30,7 +27,7 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
     loadingMore,
     loadingInbox,
     inboxError
-  ] = useInbox(user?.uid);
+  ] = useInbox();
 
   const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
