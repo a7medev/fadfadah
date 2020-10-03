@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Message from '../types/Message';
 import { Card, Dropdown } from 'react-bootstrap';
-import { Timestamp } from '@firebase/firestore-types';
 import Moment from 'react-moment';
 import LoveButton from './LoveButton';
 import { db, functions } from '../config/firebase';
@@ -16,9 +15,7 @@ import Block from './Block';
 import StaticLoveButton from './StaticLoveButton';
 import MessageBox from './MessageBox';
 import { motion, Variants } from 'framer-motion';
-import MiniUser from '../types/MiniUser';
 import UserData from './UserData';
-import { AuthContext } from '../store/AuthContext';
 
 export interface BlockActivatorProps {
   block: () => void;
@@ -31,9 +28,8 @@ const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
 );
 
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
-const getUserData = functions.httpsCallable('getUserData');
 
-export interface MessageCardProps extends Message<Timestamp> {
+export interface MessageCardProps extends Message<Date> {
   outbox?: boolean;
 }
 
@@ -54,10 +50,6 @@ const MessageCard: React.FC<MessageCardProps> = ({
   const firstRender = useRef(true);
 
   const [message, setMessage] = useState<string | null>(null);
-
-  const [author, setAuthor] = useState<MiniUser | null>(null);
-
-  const { user, username, verified } = useContext(AuthContext)!;
 
   useEffect(() => {
     if (firstRender.current) firstRender.current = false;
@@ -81,30 +73,6 @@ const MessageCard: React.FC<MessageCardProps> = ({
     }
   }
 
-  async function getAuthor() {
-    try {
-      const author = await getUserData({ id: from, type: 'uid' });
-      setAuthor(author.data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  useEffect(() => {
-    if (outbox) {
-      setAuthor({
-        uid: user!.uid,
-        displayName: user!.displayName ?? '',
-        photoURL: user!.photoURL ?? undefined,
-        username: username ?? '',
-        verified
-      });
-    } else if (from) {
-      getAuthor();
-    }
-    // eslint-disable-next-line
-  }, []);
-
   return (
     <motion.div initial="out" animate="in" variants={fadeVariants}>
       <MessageBox
@@ -115,9 +83,9 @@ const MessageCard: React.FC<MessageCardProps> = ({
       />
       <Card className="mb-3" id={id}>
         <Card.Body className={`pb-2 ${from ? 'pt-2' : ''}`}>
-          {from && author && (
+          {from && (
             <>
-              <UserData user={author} />
+              <UserData user={from} />
 
               <hr className="mt-2" />
             </>
@@ -132,7 +100,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
               className="text-muted"
               style={{ position: 'relative', top: 4 }}
             >
-              {createdAt.toDate()}
+              {createdAt}
             </Moment>
 
             {outbox ? (
