@@ -4,10 +4,10 @@ import Masonry from 'react-masonry-component';
 import Message from '../types/Message';
 import MessageCard from './MessageCard';
 import NoMessages from './icons/NoMessages';
-import { Timestamp } from '@firebase/firestore-types';
 
 export interface MessagesLayoutProps {
-  messages: Message<Timestamp>[];
+  // TODO: Change the `any` type
+  messages: Message<any>[];
   outbox?: boolean;
 }
 
