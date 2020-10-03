@@ -5,6 +5,7 @@ import * as fs from 'fs-extra';
 import * as os from 'os';
 import * as sharp from 'sharp';
 import type Settings from '../types/Settings';
+import type Message from '../types/Message';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -381,26 +382,45 @@ export const sendWhoRequest = functions.https.onCall(
     if (!authorId)
       throw new functions.https.HttpsError(
         'not-found',
-        'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا معرفة من يكون، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
+        'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا معرفة من يكون.'
       );
 
-    const author = await getUserById(authorId);
+    const messageSnap = await db.collection('messages').doc(messageId).get();
+    const message = messageSnap.data()!;
+
+    if (message.from)
+      throw new functions.https.HttpsError(
+        'invalid-argument',
+        'يمكنك إرسال طلب معرفة المرسل على رسالة مجهولة فقط'
+      );
+
+    const user = (await getUserById(context.auth.uid))!;
 
     db.collection('users')
       .doc(authorId)
       .collection('who_requests')
       .add({
-        on: messageId,
+        from: user.uid,
+        message: {
+          id: messageId,
+          content: message.content
+        },
         sentAt: new Date()
       })
       .then(snap => {
-        sendNotification(authorId, {
+        const body = `يريد ${
+          user.displayName ?? 'مستخدم بلا اسم'
+        } أن يعرف من أنت على الرسالة "${
+          message.content.length > 50
+            ? message.content.substring(0, 50) + '...'
+            : message.content
+        }"`;
+
+        return sendNotification(authorId, {
           notification: {
             title: 'فضفضة',
-            body: `يريد ${
-              author?.displayName ?? 'مستخدم بلا اسم'
-            } أن يعرف من أنت على رسالة أرسلتها إليه`,
-            icon: author?.photoURL ?? '/images/avatar.svg',
+            body,
+            icon: user.photoURL ?? '/images/avatar.svg',
             clickAction: `/who-requests?goto=${snap.id}`
           }
         });
@@ -423,8 +443,8 @@ export const sendLoveNotification = functions.firestore
       const sender = await getUserById(senderId!);
 
       const body = `أَحَبَّ ${reciever?.displayName} رسالتك "${
-        message.content.length > 30
-          ? message.content.substring(0, 30) + '...'
+        message.content.length > 100
+          ? message.content.substring(0, 100) + '...'
           : message.content
       }"`;
 
@@ -482,3 +502,47 @@ export const resizeProfilePhoto = functions.storage
       photoURL
     });
   });
+
+// Data Joining Functions
+export const getInbox = functions.https.onCall(async (data, context) => {
+  if (!context.auth)
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      'فقط المستخدمين المُسَجَّلين يستطيعون استلام الرسائل'
+    );
+
+  const userId = context.auth.uid;
+
+  let ref = db
+    .collection('messages')
+    .where('to', '==', userId)
+    .orderBy('createdAt', 'desc')
+    .limit(8);
+
+  if (data?.last) {
+    const lastDoc = await db.collection('messages').doc(data.last).get();
+    ref = ref.startAfter(lastDoc);
+  }
+
+  return ref.get().then(snap => {
+    return Promise.all(
+      snap.docs
+      .map(doc => ({
+        id: doc.id,
+        ...(doc.data() as Message<admin.firestore.Timestamp>)
+      }))
+      .map(async message => {
+        if (message.from) {
+          const author = await getUserById(message.from, {
+            withUsername: true
+          });
+          (message as any).from = author;
+        }
+
+        (message as any).createdAt = message.createdAt.toDate().toDateString();
+
+        return message;
+      })
+    );
+  });
+});
