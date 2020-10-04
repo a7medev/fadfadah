@@ -2,11 +2,19 @@ import * as React from 'react';
 
 interface SafeAreaProps {
   paddingTop?: string | number;
+  noBottomNavbar?: boolean;
 }
 
-const SafeArea: React.FC<SafeAreaProps> = ({ children, paddingTop }) => {
+const SafeArea: React.FC<SafeAreaProps> = ({
+  children,
+  paddingTop,
+  noBottomNavbar
+}) => {
   return (
-    <div className="safe-area" style={{ paddingTop: paddingTop ?? 0 }}>
+    <div
+      className={`safe-area ${noBottomNavbar ? 'no-bottom-navbar' : ''}`}
+      style={{ paddingTop: paddingTop ?? 0 }}
+    >
       {children}
     </div>
   );

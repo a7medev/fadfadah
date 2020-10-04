@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navbar';
@@ -15,15 +16,17 @@ import Outbox from './pages/signed/Outbox';
 import Inbox from './pages/signed/Inbox';
 import NotFound from './pages/NotFound';
 import useDarkMode from './hooks/useDarkMode';
+import { AuthContext } from './store/AuthContext';
 
 const App: React.FC = () => {
   useDarkMode();
+  const { user } = useContext(AuthContext)!;
 
   return (
     <>
       <Navigation />
 
-      <SafeArea paddingTop="10px">
+      <SafeArea paddingTop="10px" noBottomNavbar={!user}>
         <AnimatePresence exitBeforeEnter>
           <Switch>
             <ProtectedRoute path="/" component={Home} exact />
@@ -39,7 +42,7 @@ const App: React.FC = () => {
         </AnimatePresence>
       </SafeArea>
 
-      <BottomNavigation />
+      {user && <BottomNavigation />}
     </>
   );
 };
