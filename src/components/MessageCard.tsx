@@ -43,6 +43,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
   content,
   createdAt,
   from,
+  to,
   love: initialLove,
   outbox
 }) => {
@@ -82,10 +83,12 @@ const MessageCard: React.FC<MessageCardProps> = ({
         onClose={() => setMessage(null)}
       />
       <Card className="mb-3" id={id}>
-        <Card.Body className={`pb-2 ${from ? 'pt-2' : ''}`}>
-          {from && (
+        <Card.Body className={`pb-2 ${from || outbox ? 'pt-2' : ''}`}>
+          {(from || outbox) && (
             <>
-              <UserData user={from} />
+              {outbox && <small className="mb-1 text-muted d-block">أرسلتها إلى</small>}
+
+              <UserData user={outbox ? to : from!} />
 
               <hr className="mt-2" />
             </>
