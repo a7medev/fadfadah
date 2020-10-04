@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navbar';
+import BottomNavigation from './components/BottomNavbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import SafeArea from './components/SafeArea';
 import Home from './pages/Home';
@@ -22,7 +23,7 @@ const App: React.FC = () => {
     <>
       <Navigation />
 
-      <SafeArea paddingTop="10px" fullHeight>
+      <SafeArea paddingTop="10px">
         <AnimatePresence exitBeforeEnter>
           <Switch>
             <ProtectedRoute path="/" component={Home} exact />
@@ -37,6 +38,8 @@ const App: React.FC = () => {
           </Switch>
         </AnimatePresence>
       </SafeArea>
+
+      <BottomNavigation />
     </>
   );
 };

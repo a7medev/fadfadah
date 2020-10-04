@@ -31,6 +31,20 @@ body {
   user-select: none;
 }
 
+.safe-area {
+  margin-top: calc(1rem + 40px);
+  margin-bottom: calc(1rem + 40px);
+  padding-bottom: 0.5rem;
+  min-height: calc(100vh - 2rem - 80px);
+  overflow-x: hidden;
+}
+@media (min-width: map-get($grid-breakpoints, 'sm')) {
+  .safe-area {
+    min-height: calc(100vh - 1rem - 40px);
+    margin-bottom: 0;
+  }
+}
+
 .btn,
 .form-control,
 .custom-file-input ~ .custom-file-label {
@@ -156,7 +170,7 @@ body {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
 }
-@media (min-width: 576px) {
+@media (min-width: map-get($grid-breakpoints, 'sm')) {
   .modal-dialog {
     max-width: 600px;
   }
