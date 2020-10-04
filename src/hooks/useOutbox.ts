@@ -1,127 +1,59 @@
 import { useState, useEffect, useRef } from 'react';
-import { db } from '../config/firebase';
+import { functions } from '../config/firebase';
 import Message from '../types/Message';
-import {
-  Timestamp,
-  DocumentData,
-  QuerySnapshot
-} from '@firebase/firestore-types';
 
-function useOutbox(
-  userId?: string
-): [
-  Message<Timestamp>[],
+const getOutbox = functions.httpsCallable('getOutbox');
+
+function useOutbox(): [
+  Message<string>[],
   () => void,
   boolean,
   boolean,
   boolean,
   boolean,
-  Error | null
+  firebase.functions.HttpsError | null
 ] {
-  const [outbox, setOutbox] = useState<Message<Timestamp>[]>([]);
-  const [hasMore, setHasMore] = useState(true);
+  const [outbox, setOutbox] = useState<Message<string>[]>([]);
+  const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<firebase.functions.HttpsError | null>(null);
 
-  const last = useRef<DocumentData>();
-
-  const ref = db
-    .collection('users')
-    .doc(userId ?? 'non_existing')
-    .collection('messages')
-    .orderBy('createdAt', 'desc');
+  const last = useRef<string>();
 
   useEffect(() => {
-    if (!userId) {
-      setOutbox([]);
-      setLoading(false);
-      setError(new Error('user id is not set'));
-      return;
-    }
-    ref
-      .limit(12)
-      .get()
-      .then(async snap => {
-        last.current = snap.docs[snap.docs.length - 1];
+    getOutbox()
+      .then(({ data: outbox }) => {
+        last.current = outbox[outbox.length - 1].id;
 
-        if (snap.docs.length < 12) setHasMore(false);
+        if (outbox.length >= 8) setHasMore(true);
+        else setHasMore(false);
 
-        const messages = await getMessages(snap);
-
-        setOutbox(
-          messages.filter(message => message !== null) as Message<Timestamp>[]
-        );
-
-        messages && setLoading(false);
-        messages && setError(null);
+        setOutbox(outbox);
       })
       .catch(err => {
-        setLoading(false);
-
-        if (err.code === 'unavailable') return setOffline(true);
-
+        if (err.code === 'internal') setOffline(true);
         setError(err);
-      });
-
-    const unsub = ref.onSnapshot(snap => {
-      const changes = snap.docChanges();
-
-      const deleted = changes.filter(change => change.type === 'removed');
-
-      deleted.forEach(snap => {
-        setOutbox(prevOutbox =>
-          prevOutbox.filter(message => message.id !== snap.doc.id)
-        );
-      });
-    });
-
-    return () => unsub();
+      })
+      .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  async function getMessages(snap: QuerySnapshot<DocumentData>) {
-    return Promise.all(
-      snap.docs.map(async ({ id }) => {
-        const doc = await db.collection('messages').doc(id).get();
-
-        if (doc.exists) {
-          const message = { ...(doc.data() as Message<Timestamp>), id: doc.id };
-          return message;
-        }
-
-        return null;
-      })
-    );
-  }
 
   function loadMore() {
     setLoadingMore(true);
 
-    ref
-      .limit(12)
-      .startAfter(last.current)
-      .get()
-      .then(async snap => {
-        last.current = snap.docs[snap.docs.length - 1];
+    getOutbox({ last: last.current })
+      .then(({ data: outbox }) => {
+        last.current = outbox[outbox.length - 1].id;
 
-        const messages = await getMessages(snap);
+        if (outbox.length >= 8) setHasMore(true);
+        else setHasMore(false);
 
-        setOutbox(prevOutbox => {
-          if (snap.docs.length < 12) setHasMore(false);
-
-          return [
-            ...prevOutbox,
-            ...(messages.filter(message => message !== null) as Message<
-              Timestamp
-            >[])
-          ];
-        });
-
-        setLoadingMore(false);
+        setOutbox(prevOutbox => [...prevOutbox, ...outbox]);
       })
-      .catch(err => setError(err));
+      .catch(err => setError(err))
+      .finally(() => setLoadingMore(false));
   }
 
   return [outbox, loadMore, hasMore, loadingMore, loading, offline, error];
