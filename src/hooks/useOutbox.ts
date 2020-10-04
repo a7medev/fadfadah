@@ -18,23 +18,26 @@ function useOutbox(): [
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState(false);
-  const [error, setError] = useState<firebase.functions.HttpsError | null>(null);
+  const [error, setError] = useState<firebase.functions.HttpsError | null>(
+    null
+  );
 
   const last = useRef<string>();
 
   useEffect(() => {
     getOutbox()
       .then(({ data: outbox }) => {
-        last.current = outbox[outbox.length - 1].id;
-
-        if (outbox.length >= 8) setHasMore(true);
-        else setHasMore(false);
+        if (outbox.length >= 8) {
+          setHasMore(true);
+          last.current = outbox[outbox.length - 1].id;
+        } else setHasMore(false);
 
         setOutbox(outbox);
       })
       .catch(err => {
         if (err.code === 'internal') setOffline(true);
         setError(err);
+        console.error('Outbox', err);
       })
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps

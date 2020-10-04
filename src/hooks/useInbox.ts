@@ -18,17 +18,19 @@ function useInbox(): [
   const [loadingMore, setLoadingMore] = useState(false);
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState(false);
-  const [error, setError] = useState<firebase.functions.HttpsError | null>(null);
+  const [error, setError] = useState<firebase.functions.HttpsError | null>(
+    null
+  );
 
   const last = useRef<string>();
 
   useEffect(() => {
     getInbox()
       .then(({ data: inbox }) => {
-        last.current = inbox[inbox.length - 1].id;
-
-        if (inbox.length >= 8) setHasMore(true);
-        else setHasMore(false);
+        if (inbox.length >= 8) {
+          last.current = inbox[inbox.length - 1].id;
+          setHasMore(true);
+        } else setHasMore(false);
 
         setInbox(inbox);
       })
