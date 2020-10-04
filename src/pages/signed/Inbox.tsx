@@ -11,6 +11,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import qs from 'qs';
 import useInbox from '../../hooks/useInbox';
 import { Helmet } from 'react-helmet';
+import Offline from '../../components/icons/Offline';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -26,6 +27,7 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
     hasMore,
     loadingMore,
     loadingInbox,
+    inboxOffline,
     inboxError
   ] = useInbox();
 
@@ -46,14 +48,16 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
 
         <h4 className="mt-4 mb-3">الرسائل المستلمة</h4>
 
-        {inboxError && (
+        {inboxOffline && <Offline />}
+
+        {inboxError && !(inboxError.code === 'internal') && (
           <Alert variant="danger">
             {/* @ts-ignore */}
             {firebaseMessages[inboxError.code] ?? 'حدثت مشكلة ما'}
           </Alert>
         )}
         {loadingInbox && <Loader />}
-        {!loadingInbox && inbox && (
+        {!loadingInbox && !(inboxOffline && inbox.length === 0) && inbox && (
           <motion.div initial="out" animate="in" variants={fadeVariants}>
             <MessagesLayout messages={inbox} />
             <div className="text-center">
