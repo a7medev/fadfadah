@@ -527,22 +527,74 @@ export const getInbox = functions.https.onCall(async (data, context) => {
   return ref.get().then(snap => {
     return Promise.all(
       snap.docs
-      .map(doc => ({
-        id: doc.id,
-        ...(doc.data() as Message<admin.firestore.Timestamp>)
-      }))
-      .map(async message => {
-        if (message.from) {
-          const author = await getUserById(message.from, {
-            withUsername: true
-          });
-          (message as any).from = author;
-        }
+        .map(doc => ({
+          id: doc.id,
+          ...(doc.data() as Message<admin.firestore.Timestamp>)
+        }))
+        .map(async message => {
+          if (message.from) {
+            const author = await getUserById(message.from, {
+              withUsername: true
+            });
+            (message as any).from = author;
+          }
 
-        (message as any).createdAt = message.createdAt.toDate().toDateString();
+          (message as any).createdAt = message.createdAt.toDate().toISOString();
 
-        return message;
-      })
+          return message;
+        })
     );
   });
+});
+
+export const getOutbox = functions.https.onCall(async (data, context) => {
+  if (!context.auth)
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      'فقط المستخدمين المُسَجَّلين يستطيعون رؤية رسائلهم المرسلة'
+    );
+
+  const userId = context.auth.uid;
+
+  let ref = db
+    .collection('users')
+    .doc(userId)
+    .collection('messages')
+    .orderBy('createdAt', 'desc');
+
+  if (data?.last) {
+    const lastDoc = await db
+      .collection('users')
+      .doc(userId)
+      .collection('messages')
+      .doc(data.last)
+      .get();
+    ref = ref.startAfter(lastDoc);
+  }
+
+  return ref
+    .limit(8)
+    .get()
+    .then(snap =>
+      Promise.all(
+        snap.docs
+          .filter(doc => doc.exists)
+          .map(async ({ id }) => {
+            const doc = await db.collection('messages').doc(id).get();
+
+            const { content, createdAt, love, to } = doc.data()!;
+
+            const reciever = await getUserById(to, { withUsername: true });
+
+            const message = {
+              id: doc.id,
+              content,
+              love,
+              to: reciever,
+              createdAt: createdAt.toDate().toISOString()
+            };
+            return message;
+          })
+      )
+    );
 });
