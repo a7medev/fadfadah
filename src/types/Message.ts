@@ -2,7 +2,7 @@ import MiniUser from "./MiniUser";
 
 interface Message<Time> {
   id?: string;
-  to: string;
+  to: MiniUser;
   from?: MiniUser;
   love: boolean;
   isAnonymous?: boolean;
