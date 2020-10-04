@@ -3,6 +3,7 @@ import { useState } from 'react';
 import MiniUser from '../types/MiniUser';
 import avatar from '../assets/images/avatar.svg';
 import VerifiedIcon from './icons/Verified';
+import { useHistory } from 'react-router-dom';
 
 export interface UserDataProps {
   user: MiniUser;
@@ -10,9 +11,10 @@ export interface UserDataProps {
 
 const UserData: React.FC<UserDataProps> = ({ user }) => {
   const [photo, setPhoto] = useState(user.photoURL ? user.photoURL : avatar);
+  const history = useHistory();
 
   return (
-    <div className="d-flex align-items-center">
+    <div className="d-flex align-items-center" onClick={user.username ? () => history.push(`/u/${user.username}`) : undefined}>
       <img
         src={photo}
         onError={() => setPhoto(avatar)}
