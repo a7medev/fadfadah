@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { motion, AnimatePresence, Variants, Transition } from 'framer-motion';
 
 export interface LoveButtonProps {
@@ -30,7 +30,7 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
           exit="out"
           onClick={() => setLove(false)}
         >
-          <MdFavorite fill="#ff1450" size="1.5em" />
+          <FaHeart fill="#ff1450" size="1.2em" />
         </motion.span>
       )}
     </AnimatePresence>
@@ -45,7 +45,7 @@ const LoveButton: React.FC<LoveButtonProps> = ({ love, setLove }) => {
           exit="out"
           onClick={() => setLove(true)}
         >
-          <MdFavoriteBorder color="#777" size="1.5em" />
+          <FaRegHeart color="#777" size="1.2em" />
         </motion.span>
       )}
     </AnimatePresence>

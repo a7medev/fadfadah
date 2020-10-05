@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
-import { FaFacebook, FaTwitter, FaWhatsapp } from 'react-icons/fa';
-import { FiClipboard } from 'react-icons/fi';
+import { FaFacebook, FaTwitter, FaWhatsapp, FaRegCopy } from 'react-icons/fa';
 import { Button, Modal, Form } from 'react-bootstrap';
 
 export interface ShareProps {
@@ -52,7 +51,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
               href={`https://www.facebook.com/share.php?u=${link}`}
               target="_blank"
             >
-              <FaFacebook size="1.1em" className="ml-2" />
+              <FaFacebook size="1em" className="ml-2" />
               فيسبوك
             </Button>
             <Button
@@ -60,7 +59,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
               target="_blank"
               href={`https://twitter.com/intent/tweet?url=${link}`}
             >
-              <FaTwitter size="1.1em" className="ml-2" />
+              <FaTwitter size="1em" className="ml-2" />
               تويتر
             </Button>
             <Button
@@ -68,14 +67,14 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
               href={`whatsapp://send?text=${link}`}
               data-action="share/whatsapp/share"
             >
-              <FaWhatsapp size="1.1em" className="ml-2" />
+              <FaWhatsapp size="1em" className="ml-2" />
               واتساب
             </Button>
             <Button
               variant="dark"
               onClick={copyToClipboard}
             >
-              <FiClipboard size="1.1em" className="ml-2" />
+              <FaRegCopy size="1em" className="ml-2" />
               نسخ
             </Button>
           </div>

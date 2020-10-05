@@ -5,12 +5,7 @@ import { Card, Dropdown } from 'react-bootstrap';
 import Moment from 'react-moment';
 import LoveButton from './LoveButton';
 import { db, functions } from '../config/firebase';
-import {
-  BsThreeDotsVertical,
-  BsFillPersonDashFill,
-  BsFillQuestionCircleFill
-} from 'react-icons/bs';
-import { FiTrash2 } from 'react-icons/fi';
+import { FaQuestionCircle, FaTrashAlt, FaBan, FaEllipsisV } from 'react-icons/fa';
 import Block from './Block';
 import StaticLoveButton from './StaticLoveButton';
 import MessageBox from './MessageBox';
@@ -24,7 +19,7 @@ export interface BlockActivatorProps {
 const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
     <p className="ml-auto mb-0">حظر المرسل</p>
-    <BsFillPersonDashFill size="1.2em" />
+    <FaBan size="0.9em" />
   </Dropdown.Item>
 );
 
@@ -119,7 +114,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
 
             <Dropdown drop="right">
               <Dropdown.Toggle variant="text-dark">
-                <BsThreeDotsVertical size="1em" />
+                <FaEllipsisV size="0.9em" />
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
@@ -136,7 +131,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
                         onClick={() => whoIsTheAuthor()}
                       >
                         <p className="ml-auto mb-0">من المرسل ؟</p>
-                        <BsFillQuestionCircleFill size="1.2em" />
+                        <FaQuestionCircle size="0.9em" />
                       </Dropdown.Item>
                     )}
                   </>
@@ -146,7 +141,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
                   onClick={deleteMessage}
                 >
                   <p className="ml-auto mb-0">حذف</p>
-                  <FiTrash2 size="1.2em" />
+                  <FaTrashAlt size="0.9em" />
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>

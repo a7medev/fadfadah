@@ -10,7 +10,7 @@ import SendMessage from '../components/SendMessage';
 import MiniUser from '../types/MiniUser';
 import { AuthContext } from '../store/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
-import { BsArrowRightShort } from 'react-icons/bs';
+import { FaArrowRight } from 'react-icons/fa';
 import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet';
 
@@ -70,7 +70,7 @@ const Profile: React.FC<ProfileProps> = ({
             <p className="text-muted h2 mt-5 mb-3">هذا المستخدم غير موجود</p>
             <LinkContainer to="/inbox">
               <Button>
-                <BsArrowRightShort className="ml-1" size="1.5em" />
+                <FaArrowRight className="ml-1" size="1em" />
                 عودة إلى الرئيسية
               </Button>
             </LinkContainer>

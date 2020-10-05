@@ -15,6 +15,7 @@ import Settings from './pages/signed/Settings';
 import Outbox from './pages/signed/Outbox';
 import Inbox from './pages/signed/Inbox';
 import NotFound from './pages/NotFound';
+import WhoRequests from './pages/signed/WhoRequests';
 import useDarkMode from './hooks/useDarkMode';
 import { AuthContext } from './store/AuthContext';
 
@@ -34,6 +35,7 @@ const App: React.FC = () => {
             <ProtectedRoute path="/register" component={Register} />
             <ProtectedRoute auth path="/inbox" component={Inbox} />
             <ProtectedRoute auth path="/outbox" component={Outbox} />
+            <ProtectedRoute auth path="/who-requests" component={WhoRequests} />
             <ProtectedRoute auth path="/settings" component={Settings} />
             <Route path="/u/:username" component={Profile} />
             <Route path="/privacy-policy" component={PrivacyPolicy} />

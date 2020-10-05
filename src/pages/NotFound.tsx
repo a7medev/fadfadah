@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { Container, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { BsArrowRightShort } from 'react-icons/bs';
+import { FaArrowRight } from 'react-icons/fa';
 import { Helmet } from 'react-helmet';
 
 export interface NotFoundProps extends RouteComponentProps {}
@@ -23,7 +23,7 @@ const NotFound: React.FC<NotFoundProps> = ({ location }) => {
 
         <LinkContainer to="/" isActive={() => false}>
           <Button>
-            <BsArrowRightShort size="1.4rem" className="ml-1" />
+            <FaArrowRight size="1em" className="ml-1" />
             عودة للرئيسية
           </Button>
         </LinkContainer>

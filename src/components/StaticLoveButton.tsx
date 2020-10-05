@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MdFavoriteBorder, MdFavorite } from 'react-icons/md';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 export interface StaticLoveButtonProps {
   love: boolean;
@@ -16,9 +16,9 @@ const StaticLoveButton: React.FC<StaticLoveButtonProps> = ({ love }) => {
       }}
     >
       {love ? (
-        <MdFavorite fill="#ff1450" size="1.5em" />
+        <FaHeart fill="#ff1450" size="1.2em" />
       ) : (
-        <MdFavoriteBorder fill="#777" size="1.5em" />
+        <FaRegHeart fill="#777" size="1.2em" />
       )}
     </span>
   );

@@ -6,8 +6,7 @@ import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';
 import { AuthContext } from '../store/AuthContext';
-import { BsFillPersonDashFill, BsThreeDotsVertical } from 'react-icons/bs';
-import { FiShare2 } from 'react-icons/fi';
+import { FaShare, FaEllipsisV, FaBan } from 'react-icons/fa';
 import avatar from '../assets/images/avatar.svg';
 
 export interface ShareActivatorProps {
@@ -16,7 +15,7 @@ export interface ShareActivatorProps {
 const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => setShow(true)}>
     <p className="ml-auto mb-0">مشاركة</p>
-    <FiShare2 size="1.2em" />
+    <FaShare size="0.9em" />
   </Dropdown.Item>
 );
 
@@ -26,7 +25,7 @@ export interface BlockActivatorProps {
 const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
     <p className="ml-auto mb-0">حظر</p>
-    <BsFillPersonDashFill size="1.2em" />
+    <FaBan size="0.9em" />
   </Dropdown.Item>
 );
 
@@ -73,7 +72,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
         <Dropdown>
           <Dropdown.Toggle variant="text-dark">
-            <BsThreeDotsVertical size="1em" />
+            <FaEllipsisV size="0.9em" />
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
