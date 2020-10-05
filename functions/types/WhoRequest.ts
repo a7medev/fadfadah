@@ -1,4 +1,4 @@
-import { Timestamp } from '@firebase/firestore-types';
+import * as admin from 'firebase-admin';
 
 interface WhoRequest {
   id?: string;
@@ -7,7 +7,7 @@ interface WhoRequest {
     id: string;
     content: string;
   };
-  sentAt: Timestamp;
+  sentAt: admin.firestore.Timestamp;
 }
 
 export default WhoRequest;
