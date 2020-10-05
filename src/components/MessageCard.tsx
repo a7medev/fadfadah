@@ -5,7 +5,7 @@ import { Card, Dropdown } from 'react-bootstrap';
 import Moment from 'react-moment';
 import LoveButton from './LoveButton';
 import { db, functions } from '../config/firebase';
-import { FaQuestionCircle, FaTrashAlt, FaBan, FaEllipsisV } from 'react-icons/fa';
+import { FaQuestionCircle, FaTrashAlt, FaUserLock, FaEllipsisV } from 'react-icons/fa';
 import Block from './Block';
 import StaticLoveButton from './StaticLoveButton';
 import MessageBox from './MessageBox';
@@ -19,7 +19,7 @@ export interface BlockActivatorProps {
 const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
     <p className="ml-auto mb-0">حظر المرسل</p>
-    <FaBan size="0.9em" />
+    <FaUserLock size="0.9em" />
   </Dropdown.Item>
 );
 

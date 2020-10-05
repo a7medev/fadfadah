@@ -6,7 +6,7 @@ import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';
 import { AuthContext } from '../store/AuthContext';
-import { FaShare, FaEllipsisV, FaBan } from 'react-icons/fa';
+import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 import avatar from '../assets/images/avatar.svg';
 
 export interface ShareActivatorProps {
@@ -25,7 +25,7 @@ export interface BlockActivatorProps {
 const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
   <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
     <p className="ml-auto mb-0">حظر</p>
-    <FaBan size="0.9em" />
+    <FaUserLock size="0.9em" />
   </Dropdown.Item>
 );
 
