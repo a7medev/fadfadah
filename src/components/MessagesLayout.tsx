@@ -6,8 +6,7 @@ import MessageCard from './MessageCard';
 import NoMessages from './icons/NoMessages';
 
 export interface MessagesLayoutProps {
-  // TODO: Change the `any` type
-  messages: Message<any>[];
+  messages: Message<string>[];
   outbox?: boolean;
 }
 

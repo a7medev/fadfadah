@@ -25,7 +25,7 @@ const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
 
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 
-export interface MessageCardProps extends Message<Date> {
+export interface MessageCardProps extends Message<string> {
   outbox?: boolean;
 }
 
