@@ -11,22 +11,22 @@ const BottomNavigation: React.FC = () => {
       expand="lg"
       fixed="bottom"
       className="justify-content-around d-sm-none"
-      style={{ height: 56 }}
+      style={{ height: 56, boxShadow: '0 -3px 5px -1px rgba(0, 0, 0, 0.05)' }}
     >
       <LinkContainer to="/outbox">
-        <Button variant="text-primary">
+        <Button variant="text-primary" className="fab">
           <FaPaperPlane size="21" />
         </Button>
       </LinkContainer>
       
       <LinkContainer to="/inbox">
-        <Button variant="text-primary">
+        <Button variant="text-primary" className="fab">
           <FaInbox size="21" />
         </Button>
       </LinkContainer>
 
       <LinkContainer to="/settings">
-        <Button variant="text-primary">
+        <Button variant="text-primary" className="fab">
           <FaCog size="21" />
         </Button>
       </LinkContainer>
