@@ -6,6 +6,7 @@ import * as os from 'os';
 import * as sharp from 'sharp';
 import type Settings from '../types/Settings';
 import type Message from '../types/Message';
+import type WhoRequest from '../types/WhoRequest';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -374,7 +375,7 @@ export const sendWhoRequest = functions.https.onCall(
     if (!context.auth)
       throw new functions.https.HttpsError(
         'unauthenticated',
-        'قم بالدخول إلى حسابك للاستمتاع بكافة مميزات فضفضة'
+        'يمكن للأشخاص المسجلين فقط إرسال طلبات معرفة المرسل.'
       );
 
     const authorId = await getUIDByMessageId(messageId);
@@ -391,7 +392,7 @@ export const sendWhoRequest = functions.https.onCall(
     if (message.from)
       throw new functions.https.HttpsError(
         'invalid-argument',
-        'يمكنك إرسال طلب معرفة المرسل على رسالة مجهولة فقط'
+        'يمكنك إرسال طلب معرفة المرسل على رسالة مجهولة فقط.'
       );
 
     const user = (await getUserById(context.auth.uid))!;
@@ -508,7 +509,7 @@ export const getInbox = functions.https.onCall(async (data, context) => {
   if (!context.auth)
     throw new functions.https.HttpsError(
       'unauthenticated',
-      'فقط المستخدمين المُسَجَّلين يستطيعون استلام الرسائل'
+      'فقط المستخدمين المُسَجَّلين يستطيعون استلام الرسائل.'
     );
 
   const userId = context.auth.uid;
@@ -551,7 +552,7 @@ export const getOutbox = functions.https.onCall(async (data, context) => {
   if (!context.auth)
     throw new functions.https.HttpsError(
       'unauthenticated',
-      'فقط المستخدمين المُسَجَّلين يستطيعون رؤية رسائلهم المرسلة'
+      'فقط المستخدمين المُسَجَّلين يستطيعون رؤية رسائلهم المرسلة.'
     );
 
   const userId = context.auth.uid;
@@ -597,4 +598,50 @@ export const getOutbox = functions.https.onCall(async (data, context) => {
           })
       )
     );
+});
+
+export const getWhoRequests = functions.https.onCall(async (data, context) => {
+  if (!context.auth)
+    throw new functions.https.HttpsError(
+      'unauthenticated',
+      'يمكن للأشخاص المسجلين فقط استقبال طلبات معرفة المرسل.'
+    );
+
+  const userId = context.auth.uid;
+
+  let ref = db
+    .collection('users')
+    .doc(userId)
+    .collection('who_requests')
+    .limit(8);
+
+  if (data?.last) {
+    const lastDoc = await db
+      .collection('users')
+      .doc(userId)
+      .collection('who_requests')
+      .doc(data.last)
+      .get();
+    ref = ref.startAfter(lastDoc);
+  }
+
+  return ref.get().then(snap =>
+    Promise.all(
+      snap.docs
+        .map(doc => ({
+          id: doc.id,
+          ...(doc.data() as WhoRequest)
+        }))
+        .map(async req => {
+          const from = await getUserById(req.from, { withUsername: true });
+
+          return {
+            id: req.id,
+            from,
+            message: req.message,
+            sentAt: req.sentAt.toDate().toISOString()
+          };
+        })
+    )
+  );
 });
