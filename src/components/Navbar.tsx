@@ -39,7 +39,7 @@ const Navigation: React.FC = () => {
             height="30"
             className="d-inline-block align-top ml-2"
           />
-          <span className="font-weight-bold d-none d-lg-inline">فضفضة</span>
+          <span className="font-weight-bold text-primary">فضفضه</span>
         </Navbar.Brand>
       </LinkContainer>
 
