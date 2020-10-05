@@ -16,6 +16,7 @@ import StaticLoveButton from './StaticLoveButton';
 import MessageBox from './MessageBox';
 import { motion, Variants } from 'framer-motion';
 import UserData from './UserData';
+import { Emojione as Emoji } from 'react-emoji-render';
 
 export interface BlockActivatorProps {
   block: () => void;
@@ -86,7 +87,9 @@ const MessageCard: React.FC<MessageCardProps> = ({
         <Card.Body className={`pb-2 ${from || outbox ? 'pt-2' : ''}`}>
           {(from || outbox) && (
             <>
-              {outbox && <small className="mb-1 text-muted d-block">أرسلتها إلى</small>}
+              {outbox && (
+                <small className="mb-1 text-muted d-block">أرسلتها إلى</small>
+              )}
 
               <UserData user={outbox ? to : from!} />
 
@@ -94,7 +97,9 @@ const MessageCard: React.FC<MessageCardProps> = ({
             </>
           )}
 
-          <p style={{ fontSize: 18, whiteSpace: 'pre-line' }}>{content}</p>
+          <p style={{ fontSize: 18, whiteSpace: 'pre-line' }}>
+            <Emoji text={content} />
+          </p>
           <hr className="mb-2" />
           <div className="d-flex justify-content-between position-relative">
             <Moment
