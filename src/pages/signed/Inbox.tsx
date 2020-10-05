@@ -21,15 +21,15 @@ const fadeVariants: Variants = {
 export interface InboxProps extends RouteComponentProps {}
 
 const Inbox: React.FC<InboxProps> = ({ location }) => {
-  const [
+  const {
     inbox,
     loadMore,
     hasMore,
     loadingMore,
-    loadingInbox,
-    inboxOffline,
-    inboxError
-  ] = useInbox();
+    loading: loadingInbox,
+    offline: inboxOffline,
+    error: inboxError
+  } = useInbox();
 
   const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
 

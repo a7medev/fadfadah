@@ -4,15 +4,7 @@ import Message from '../types/Message';
 
 const getInbox = functions.httpsCallable('getInbox');
 
-function useInbox(): [
-  Message<string>[],
-  () => void,
-  boolean,
-  boolean,
-  boolean,
-  boolean,
-  firebase.functions.HttpsError | null
-] {
+function useInbox() {
   const [inbox, setInbox] = useState<Message<string>[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -35,7 +27,8 @@ function useInbox(): [
         setInbox(inbox);
       })
       .catch(err => {
-        if (err.code === 'internal' || err.code === 'deadline-exceeded') setOffline(true);
+        if (err.code === 'internal' || err.code === 'deadline-exceeded')
+          setOffline(true);
         setError(err);
       })
       .finally(() => setLoading(false));
@@ -58,7 +51,15 @@ function useInbox(): [
       .finally(() => setLoadingMore(false));
   }
 
-  return [inbox, loadMore, hasMore, loadingMore, loading, offline, error];
+  return {
+    inbox,
+    loadMore,
+    hasMore,
+    loadingMore,
+    loading,
+    offline,
+    error
+  };
 }
 
 export default useInbox;

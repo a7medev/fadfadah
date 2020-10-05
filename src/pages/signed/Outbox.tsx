@@ -21,15 +21,15 @@ const fadeVariants: Variants = {
 export interface OutboxProps extends RouteComponentProps {}
 
 const Outbox: React.FC<OutboxProps> = ({ location }) => {
-  const [
+  const {
     outbox,
     loadMore,
     hasMore,
     loadingMore,
-    loadingOutbox,
-    outboxOffline,
-    outboxError
-  ] = useOutbox();
+    loading: loadingOutbox,
+    offline: outboxOffline,
+    error: outboxError
+  } = useOutbox();
   const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   useEffect(() => {

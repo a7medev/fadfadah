@@ -4,15 +4,7 @@ import Message from '../types/Message';
 
 const getOutbox = functions.httpsCallable('getOutbox');
 
-function useOutbox(): [
-  Message<string>[],
-  () => void,
-  boolean,
-  boolean,
-  boolean,
-  boolean,
-  firebase.functions.HttpsError | null
-] {
+function useOutbox() {
   const [outbox, setOutbox] = useState<Message<string>[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -35,7 +27,8 @@ function useOutbox(): [
         setOutbox(outbox);
       })
       .catch(err => {
-        if (err.code === 'internal' || err.code === 'deadline-exceeded') setOffline(true);
+        if (err.code === 'internal' || err.code === 'deadline-exceeded')
+          setOffline(true);
         setError(err);
       })
       .finally(() => setLoading(false));
@@ -58,7 +51,15 @@ function useOutbox(): [
       .finally(() => setLoadingMore(false));
   }
 
-  return [outbox, loadMore, hasMore, loadingMore, loading, offline, error];
+  return {
+    outbox,
+    loadMore,
+    hasMore,
+    loadingMore,
+    loading,
+    offline,
+    error
+  };
 }
 
 export default useOutbox;
