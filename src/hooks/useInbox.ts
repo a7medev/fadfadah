@@ -35,7 +35,7 @@ function useInbox(): [
         setInbox(inbox);
       })
       .catch(err => {
-        if (err.code === 'internal') setOffline(true);
+        if (err.code === 'internal' || err.code === 'deadline-exceeded') setOffline(true);
         setError(err);
       })
       .finally(() => setLoading(false));

@@ -35,9 +35,8 @@ function useOutbox(): [
         setOutbox(outbox);
       })
       .catch(err => {
-        if (err.code === 'internal') setOffline(true);
+        if (err.code === 'internal' || err.code === 'deadline-exceeded') setOffline(true);
         setError(err);
-        console.error('Outbox', err);
       })
       .finally(() => setLoading(false));
     // eslint-disable-next-line react-hooks/exhaustive-deps
