@@ -105,10 +105,11 @@ body {
 }
 
 .card {
-  border-radius: 1rem;
+  position: relative;
+  border-radius: 0.8rem;
   border: 0;
-  border-bottom: 2px solid $primary;
-  box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.2);
+  // border-bottom: 2px solid $primary;
+  // box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.2);
 }
 
 @each $color, $value in $theme-colors {
@@ -323,7 +324,7 @@ body {
   .card {
     background: $gray-800;
     color: white;
-    box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.05);
+    // box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.05);
   }
 
   // Dropdowns
