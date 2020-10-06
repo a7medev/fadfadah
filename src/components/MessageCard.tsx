@@ -26,6 +26,7 @@ const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 
 export interface MessageCardProps extends Message<string> {
+  removeMessage: (id: string) => void;
   outbox?: boolean;
 }
 
@@ -41,7 +42,8 @@ const MessageCard: React.FC<MessageCardProps> = ({
   from,
   to,
   love: initialLove,
-  outbox
+  outbox,
+  removeMessage
 }) => {
   const [love, setLove] = useState(initialLove);
   const firstRender = useRef(true);
@@ -56,6 +58,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
   }, [id, love]);
 
   function deleteMessage() {
+    removeMessage(id!);
     db.collection('messages').doc(id).delete();
   }
 

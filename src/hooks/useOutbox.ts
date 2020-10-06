@@ -51,6 +51,10 @@ function useOutbox() {
       .finally(() => setLoadingMore(false));
   }
 
+  function removeMessage(id: string) {
+    setOutbox(prevOutbox => prevOutbox.filter(message => message.id !== id));
+  }
+
   return {
     outbox,
     loadMore,
@@ -58,7 +62,8 @@ function useOutbox() {
     loadingMore,
     loading,
     offline,
-    error
+    error,
+    removeMessage
   };
 }
 

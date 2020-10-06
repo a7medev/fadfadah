@@ -26,6 +26,7 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
     loadMore,
     hasMore,
     loadingMore,
+    removeMessage,
     loading: loadingInbox,
     offline: inboxOffline,
     error: inboxError
@@ -59,7 +60,7 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
         {loadingInbox && <Loader />}
         {!loadingInbox && !(inboxOffline && inbox.length === 0) && inbox && (
           <motion.div initial="out" animate="in" variants={fadeVariants}>
-            <MessagesLayout messages={inbox} />
+            <MessagesLayout messages={inbox} removeMessage={removeMessage} />
             <div className="text-center">
               {hasMore && !loadingMore && (
                 <Button

@@ -51,6 +51,10 @@ function useInbox() {
       .finally(() => setLoadingMore(false));
   }
 
+  function removeMessage(id: string) {
+    setInbox(prevInbox => prevInbox.filter(message => message.id !== id));
+  }
+
   return {
     inbox,
     loadMore,
@@ -58,7 +62,8 @@ function useInbox() {
     loadingMore,
     loading,
     offline,
-    error
+    error,
+    removeMessage
   };
 }
 

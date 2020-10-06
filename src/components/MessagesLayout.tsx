@@ -7,11 +7,13 @@ import NoMessages from './icons/NoMessages';
 
 export interface MessagesLayoutProps {
   messages: Message<string>[];
+  removeMessage: (id: string) => void;
   outbox?: boolean;
 }
 
 const MessagesLayout: React.FC<MessagesLayoutProps> = ({
   messages,
+  removeMessage,
   outbox
 }) => {
   return messages.length ? (
@@ -21,7 +23,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
     >
       {messages.map(message => (
         <Col xs="12" md="6" lg="4" key={message.id}>
-          <MessageCard {...message} outbox={outbox} />
+          <MessageCard {...message} outbox={outbox} removeMessage={removeMessage} />
         </Col>
       ))}
     </Masonry>

@@ -26,6 +26,7 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
     loadMore,
     hasMore,
     loadingMore,
+    removeMessage,
     loading: loadingOutbox,
     offline: outboxOffline,
     error: outboxError
@@ -61,7 +62,7 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
           !outboxOffline &&
           outbox && (
             <motion.div initial="out" animate="in" variants={fadeVariants}>
-              <MessagesLayout messages={outbox} outbox />
+              <MessagesLayout messages={outbox} removeMessage={removeMessage} outbox />
               <div className="text-center">
                 {hasMore && !loadingMore && (
                   <Button
