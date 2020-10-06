@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { Container, Alert, Button } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { functions } from '../config/firebase';
 import Loader from '../components/Loader';
 import { motion } from 'framer-motion';
@@ -13,6 +13,8 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { FaArrowRight } from 'react-icons/fa';
 import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet';
+import UserCardSkeleton from '../components/UserCardSkeleton';
+import Offline from '../components/icons/Offline';
 
 export interface ProfileProps
   extends RouteComponentProps<{ username: string }> {}
@@ -24,7 +26,7 @@ const Profile: React.FC<ProfileProps> = ({
   history
 }) => {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [offline, setOffline] = useState<boolean>(false);
   const [user, setUser] = useState<MiniUser | null>(null);
   const { username: currentUsername } = useContext(AuthContext)!;
 
@@ -33,13 +35,13 @@ const Profile: React.FC<ProfileProps> = ({
       const getUserData = functions.httpsCallable('getUserData');
       getUserData({ id: username, type: 'username' })
         .then(result => {
-          setError(null);
+          setOffline(false);
           setLoading(false);
           setUser(result.data);
         })
         .catch(err => {
           setLoading(false);
-          setError('حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك');
+          setOffline(true);
         });
     } else history.replace('/inbox');
   }, [username, currentUsername, history]);
@@ -52,9 +54,14 @@ const Profile: React.FC<ProfileProps> = ({
 
       <Container>
         {loading ? (
-          <Loader style={{ marginTop: 150, marginBottom: 20 }} />
-        ) : error ? (
-          <Alert variant="danger">{error}</Alert>
+          <>
+            <UserCardSkeleton />
+            <Loader style={{ marginTop: 150, marginBottom: 20 }} />
+          </>
+        ) : offline ? (
+          <div className="my-3">
+            <Offline />
+          </div>
         ) : user ? (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             <UserCard user={{ ...user, username }} />
