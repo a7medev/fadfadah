@@ -279,15 +279,22 @@ export const getUserData = functions.https.onCall(
   }
 );
 
-export const unbelongMessageToUser = functions.firestore
+export const removeMessageData = functions.firestore
   .document('/messages/{messageId}')
   .onDelete(async (_, { params }) => {
-    const { docs } = await db
+    const { docs: messages } = await db
       .collectionGroup('messages')
       .where('messageId', '==', params.messageId)
       .get();
 
-    return docs.map(doc => doc.ref.delete());
+    const { docs: whoRequests } = await db
+      .collectionGroup('who_request')
+      .where('message.id', '==', params.messageId)
+      .get();
+
+    return Promise.all(
+      [...messages, ...whoRequests].map(doc => doc.ref.delete())
+    );
   });
 
 export const blockUser = functions.https.onCall(
@@ -429,6 +436,67 @@ export const sendWhoRequest = functions.https.onCall(
       .catch(err => console.error(err));
 
     return true;
+  }
+);
+
+export const acceptWhoRequest = functions.https.onCall(
+  async (reqId, context) => {
+    if (!context.auth)
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'يمكن للمسجلين على فضفضة فقط قبول أو رفض طلبات معرفة المرسل.'
+      );
+
+    const userId = context.auth.uid;
+    const user = (await getUserById(userId))!;
+
+    const reqSnap = await db
+      .collection('users')
+      .doc(userId)
+      .collection('who_requests')
+      .doc(reqId)
+      .get();
+
+    if (!reqSnap.exists)
+      throw new functions.https.HttpsError(
+        'not-found',
+        'طلب معرفة المرسل الذي تحاول قبوله غير موجود'
+      );
+
+    const req = reqSnap.data()!;
+
+    const messageId = req.message.id;
+    return db
+      .collection('messages')
+      .doc(messageId)
+      .update({
+        from: userId
+      })
+      .then(() => reqSnap.ref.delete())
+      .then(() => {
+        const body = `قام ${
+          user.displayName ?? 'مستخدم فضفضة'
+        } بقبول طلب معرفة المرسل على الرسالة "${
+          req.message.content.length > 50
+            ? req.message.content.substring(0, 50) + '...'
+            : req.message.content
+        }"`;
+
+        sendNotification(req.from, {
+          notification: {
+            title: 'فضفضة',
+            body,
+            icon: user.photoURL ?? '/images/avatar.svg',
+            clickAction: `/inbox?goto=${messageId}`
+          }
+        }).catch(err => console.error(err));
+
+        return true;
+      })
+      .catch(err => {
+        console.error(err);
+        return false;
+      });
   }
 );
 
