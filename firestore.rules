@@ -20,7 +20,7 @@ service cloud.firestore {
         blockUnsignedMessagesIsValid();
 
       match /who_requests/{requestId} {
-        allow read: if isTheUser();
+        allow delete: if isTheUser();
       }
     }
 
