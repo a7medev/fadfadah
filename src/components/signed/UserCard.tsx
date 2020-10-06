@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useState, useRef, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../../store/AuthContext';
 import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
 import NameIsNotSet from './NameIsNotSet';
 import UsernameIsNotSet from './UsernameIsNotSet';
 import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
+import UserCardSkeleton from '../UserCardSkeleton';
 
 const slideVaraints: Variants = {
   out: {
@@ -31,36 +32,22 @@ const SignedUserCard: React.FC = () => {
     !user?.emailVerified!
   );
 
-  const motionDiv = useRef<HTMLDivElement>(null);
-
   return (
     <>
-      {user && username && (
-        <motion.div
-          initial="out"
-          animate="in"
-          ref={motionDiv}
-          variants={slideVaraints}
-          onAnimationComplete={() => {
-            const div = motionDiv.current!;
-
-            setTimeout(() => {
-              div.style.height = `${div.offsetHeight}px`;
-              div.style.overflow = 'unset';
-            }, 20);
+      {user && username ? (
+        <UserCard
+          user={{
+            uid: user.uid,
+            displayName: user.displayName!,
+            photoURL: user.photoURL! + photoSuffix,
+            verified,
+            username
           }}
-        >
-          <UserCard
-            user={{
-              uid: user.uid,
-              displayName: user.displayName!,
-              photoURL: user.photoURL! + photoSuffix,
-              verified,
-              username
-            }}
-          />
-        </motion.div>
+        />
+      ) : (
+        <UserCardSkeleton />
       )}
+
       {emailNotVerified && user?.email && (
         <motion.div initial="out" animate="in" variants={slideVaraints}>
           <EmailNotVerifiedMessage setEmailNotVerified={setEmailNotVerified} />
