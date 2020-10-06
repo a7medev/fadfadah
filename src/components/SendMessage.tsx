@@ -69,53 +69,54 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   }
 
   return (
-    <Card body className="mb-2">
-      <Card.Title>
-        <h4>كتابة رسالة</h4>
-      </Card.Title>
-      <Card.Subtitle className="text-muted mb-3">
-        لن يعرف {user?.displayName} أنك من أرسلها
-      </Card.Subtitle>
-
-      {error && (
-        <Alert variant="danger" onClose={() => setError(null)} dismissible>
-          {error}
-        </Alert>
-      )}
-
+    <>
       <MessageBox
         show={!!message}
         onClose={() => setMessage(null)}
         title="رسالة من الموقع"
         text={message!}
       />
+      <Card body className="mb-2">
+        <Card.Title>
+          <h4>كتابة رسالة</h4>
+        </Card.Title>
+        <Card.Subtitle className="text-muted mb-3">
+          لن يعرف {user?.displayName} أنك من أرسلها
+        </Card.Subtitle>
 
-      <Form onSubmit={sendMessage}>
-        <Form.Group className="mb-2">
-          <Form.Control
-            as={TextareaAutosize}
-            minRows={5}
-            ref={messageContent}
-            placeholder="اكتب رسالتك هنا"
-          />
-        </Form.Group>
-
-        {currentUser && (
-          <Form.Group>
-            <Form.Switch
-              id="is-anonymous-switch"
-              checked={isAnonymous}
-              onChange={() => setIsAnonymous(prev => !prev)}
-              label="رسالة مجهولة المصدر"
-            />
-          </Form.Group>
+        {error && (
+          <Alert variant="danger" onClose={() => setError(null)} dismissible>
+            {error}
+          </Alert>
         )}
 
-        <Button type="submit" ref={sendButton}>
-          إرسال
-        </Button>
-      </Form>
-    </Card>
+        <Form onSubmit={sendMessage}>
+          <Form.Group className="mb-2">
+            <Form.Control
+              as={TextareaAutosize}
+              minRows={5}
+              ref={messageContent}
+              placeholder="اكتب رسالتك هنا"
+            />
+          </Form.Group>
+
+          {currentUser && (
+            <Form.Group>
+              <Form.Switch
+                id="is-anonymous-switch"
+                checked={isAnonymous}
+                onChange={() => setIsAnonymous(prev => !prev)}
+                label="رسالة مجهولة المصدر"
+              />
+            </Form.Group>
+          )}
+
+          <Button type="submit" ref={sendButton}>
+            إرسال
+          </Button>
+        </Form>
+      </Card>
+    </>
   );
 };
 
