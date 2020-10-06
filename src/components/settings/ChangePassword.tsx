@@ -49,7 +49,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
 
   return (
     <Card body className="mb-4">
-      <h4>تغيير كلمة المرور</h4>
+      <h5>تغيير كلمة المرور</h5>
 
       <Form onSubmit={changePassword}>
         <Form.Group controlId="current-password">

@@ -20,7 +20,7 @@ const Settings: React.FC = () => {
         <title>الإعدادات | فضفضة</title>
       </Helmet>
       <Container className="pt-2">
-        <h3 className="mb-3">الإعدادات</h3>
+        <h4 className="mb-3">الإعدادات</h4>
         <hr />
 
         <MessageBox

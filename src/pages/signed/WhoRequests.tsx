@@ -25,7 +25,7 @@ const WhoRequests: React.FC = () => {
       </Helmet>
 
       <Container className="pt-2">
-        <h3 className="mb-3">طلبات معرفة المرسل</h3>
+        <h4 className="mb-3">طلبات معرفة المرسل</h4>
         <hr />
 
         {whoRequestsOffline && <Offline />}
