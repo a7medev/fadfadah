@@ -8,6 +8,7 @@ export interface MessageBoxProps {
   title: string;
   text: string;
   show: boolean;
+  hideAfter?: number;
   onClose: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
@@ -15,6 +16,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   title,
   text,
   show,
+  hideAfter = 5000,
   onClose
 }) => {
   const [showBox, setShowBox] = useState<boolean>(false);
@@ -27,12 +29,12 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     if (show) {
       timeout.current = setTimeout(() => {
         setShowBox(false);
-      }, 5000);
+      }, hideAfter);
     } else if (timeout.current) {
       clearTimeout(timeout.current);
       timeout.current = undefined;
     }
-  }, [show]);
+  }, [show, hideAfter]);
 
   return createPortal(
     <div className={'modal-content message-box ' + (showBox ? 'show' : '')}>
