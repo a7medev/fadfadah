@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
 import VerifiedIcon from './icons/Verified';
 import MiniUser from '../types/MiniUser';
@@ -7,7 +7,7 @@ import Share from './Share';
 import Block from './Block';
 import { AuthContext } from '../store/AuthContext';
 import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
-import avatar from '../assets/images/avatar.svg';
+import UserPhoto from './UserPhoto';
 
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,24 +39,16 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
   const { username } = useContext(AuthContext)!;
 
-  const [photo, setPhoto] = useState(user.photoURL ? user.photoURL : avatar);
-
   return (
     <Card className="mb-2">
       <Card.Body className="d-flex user-data">
         <div className="d-flex align-items-center flex-grow-1">
-          <img
-            src={photo}
-            onError={() => setPhoto(avatar)}
-            alt={user.displayName ?? 'لا يوجد اسم'}
-            className="rounded-circle shadow-sm"
-            style={{ width: 55, height: 55, objectFit: 'cover' }}
-          />
+          <UserPhoto url={user.photoURL} displayName={user.displayName} />
 
           <div className="mr-3">
             <Card.Title>
               <h5>
-                {user.displayName ?? 'لا يوجد اسم'}
+                {user.displayName ?? 'مستخدم فضفضة'}
                 {user.verified && (
                   <VerifiedIcon size="18px" className="text-primary mr-2" />
                 )}

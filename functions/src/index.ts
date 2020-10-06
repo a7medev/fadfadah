@@ -410,7 +410,7 @@ export const sendWhoRequest = functions.https.onCall(
       })
       .then(snap => {
         const body = `يريد ${
-          user.displayName ?? 'مستخدم بلا اسم'
+          user.displayName ?? 'مستخدم فضفضة'
         } أن يعرف من أنت على الرسالة "${
           message.content.length > 50
             ? message.content.substring(0, 50) + '...'
