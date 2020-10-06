@@ -66,21 +66,23 @@ const Navigation: React.FC = () => {
           )}
 
           {user && (
-            <LinkContainer to="/inbox" exact>
-              <Nav.Link active={false}>الرسائل المستلمة</Nav.Link>
-            </LinkContainer>
-          )}
+            <>
+              <LinkContainer to="/inbox" exact>
+                <Nav.Link active={false}>الرسائل المستلمة</Nav.Link>
+              </LinkContainer>
 
-          {user && (
-            <LinkContainer to="/outbox" exact>
-              <Nav.Link active={false}>الرسائل المرسلة</Nav.Link>
-            </LinkContainer>
-          )}
+              <LinkContainer to="/outbox" exact>
+                <Nav.Link active={false}>الرسائل المرسلة</Nav.Link>
+              </LinkContainer>
 
-          {user && (
-            <LinkContainer to="/settings" exact>
-              <Nav.Link active={false}>الإعدادات</Nav.Link>
-            </LinkContainer>
+              <LinkContainer to="/who-requests" exact>
+                <Nav.Link active={false}>طلبات معرفة المرسل</Nav.Link>
+              </LinkContainer>
+
+              <LinkContainer to="/settings" exact>
+                <Nav.Link active={false}>الإعدادات</Nav.Link>
+              </LinkContainer>
+            </>
           )}
 
           <LinkContainer to="/privacy-policy" exact>
@@ -90,15 +92,13 @@ const Navigation: React.FC = () => {
 
         <Nav className="mr-auto">
           {user ? (
-            <>
-              <Button
-                onClick={() => auth.signOut()}
-                variant="text-danger"
-                className="ml-lg-1 mb-1 mb-lg-0"
-              >
-                تسجيل الخروج
-              </Button>
-            </>
+            <Button
+              onClick={() => auth.signOut()}
+              variant="text-danger"
+              className="ml-lg-1 mb-1 mb-lg-0"
+            >
+              تسجيل الخروج
+            </Button>
           ) : (
             <>
               <LinkContainer to="/login">
