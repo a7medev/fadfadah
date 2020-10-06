@@ -52,10 +52,15 @@ function useWhoRequests() {
       .finally(() => setLoadingMore(false));
   }
 
+  function removeReq(id: string) {
+    setWhoRequests(prevReqs => prevReqs.filter(req => req.id !== id));
+  }
+
   return {
     whoRequests,
     loadMore,
     hasMore,
+    removeReq,
     loadingMore,
     loading,
     offline,

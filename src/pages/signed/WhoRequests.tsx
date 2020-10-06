@@ -12,6 +12,7 @@ const WhoRequests: React.FC = () => {
     whoRequests,
     loadMore,
     hasMore,
+    removeReq,
     loadingMore,
     loading: loadingWhoRequests,
     error: whoRequestsError,
@@ -41,8 +42,11 @@ const WhoRequests: React.FC = () => {
           !(whoRequestsOffline && whoRequests.length === 0) &&
           whoRequests && (
             <>
+              {whoRequests.length === 0 && (
+                <h5 className="text-center text-muted">لا يوجد طلبات</h5>
+              )}
               {whoRequests.map(request => (
-                <WhoRequest {...request} key={request.id} />
+                <WhoRequest {...request} removeReq={removeReq} key={request.id} />
               ))}
 
               <div className="text-center">
