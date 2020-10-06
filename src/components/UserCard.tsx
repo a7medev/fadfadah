@@ -43,7 +43,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
     <Card className="mb-2">
       <Card.Body className="d-flex user-data">
         <div className="d-flex align-items-center flex-grow-1">
-          <UserPhoto url={user.photoURL} displayName={user.displayName} />
+          <UserPhoto url={user.photoURL} displayName={user.displayName} size={55} />
 
           <div className="mr-3">
             <Card.Title>

@@ -8,9 +8,7 @@ export interface UserPhotoProps {
   size?: number;
 }
 
-const UserPhoto: React.FC<UserPhotoProps> = (
-  { url, displayName, size } = { size: 55 }
-) => {
+const UserPhoto: React.FC<UserPhotoProps> = ({ url, displayName, size }) => {
   const [photo, setPhoto] = useState(url ? url : avatar);
 
   return (
