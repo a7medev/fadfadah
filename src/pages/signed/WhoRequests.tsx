@@ -1,13 +1,18 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { Alert, Button, Container } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
+import { RouteComponentProps } from 'react-router-dom';
 import Offline from '../../components/icons/Offline';
 import Loader from '../../components/Loader';
 import PageTransition from '../../components/PageTransition';
 import WhoRequest from '../../components/WhoRequest';
 import useWhoRequests from '../../hooks/useWhoRequests';
+import qs from 'qs';
 
-const WhoRequests: React.FC = () => {
+export interface WhoRequestsProps extends RouteComponentProps {}
+
+const WhoRequests: React.FC<WhoRequestsProps> = ({ location }) => {
   const {
     whoRequests,
     loadMore,
@@ -18,6 +23,12 @@ const WhoRequests: React.FC = () => {
     error: whoRequestsError,
     offline: whoRequestsOffline
   } = useWhoRequests();
+
+  const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
+
+  useEffect(() => {
+    if (!loadingWhoRequests && goto) window.location.href = `#${goto}`;
+  }, [loadingWhoRequests, goto]);
 
   return (
     <PageTransition>
