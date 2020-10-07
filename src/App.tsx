@@ -28,7 +28,7 @@ const App: React.FC = () => {
       <Navigation />
 
       <SafeArea paddingTop="10px" noBottomNavbar={!user}>
-        <AnimatePresence exitBeforeEnter>
+        <AnimatePresence exitBeforeEnter initial={false}>
           <Switch>
             <ProtectedRoute path="/" component={Home} exact />
             <ProtectedRoute path="/login" component={Login} />
