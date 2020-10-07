@@ -8,7 +8,7 @@ import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
 import UserCardSkeleton from '../UserCardSkeleton';
 
-const slideVaraints: Variants = {
+const slideVariants: Variants = {
   out: {
     overflow: 'hidden',
     height: 0,
@@ -17,6 +17,17 @@ const slideVaraints: Variants = {
   in: {
     height: 'auto',
     transition: { type: 'tween', ease: 'linear', duration: 0.2 }
+  }
+};
+
+const fadeVariants: Variants = {
+  out: {
+    opacity: 0,
+    transition: { type: 'tween', ease: 'linear', duration: 0.4 }
+  },
+  in: {
+    opacity: 1,
+    transition: { type: 'tween', ease: 'linear', duration: 0.4 }
   }
 };
 
@@ -34,32 +45,63 @@ const SignedUserCard: React.FC = () => {
 
   return (
     <>
-      {user && username ? (
-        <UserCard
-          user={{
-            uid: user.uid,
-            displayName: user.displayName!,
-            photoURL: user.photoURL! + photoSuffix,
-            verified,
-            username
-          }}
-        />
-      ) : (
-        <UserCardSkeleton />
+      {user && username && (
+        <motion.div
+          initial="out"
+          animate="in"
+          exit="out"
+
+          variants={fadeVariants}
+        >
+          <UserCard
+            user={{
+              uid: user.uid,
+              displayName: user.displayName!,
+              photoURL: user.photoURL! + photoSuffix,
+              verified,
+              username
+            }}
+          />
+        </motion.div>
+      )}
+      {!(user && username) && (
+        <motion.div
+          initial="out"
+          animate="in"
+          exit="out"
+          variants={fadeVariants}
+        >
+          <UserCardSkeleton />
+        </motion.div>
       )}
 
       {emailNotVerified && user?.email && (
-        <motion.div initial="out" animate="in" variants={slideVaraints}>
+        <motion.div
+          initial="out"
+          animate="in"
+          exit="out"
+          variants={slideVariants}
+        >
           <EmailNotVerifiedMessage setEmailNotVerified={setEmailNotVerified} />
         </motion.div>
       )}
       {!user?.displayName && (
-        <motion.div initial="out" animate="in" variants={slideVaraints}>
+        <motion.div
+          initial="out"
+          animate="in"
+          exit="out"
+          variants={slideVariants}
+        >
           <NameIsNotSet />
         </motion.div>
       )}
       {username === null && (
-        <motion.div initial="out" animate="in" variants={slideVaraints}>
+        <motion.div
+          initial="out"
+          animate="in"
+          exit="out"
+          variants={slideVariants}
+        >
           <UsernameIsNotSet />
         </motion.div>
       )}
