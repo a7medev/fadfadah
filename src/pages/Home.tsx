@@ -16,16 +16,15 @@ const Home: React.FC = () => {
       <Container className="text-center">
         <Row>
           <Col className="content d-flex align-items-center justify-content-center">
-            <div>
-              <h1 className="display-3">فَضْفَضَة</h1>
-              <p className="lead text-black-50">
+            <div className="text-lg-right">
+              <h1 className="display-4 mb-2">فَضْفَضَة</h1>
+              <p className="lead text-black-50 mb-4">
                 فضفضة يسمح لك بالإفصاح عما بداخلك للآخرين.
               </p>
 
               <LinkContainer to="/login">
-                <Button className="join-btn mb-2">تسجيل الدخول</Button>
+                <Button className="join-btn mb-2 mb-lg-0 ml-lg-2">تسجيل الدخول</Button>
               </LinkContainer>
-              <br />
               <LinkContainer to="/register">
                 <Button variant="outline-primary" className="join-btn">
                   إنشاء حساب
