@@ -11,7 +11,7 @@ const UsernameIsNotSet: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-  async function changeDisplayName(event: FormEvent) {
+  async function changeUsername(event: FormEvent) {
     event.preventDefault();
 
     // Validate username
@@ -36,7 +36,6 @@ const UsernameIsNotSet: React.FC = () => {
       // @ts-ignore
       setError(messages[err.code]);
     }
-
   }
 
   return (
@@ -55,7 +54,7 @@ const UsernameIsNotSet: React.FC = () => {
           </Alert>
         )}
 
-        <Form onSubmit={changeDisplayName}>
+        <Form onSubmit={changeUsername}>
           <Form.Group className="mb-2">
             <Form.Control
               ref={username}
