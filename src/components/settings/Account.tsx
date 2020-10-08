@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState, useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { storage } from '../../config/firebase';
+import Gender from '../../types/Gender';
 
 export interface AccountProps {
   user: firebase.User | null;
@@ -14,6 +15,8 @@ const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
 
   const saveDataButton = useRef<HTMLButtonElement>(null);
   const displayName = useRef<HTMLInputElement>(null);
+
+  const [gender, setGender] = useState<string>(Gender.MALE);
 
   async function handlePhotoChange(event: any) {
     const photoFile: File = event.target.files[0];
@@ -110,6 +113,37 @@ const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
             accept=".png, .jpg, .jpeg"
             onChange={handlePhotoChange}
           />
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>النوع</Form.Label>
+          <Form.Row>
+            <Form.Check
+              type="radio"
+              custom
+              name="gender"
+              id="male"
+              label="ذكر"
+              value={Gender.MALE}
+              checked={gender === Gender.MALE}
+              onChange={(event: React.FormEvent) => {
+                setGender((event.target as HTMLInputElement).value);
+              }}
+              className="ml-3"
+            />
+            <Form.Check
+              type="radio"
+              custom
+              name="gender"
+              id="female"
+              label="أنثى"
+              value={Gender.FEMALE}
+              checked={gender === Gender.FEMALE}
+              onChange={(event: React.FormEvent) => {
+                setGender((event.target as HTMLInputElement).value);
+              }}
+            />
+          </Form.Row>
         </Form.Group>
 
         <Button type="submit" ref={saveDataButton}>
