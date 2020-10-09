@@ -14,21 +14,15 @@ const BottomNavigation: React.FC = () => {
       style={{ height: 56, boxShadow: '0 -3px 5px -1px rgba(0, 0, 0, 0.05)' }}
     >
       <LinkContainer to="/outbox">
-        <Button variant="text-primary" className="fab">
-          <FaPaperPlane size="21" />
-        </Button>
+        <FaPaperPlane className="bottom-nav-icon" size="25" />
       </LinkContainer>
-      
+
       <LinkContainer to="/inbox">
-        <Button variant="text-primary" className="fab">
-          <FaInbox size="21" />
-        </Button>
+        <FaInbox className="bottom-nav-icon" size="25" />
       </LinkContainer>
 
       <LinkContainer to="/settings">
-        <Button variant="text-primary" className="fab">
-          <FaCog size="21" />
-        </Button>
+        <FaCog className="bottom-nav-icon" size="25" />
       </LinkContainer>
     </Navbar>
   );

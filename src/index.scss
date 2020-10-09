@@ -217,6 +217,16 @@ body {
   }
 }
 
+.bottom-nav-icon {
+  opacity: 0.4;
+  transition: opacity 0.25s ease-in-out, color 0.25s ease-in-out;
+
+  &.active {
+    opacity: 1;
+    color: $primary;
+  }
+}
+
 // Custom Select
 .custom-select {
   border: none;
