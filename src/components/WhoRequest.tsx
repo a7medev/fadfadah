@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import { db, functions } from '../config/firebase';
-import { AuthContext } from '../store/AuthContext';
+import { db, auth, functions } from '../config/firebase';
 import IWhoRequest from '../types/WhoRequest';
 import UserPhoto from './UserPhoto';
 import MessageBox from './MessageBox';
@@ -19,8 +18,6 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
   from,
   removeReq
 }) => {
-  const { user } = useContext(AuthContext)!;
-
   const [messageText, setMessageText] = useState<string | null>(null);
 
   function handleAccept() {
@@ -43,7 +40,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
 
   function handleDelete() {
     db.collection('users')
-      .doc(user!.uid)
+      .doc(auth.currentUser!.uid)
       .collection('who_requests')
       .doc(id)
       .delete()

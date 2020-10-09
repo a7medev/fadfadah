@@ -3,8 +3,8 @@ import { useState } from 'react';
 import avatar from '../assets/images/avatar.svg';
 
 export interface UserPhotoProps {
-  url?: string;
-  displayName?: string;
+  url?: string | null;
+  displayName?: string | null;
   size?: number;
 }
 

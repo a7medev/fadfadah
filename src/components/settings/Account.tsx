@@ -1,22 +1,23 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { storage } from '../../config/firebase';
-import Gender from '../../types/Gender';
+import { auth, storage } from '../../config/firebase';
+// import Gender from '../../types/Gender';
 
 export interface AccountProps {
-  user: firebase.User | null;
   setMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
+const Account: React.FC<AccountProps> = ({ setMessage }) => {
   const [photoFileText, setPhotoFileText] = useState('اضغط لتحديد ملف الصورة');
   const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
 
   const saveDataButton = useRef<HTMLButtonElement>(null);
   const displayName = useRef<HTMLInputElement>(null);
 
-  const [gender, setGender] = useState<string>(Gender.MALE);
+  // const [gender, setGender] = useState<string>(Gender.MALE);
+
+  const user = auth.currentUser;
 
   async function handlePhotoChange(event: any) {
     const photoFile: File = event.target.files[0];
@@ -114,7 +115,7 @@ const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
             onChange={handlePhotoChange}
           />
         </Form.Group>
-
+        {/* 
         <Form.Group>
           <Form.Label>النوع</Form.Label>
           <Form.Row>
@@ -144,7 +145,7 @@ const Account: React.FC<AccountProps> = ({ user, setMessage }) => {
               }}
             />
           </Form.Row>
-        </Form.Group>
+        </Form.Group> */}
 
         <Button type="submit" ref={saveDataButton}>
           حفظ البيانات

@@ -18,7 +18,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const { user: currentUser } = useContext(AuthContext)!;
+  const { user: currentUser, signedIn } = useContext(AuthContext);
 
   const [isAnonymous, setIsAnonymous] = useState(true);
 
@@ -100,7 +100,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
             />
           </Form.Group>
 
-          {currentUser && (
+          {signedIn && (
             <Form.Group>
               <Form.Switch
                 id="is-anonymous-switch"

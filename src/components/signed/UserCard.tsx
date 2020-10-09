@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../store/AuthContext';
 import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
-import NameIsNotSet from './NameIsNotSet';
-import UsernameIsNotSet from './UsernameIsNotSet';
 import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
 import UserCardSkeleton from '../UserCardSkeleton';
+import CompleteAccountData from './CompleteAccountData';
+import { auth } from '../../config/firebase';
 
 const slideVariants: Variants = {
   out: {
@@ -32,7 +32,7 @@ const fadeVariants: Variants = {
 };
 
 const SignedUserCard: React.FC = () => {
-  const { user, username, verified } = useContext(AuthContext)!;
+  const { user } = useContext(AuthContext);
 
   let photoSuffix = '';
   if (user?.photoURL?.includes('facebook')) photoSuffix = '?height=64';
@@ -40,31 +40,27 @@ const SignedUserCard: React.FC = () => {
   if (user?.photoURL?.includes('firebase')) photoSuffix = '';
 
   const [emailNotVerified, setEmailNotVerified] = useState(
-    !user?.emailVerified!
+    !auth.currentUser?.emailVerified
   );
 
   return (
     <>
-      {user && username && (
+      {user && user.username && (
         <motion.div
           initial="out"
           animate="in"
           exit="out"
-
           variants={fadeVariants}
         >
           <UserCard
             user={{
-              uid: user.uid,
-              displayName: user.displayName!,
-              photoURL: user.photoURL! + photoSuffix,
-              verified,
-              username
+              ...user,
+              photoURL: user.photoURL + photoSuffix
             }}
           />
         </motion.div>
       )}
-      {!(user && username) && (
+      {user === undefined && (
         <motion.div
           initial="out"
           animate="in"
@@ -75,7 +71,7 @@ const SignedUserCard: React.FC = () => {
         </motion.div>
       )}
 
-      {emailNotVerified && user?.email && (
+      {emailNotVerified && auth.currentUser?.email && (
         <motion.div
           initial="out"
           animate="in"
@@ -85,7 +81,16 @@ const SignedUserCard: React.FC = () => {
           <EmailNotVerifiedMessage setEmailNotVerified={setEmailNotVerified} />
         </motion.div>
       )}
-      {!user?.displayName && (
+
+      {user && (!user.displayName || !user.username || !user.gender) && (
+        <CompleteAccountData
+          missingDisplayName={!user.displayName}
+          missingUsername={!user.username}
+          missingGender={!user.gender}
+        />
+      )}
+
+      {/* {!user?.displayName && (
         <motion.div
           initial="out"
           animate="in"
@@ -104,7 +109,7 @@ const SignedUserCard: React.FC = () => {
         >
           <UsernameIsNotSet />
         </motion.div>
-      )}
+      )} */}
     </>
   );
 };

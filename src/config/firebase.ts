@@ -46,7 +46,7 @@ export const messages = {
   'auth/network-request-failed':
     'حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك',
   'auth/user-not-found': 'هذا المستخدم غير موجود',
-  'auth/wrong-password': 'كلمة المرور غير صحيحة',
+  'auth/wrong-password': 'كلمة المرور غير صحيحة أو المستخدم لا يمتلك كلمة مرور',
   'auth/popup-closed-by-user': 'لقد قمت بإغلاق النافذة المنبثقة',
   'auth/cancelled-popup-request':
     'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',

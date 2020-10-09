@@ -28,10 +28,10 @@ const Profile: React.FC<ProfileProps> = ({
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState<boolean>(false);
   const [user, setUser] = useState<MiniUser | null>(null);
-  const { username: currentUsername } = useContext(AuthContext)!;
+  const { user: currentUser } = useContext(AuthContext);
 
   useEffect(() => {
-    if (username !== currentUsername) {
+    if (username !== currentUser?.username) {
       const getUserData = functions.httpsCallable('getUserData');
       getUserData({ id: username, type: 'username' })
         .then(result => {
@@ -44,7 +44,7 @@ const Profile: React.FC<ProfileProps> = ({
           setOffline(true);
         });
     } else history.replace('/inbox');
-  }, [username, currentUsername, history]);
+  }, [username, currentUser, history]);
 
   return (
     <PageTransition>

@@ -8,7 +8,7 @@ import { auth } from '../config/firebase';
 import Logo from '../assets/images/logo.svg';
 
 const Navigation: React.FC = () => {
-  const { user } = useContext(AuthContext)!;
+  const { signedIn } = useContext(AuthContext);
 
   const [collapseOffCanvas, setCollapseOffCanvas] = useState(false);
 
@@ -30,7 +30,7 @@ const Navigation: React.FC = () => {
 
   return (
     <Navbar bg="white" expand="lg" fixed="top">
-      <LinkContainer to={user ? '/inbox' : '/'}>
+      <LinkContainer to={signedIn ? '/inbox' : '/'}>
         <Navbar.Brand>
           <img
             alt="فضفضة"
@@ -59,13 +59,13 @@ const Navigation: React.FC = () => {
         }`}
       >
         <Nav className="main-links ml-auto mr-lg-3 pr-lg-2">
-          {!user && (
+          {!signedIn && (
             <LinkContainer to="/" exact>
               <Nav.Link active={false}>الرئيسية</Nav.Link>
             </LinkContainer>
           )}
 
-          {user && (
+          {signedIn && (
             <>
               <LinkContainer to="/inbox" exact>
                 <Nav.Link active={false}>الرسائل المستلمة</Nav.Link>
@@ -91,7 +91,7 @@ const Navigation: React.FC = () => {
         </Nav>
 
         <Nav className="mr-auto">
-          {user ? (
+          {signedIn ? (
             <Button
               onClick={() => auth.signOut()}
               variant="text-danger"

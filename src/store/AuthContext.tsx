@@ -1,89 +1,88 @@
 import * as React from 'react';
 import { createContext, useState, useEffect } from 'react';
 import { auth, db, messaging } from '../config/firebase';
+import MiniUser from '../types/MiniUser';
+import Settings from '../types/Settings';
 import UserData from '../types/UserData';
 
-export const AuthContext = createContext<{
-  user: firebase.User | null;
-  setUser: React.Dispatch<React.SetStateAction<firebase.User | null>>;
-  username?: string | null;
-  setUsername: React.Dispatch<React.SetStateAction<string | null | undefined>>;
-  verified?: boolean;
-  userData?: UserData;
-  setUserData: React.Dispatch<React.SetStateAction<UserData | undefined>>;
-} | null>(null);
+export interface AuthContextType {
+  signedIn: boolean;
+  user?: MiniUser | null;
+  setUser: React.Dispatch<React.SetStateAction<MiniUser | null | undefined>>;
+  settings?: Settings | null;
+  setSettings: React.Dispatch<React.SetStateAction<Settings | null | undefined>>;
+}
+
+export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 const AuthContextProvider: React.FC = ({ children }) => {
-  const localUser: firebase.User | null = JSON.parse(
-    localStorage.getItem('user') ?? 'null'
-  );
-  const [user, setUser] = useState<firebase.User | null>(localUser);
+  const initialSignedIn = !!localStorage.getItem('signedIn');
+  const [signedIn, setSignedIn] = useState<boolean>(initialSignedIn);
 
-  const [userData, setUserData] = useState<UserData>();
-
-  const [username, setUsername] = useState<string | null>();
-
-  const [verified, setVerified] = useState<boolean>();
+  const [user, setUser] = useState<MiniUser | null>();
+  const [settings, setSettings] = useState<Settings | null>();
 
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(user => {
-      setUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
-
+    const unsub = auth.onAuthStateChanged(async user => {
       if (!user) {
-        localStorage.removeItem('user');
-        localStorage.removeItem('username');
-        localStorage.removeItem('verified');
+        setSignedIn(false);
+        localStorage.removeItem('signedIn');
 
         messaging
           .getToken()
-          .then(token => {
-            const promises: Promise<any>[] = [];
-            const p1 = messaging.deleteToken();
-            promises.push(p1);
-            const p2 = db.collection('devices').doc(token).delete();
-            promises.push(p2);
-            return Promise.all(promises);
-          })
+          .then(token =>
+            Promise.all([
+              messaging.deleteToken(),
+              db.collection('devices').doc(token).delete()
+            ])
+          )
           .catch(err => console.error(err));
         return;
       }
 
+      const { uid } = user;
+      setSignedIn(true);
+      localStorage.setItem('signedIn', 'true');
+
+      // Get the username
+      const {
+        docs: [usernameDoc]
+      } = await db.collection('usernames').where('userId', '==', uid).get();
+
+      const username = usernameDoc?.id ?? null;
+
+      // Get the verified state
+      const { exists: verified } = await db
+        .collection('verified_users')
+        .doc(user.uid)
+        .get();
+
+      const userDoc = await db.collection('users').doc(uid).get();
+      const { settings, gender } = userDoc.data() as UserData;
+
+      const { displayName, photoURL } = user;
+
+      setSettings(settings);
+      setUser({
+        uid,
+        displayName,
+        photoURL,
+        username,
+        verified,
+        gender
+      });
+
+      // Store the token of the user
       messaging
         .getToken()
         .then(token =>
           db.collection('devices').doc(token).set({
-            userId: auth.currentUser?.uid,
-            device: token.split(':').shift(),
+            userId: auth.currentUser!.uid,
             token
           })
         )
         .catch(err => {
-          console.error(err);
-        });
-      db.collection('users')
-        .doc(user.uid)
-        .get()
-        .then(snap => {
-          setUserData({ id: snap.id, ...(snap.data() as UserData) });
-        });
-
-      db.collection('usernames')
-        .where('userId', '==', user.uid)
-        .get()
-        .then(snap => {
-          const username = snap.docs[0]?.id ?? null;
-          setUsername(username);
-          if (username) localStorage.setItem('username', username);
-        });
-
-      db.collection('verified_users')
-        .doc(user.uid)
-        .get()
-        .then(({ exists }) => {
-          setVerified(exists);
-          if (exists) localStorage.setItem('verified', '1');
-          else localStorage.removeItem('verified');
+          console.error('Error storing the device token:', err);
         });
     });
 
@@ -91,17 +90,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        setUser,
-        username,
-        setUsername,
-        verified,
-        userData,
-        setUserData
-      }}
-    >
+    <AuthContext.Provider value={{ signedIn, user, setUser, settings, setSettings }}>
       {children}
     </AuthContext.Provider>
   );

@@ -3,18 +3,21 @@ import { useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import { db } from '../../config/firebase';
 import useDarkMode from '../../hooks/useDarkMode';
-import UserData from '../../types/UserData';
+import MiniUser from '../../types/MiniUser';
+import Settings from '../../types/Settings';
 
 export interface PrefrencesProps {
-  user: firebase.User | null;
-  userData: UserData | undefined;
-  setUserData: React.Dispatch<React.SetStateAction<UserData | undefined>>;
+  user: MiniUser;
+  settings: Settings | null;
+  setSettings: React.Dispatch<
+    React.SetStateAction<Settings | null | undefined>
+  >;
 }
 
 const Prefrences: React.FC<PrefrencesProps> = ({
   user,
-  userData,
-  setUserData
+  settings,
+  setSettings
 }) => {
   const [darkModeOn, setDarkModeOn, detectTheme] = useDarkMode();
 
@@ -46,43 +49,41 @@ const Prefrences: React.FC<PrefrencesProps> = ({
   function changeBlockUnsignedMessages(event: React.FormEvent) {
     const blockUnsignedMessages = (event.target as HTMLInputElement).checked;
 
-    db.collection('users').doc(user?.uid).set(
+    db.collection('users').doc(user!.uid).set(
       {
         settings: { blockUnsignedMessages }
       },
       { merge: true }
     );
 
-    setUserData(prevUserData => ({
-      ...prevUserData,
-      settings: prevUserData?.settings
+    setSettings(prevSettings =>
+      prevSettings
         ? {
-            ...prevUserData?.settings,
+            ...prevSettings,
             blockUnsignedMessages
           }
-        : undefined
-    }));
+        : null
+    );
   }
 
   function changeAirplaneMode(event: React.FormEvent) {
     const airplaneMode = (event.target as HTMLInputElement).checked;
 
-    db.collection('users').doc(user?.uid).set(
+    db.collection('users').doc(user!.uid).set(
       {
         settings: { airplaneMode }
       },
       { merge: true }
     );
 
-    setUserData(prevUserData => ({
-      ...prevUserData,
-      settings: prevUserData?.settings
+    setSettings(prevSettings =>
+      prevSettings
         ? {
-            ...prevUserData?.settings,
+            ...prevSettings,
             airplaneMode
           }
         : undefined
-    }));
+    );
   }
 
   return (
@@ -92,7 +93,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
       <Form.Group controlId="block-unsigned-messages">
         <Form.Switch
           label="منع استلام الرسائل من غير المُسَجَّلين"
-          checked={!!userData?.settings?.blockUnsignedMessages}
+          checked={!!settings?.blockUnsignedMessages}
           onChange={changeBlockUnsignedMessages}
         />
         <Form.Text className="text-muted">
@@ -126,8 +127,8 @@ const Prefrences: React.FC<PrefrencesProps> = ({
 
       <Form.Group controlId="airplane-mode" className="mb-0">
         <Form.Switch
-          label="وضع الطيران"
-          checked={!!userData?.settings?.airplaneMode}
+          label="منع استلام الرسائل من الجميع"
+          checked={!!settings?.airplaneMode}
           onChange={changeAirplaneMode}
         />
         <Form.Text className="text-muted">

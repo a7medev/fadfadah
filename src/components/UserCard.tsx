@@ -37,7 +37,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
   const { protocol, host } = window.location;
   const link = `${protocol}//${host}/u/${user.username}`;
 
-  const { username } = useContext(AuthContext)!;
+  const { user: currentUser } = useContext(AuthContext);
 
   return (
     <Card className="mb-2">
@@ -69,7 +69,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
           <Dropdown.Menu>
             <Share activator={ShareActivator} link={link} />
-            {username && user.username !== username && (
+            {currentUser && user.username !== currentUser.username && (
               <Block
                 activator={BlockActivator}
                 id={user.username ?? ''}

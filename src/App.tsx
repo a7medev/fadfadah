@@ -21,13 +21,13 @@ import { AuthContext } from './store/AuthContext';
 
 const App: React.FC = () => {
   useDarkMode();
-  const { user } = useContext(AuthContext)!;
+  const { signedIn } = useContext(AuthContext);
 
   return (
     <>
       <Navigation />
 
-      <SafeArea paddingTop="10px" noBottomNavbar={!user}>
+      <SafeArea paddingTop="10px" noBottomNavbar={!signedIn}>
         <AnimatePresence exitBeforeEnter>
           <Switch>
             <ProtectedRoute path="/" component={Home} exact />
@@ -44,7 +44,7 @@ const App: React.FC = () => {
         </AnimatePresence>
       </SafeArea>
 
-      {user && <BottomNavigation />}
+      {signedIn && <BottomNavigation />}
     </>
   );
 };

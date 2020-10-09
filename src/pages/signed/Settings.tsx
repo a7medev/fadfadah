@@ -10,7 +10,7 @@ import Account from '../../components/settings/Account';
 import ChangePassword from '../../components/settings/ChangePassword';
 
 const Settings: React.FC = () => {
-  const { user, userData, setUserData } = useContext(AuthContext)!;
+  const { user, settings, setSettings } = useContext(AuthContext);
 
   const [message, setMessage] = useState<string | null>(null);
 
@@ -30,9 +30,9 @@ const Settings: React.FC = () => {
           text={message!}
         />
 
-        <Prefrences user={user} userData={userData} setUserData={setUserData} />
+        <Prefrences user={user!} settings={settings!} setSettings={setSettings} />
 
-        <Account user={user} setMessage={setMessage} />
+        <Account setMessage={setMessage} />
 
         <ChangePassword setMessage={setMessage} />
       </Container>
