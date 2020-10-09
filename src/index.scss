@@ -20,12 +20,12 @@ $theme-colors: (
 }
 
 *::selection {
-  background: $primary;
+  background-color: $primary;
   color: white;
 }
 
 body {
-  background: #eaebef;
+  background-color: #eaebef;
   text-align: right;
   overflow-y: scroll;
   user-select: none;
@@ -80,18 +80,18 @@ body {
 .form-control,
 .custom-file-label {
   border-color: #f2f2f2 !important;
-  background: #f2f2f2;
+  background-color: #f2f2f2;
   transition: background-color 0.25s ease-in-out;
 }
 
 .form-control:focus {
-  background: white;
+  background-color: white;
 }
 
 // Custom File Input
 .custom-file-input {
   &:focus ~ .custom-file-label {
-    background: white;
+    background-color: white;
   }
 }
 
@@ -104,7 +104,7 @@ body {
     border: 0;
     border-radius: 0.3rem;
     height: calc(1.4em + 0.75rem);
-    background: $primary;
+    background-color: $primary;
     color: white;
   }
 }
@@ -123,16 +123,16 @@ body {
   }
 
   .btn-text-#{$color} {
-    background: rgba($value, 0.1);
+    background-color: rgba($value, 0.1);
     color: $value;
 
     &:hover {
-      background: rgba($value, 0.2);
+      background-color: rgba($value, 0.2);
       color: darken($value, 5%);
     }
 
     &.active {
-      background: $value;
+      background-color: $value;
       color: color-yiq($value);
     }
   }
@@ -160,7 +160,7 @@ body {
 .loader {
   width: 20px;
   height: 20px;
-  background: $primary;
+  background-color: $primary;
   border-radius: 50%;
   margin: 100px auto 10px;
 
@@ -263,7 +263,7 @@ body {
 .custom-control-input:checked ~ .custom-control-label {
   &::before {
     border-color: $primary;
-    background: $primary;
+    background-color: $primary;
   }
   &::after {
     transform: translateX(-0.75rem) !important;
@@ -303,7 +303,7 @@ body {
 
 // Dark Theme
 .dark {
-  background: $gray-900;
+  background-color: $gray-900;
   color: white;
 
   // HR
@@ -335,13 +335,13 @@ body {
   // Form Control
   .form-control,
   .custom-file-label {
-    background: $gray-700;
+    background-color: $gray-700;
     border-color: $gray-700 !important;
     color: white;
   }
   .form-control {
     &:focus {
-      background: $gray-800;
+      background-color: $gray-800;
     }
     &::placeholder {
       color: $gray-500;
@@ -349,24 +349,24 @@ body {
   }
   .custom-file-input {
     &:focus ~ .custom-file-label {
-      background: $gray-800;
+      background-color: $gray-800;
     }
   }
 
   // Navbar
   .navbar {
-    background: $gray-800 !important;
+    background-color: $gray-800 !important;
     @extend .navbar-dark;
 
     .bar {
-      background: white;
+      background-color: white;
     }
   }
   .main-links {
     border-color: $gray-700;
   }
   .navbar-collapse {
-    background: $gray-800;
+    background-color: $gray-800;
   }
   .nav-link {
     color: white !important;
@@ -374,27 +374,27 @@ body {
 
   // Cards
   .card {
-    background: $gray-800;
+    background-color: $gray-800;
     color: white;
     // box-shadow: 0 1rem 3rem -1rem rgba($primary, 0.05);
   }
 
   // Dropdowns
   .dropdown-menu {
-    background: $gray-800;
+    background-color: $gray-800;
     border-color: $gray-700;
   }
   .dropdown-item {
     color: white;
     &:hover,
     &:focus {
-      background: $gray-700;
+      background-color: $gray-700;
     }
   }
 
   // Modals
   .modal-content {
-    background: $gray-800;
+    background-color: $gray-800;
   }
   .modal-header,
   .modal-footer {
@@ -405,7 +405,7 @@ body {
   .custom-switch {
     .custom-control-label {
       &::after {
-        background: $gray-600;
+        background-color: $gray-600;
       }
     }
   }
@@ -416,13 +416,13 @@ body {
   .custom-switch {
     .custom-control-label::before {
       border-color: $gray-600;
-      background: $gray-800;
+      background-color: $gray-800;
     }
   }
 
   .custom-control-input:checked ~ .custom-control-label::before {
     border-color: $primary;
-    background: $primary;
+    background-color: $primary;
   }
 
   // Alerts
@@ -460,6 +460,6 @@ body {
   }
 
   .skeleton {
-    background: rgba($light, 0.1);
+    background-color: rgba($light, 0.1);
   }
 }
