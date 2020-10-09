@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Navbar, Button } from 'react-bootstrap';
+import { Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './Navbar.scss';
 import { FaPaperPlane, FaCog, FaInbox } from 'react-icons/fa';
