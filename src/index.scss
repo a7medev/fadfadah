@@ -218,6 +218,7 @@ body {
 }
 
 .bottom-nav-icon {
+  cursor: pointer;
   opacity: 0.4;
   transition: opacity 0.25s ease-in-out, color 0.25s ease-in-out;
 
