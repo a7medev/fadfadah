@@ -16,7 +16,7 @@ $theme-colors: (
 // Using Custom Font
 @font-face {
   font-family: 'JF Flat';
-  src: url('./assets/fonts/jf-flat.ttf') format('truetype');
+  src: url('../fonts/jf-flat.ttf') format('truetype');
 }
 
 *::selection {

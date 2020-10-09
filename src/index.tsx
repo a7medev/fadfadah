@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import './index.scss';
+import './assets/scss/main.scss';
 import { BrowserRouter as Router } from 'react-router-dom';
 import AuthContextProvider from './store/AuthContext';
 import 'moment/locale/ar';
