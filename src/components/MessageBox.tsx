@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal, Button } from 'react-bootstrap';
-import './MessageBox.scss';
 
 export interface MessageBoxProps {
   title: string;

@@ -3,7 +3,6 @@ import { useState, useEffect, useRef, useContext } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { AuthContext } from '../store/AuthContext';
-import './Navbar.scss';
 import { auth } from '../config/firebase';
 import Logo from '../assets/images/logo.svg';
 

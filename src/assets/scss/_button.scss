@@ -1,0 +1,32 @@
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    border-color: transparent !important;
+  }
+
+  .btn-text-#{$color} {
+    background-color: rgba($value, 0.1);
+    color: $value;
+
+    &:hover {
+      background-color: rgba($value, 0.2);
+      color: darken($value, 5%);
+    }
+
+    &.active {
+      background-color: $value;
+      color: color-yiq($value);
+    }
+  }
+}
+
+.dark {
+  .btn-dark {
+    @extend .btn-light;
+  }
+  .btn-text-dark {
+    @extend .btn-text-light;
+  }
+  .btn-outline-dark {
+    @extend .btn-outline-light;
+  }
+}

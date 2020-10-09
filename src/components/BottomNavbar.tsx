@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import './Navbar.scss';
 import { FaPaperPlane, FaCog, FaInbox } from 'react-icons/fa';
 
 const BottomNavigation: React.FC = () => {

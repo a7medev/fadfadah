@@ -1,0 +1,36 @@
+.skeleton {
+  background-color: rgba($dark, 0.1);
+  animation: fade 3s linear infinite;
+}
+
+@keyframes fade {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.user-card-skeleton {
+  .profile-photo {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+  }
+
+  .display-name {
+    width: 120px;
+    height: 24px;
+    border-radius: 4px;
+  }
+
+  .username {
+    width: 70px;
+    height: 19px;
+    border-radius: 4px;
+  }
+}
+
+.dark {
+  .skeleton {
+    background-color: rgba($light, 0.1);
+  }
+}

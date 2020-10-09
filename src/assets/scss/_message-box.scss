@@ -2,7 +2,7 @@
   position: fixed !important;
   top: -100%;
   left: 50%;
-  max-width: 500px;  
+  max-width: 500px;
   width: 94% !important;
   transform: translate(-50%);
   box-shadow: 0 1rem 4rem -1rem rgba(0, 0, 0, 0.2);
@@ -28,6 +28,8 @@
   }
 }
 
-.dark .message-box {
-  box-shadow: 0 1rem 4rem -1rem rgba(0, 0, 0, 0.4);
+.dark {
+  .message-box {
+    box-shadow: 0 1rem 4rem -1rem rgba(0, 0, 0, 0.4);
+  }
 }

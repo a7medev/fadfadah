@@ -1,0 +1,14 @@
+.form-control:focus {
+  background-color: white;
+}
+
+.dark {
+  .form-control {
+    &:focus {
+      background-color: $gray-800;
+    }
+    &::placeholder {
+      color: $gray-500;
+    }
+  }
+}

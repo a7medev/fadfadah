@@ -1,0 +1,80 @@
+$font-family-sans-serif: 'JF Flat', -apple-system, BlinkMacSystemFont,
+  'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+  'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+$primary: #00cf95;
+
+$theme-colors: (
+  'facebook': #2d88ff,
+  'google': #ea4335,
+  'twitter': #1da1f2,
+  'whatsapp': #25d366
+);
+
+@import '~bootstrap/scss/bootstrap';
+
+// Using Custom Font
+@font-face {
+  font-family: 'JF Flat';
+  src: url('../fonts/jf-flat.ttf') format('truetype');
+}
+
+*::selection {
+  background-color: $primary;
+  color: white;
+}
+
+body {
+  background-color: #eaebef;
+  text-align: right;
+  overflow-y: scroll;
+  user-select: none;
+}
+
+.btn,
+.form-control,
+.custom-file-input ~ .custom-file-label {
+  border-radius: 0.4rem;
+  border-width: 2px;
+  box-shadow: 0 0 !important;
+}
+
+.form-control,
+.custom-file-label {
+  border-color: #f2f2f2 !important;
+  background-color: #f2f2f2;
+  transition: background-color 0.25s ease-in-out;
+}
+
+.close {
+  text-shadow: none;
+  outline: none;
+}
+
+.dark {
+  background-color: $gray-900;
+  color: white;
+
+  hr {
+    border-color: $gray-700;
+  }
+
+  .text-muted {
+    color: $gray-500 !important;
+  }
+
+  .text-black-50 {
+    @extend .text-white-50;
+  }
+
+  .form-control,
+  .custom-file-label {
+    background-color: $gray-700;
+    border-color: $gray-700 !important;
+    color: white;
+  }
+
+  .close {
+    color: white;
+  }
+}

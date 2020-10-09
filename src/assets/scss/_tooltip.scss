@@ -1,0 +1,22 @@
+.dark {
+  // Tooltip
+  .tooltip {
+    .tooltip-inner {
+      color: black;
+      background-color: white;
+    }
+
+    &.bs-tooltip-top .arrow::before {
+      border-top-color: white;
+    }
+    &.bs-tooltip-bottom .arrow::before {
+      border-bottom-color: white;
+    }
+    &.bs-tooltip-right .arrow::before {
+      border-right-color: white;
+    }
+    &.bs-tooltip-left .arrow::before {
+      border-left-color: white;
+    }
+  }
+}

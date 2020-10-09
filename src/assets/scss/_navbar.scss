@@ -13,7 +13,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background: var(--primary);
+    background: $primary;
     transform: translateX(-50%);
     transition: 0.25s ease-in-out;
   }
@@ -32,7 +32,6 @@
   border: none !important;
   padding: 0.3rem !important;
   background: none !important;
-  // background: #eaebef !important;
   outline: none !important;
 
   .bar {
@@ -66,13 +65,24 @@
   }
 }
 
-@media (min-width: 992px) {
+@media (min-width: map-get($grid-breakpoints, 'lg')) {
   .main-links {
     border-right: 1px solid #e2e2e2;
   }
 }
 
-@media (max-width: 991.98px) {
+.bottom-nav-icon {
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.25s ease-in-out, color 0.25s ease-in-out;
+
+  &.active {
+    opacity: 1;
+    color: $primary;
+  }
+}
+
+@media (max-width: map-get($grid-breakpoints, 'lg') - 0.02px) {
   .offcanvas-collapse {
     position: fixed;
     top: 56px;
@@ -82,11 +92,31 @@
     padding-left: 1rem;
     overflow-y: auto;
     background-color: white;
-    transition: transform .3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     transform: translateX(-100%);
 
     &.open {
       transform: translateX(1rem);
     }
+  }
+}
+
+.dark {
+  .navbar {
+    background-color: $gray-800 !important;
+    @extend .navbar-dark;
+
+    .bar {
+      background-color: white;
+    }
+  }
+  .main-links {
+    border-color: $gray-700;
+  }
+  .navbar-collapse {
+    background-color: $gray-800;
+  }
+  .nav-link {
+    color: white !important;
   }
 }

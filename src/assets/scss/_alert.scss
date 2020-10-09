@@ -1,0 +1,22 @@
+.alert {
+  border-radius: 0.5rem;
+  border: none;
+}
+.alert-dismissible {
+  padding-left: 4rem;
+  padding-right: 1.25rem;
+
+  .close {
+    left: 0;
+    right: auto;
+  }
+}
+
+.dark {
+  @each $color, $value in $theme-colors {
+    .alert-#{$color} {
+      background-color: rgba($value, 0.3);
+      color: lighten($value, 30%);
+    }
+  }
+}
