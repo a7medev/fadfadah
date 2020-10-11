@@ -4,7 +4,6 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as os from 'os';
 import * as sharp from 'sharp';
-import type Settings from '../types/Settings';
 import type Message from '../types/Message';
 import type WhoRequest from '../types/WhoRequest';
 import type UserData from '../types/UserData';
@@ -160,13 +159,16 @@ export const sendMessage = functions.https.onCall(
       );
     }
 
-    const settingsSnap = await db.collection('users').doc(to).get();
-    const settings: Settings = settingsSnap.data()?.settings;
+    const userDoc = await db.collection('users').doc(to).get();
+    const { settings, gender } = userDoc.data() as UserData;
 
-    if (settings.airplaneMode) {
+    const thisUserWord =
+      gender === Gender.FEMALE ? 'هذه المستخدمة' : 'هذا المستخدم';
+
+    if (settings!.airplaneMode) {
       throw new functions.https.HttpsError(
         'permission-denied',
-        'لا يمكن لأحدٍ مراسلة هذا المستخدم في الوقت الحالي'
+        `لا يمكن لأحدٍ مراسلة ${thisUserWord} في الوقت الحالي`
       );
     }
 
@@ -181,12 +183,12 @@ export const sendMessage = functions.https.onCall(
       if (userIsBlocked)
         throw new functions.https.HttpsError(
           'permission-denied',
-          'لا يمكنك مراسلة هذا المستخدم بعد الآن'
+          `لا يمكنك مراسلة ${thisUserWord} بعد الآن`
         );
-    } else if (settings.blockUnsignedMessages) {
+    } else if (settings!.blockUnsignedMessages) {
       throw new functions.https.HttpsError(
         'permission-denied',
-        'رجاءاً قم بالتسجيل في فضفضة لتتمكن من مراسلة هذا المستخدم'
+        `رجاءاً قم بالتسجيل في فضفضة لتتمكن من مراسلة ${thisUserWord}`
       );
     }
 
@@ -424,9 +426,12 @@ export const sendWhoRequest = functions.https.onCall(
         sentAt: new Date()
       })
       .then(snap => {
-        const body = `يريد ${
-          user.displayName ?? 'مستخدم فضفضة'
-        } أن يعرف من أنت على الرسالة "${
+        const wantWord = user.gender === Gender.FEMALE ? 'تريد' : 'يريد';
+        const userWord = user.gender === Gender.FEMALE ? 'مستخدمة' : 'مستخدم';
+        const knowWord = user.gender === Gender.FEMALE ? 'تعرف' : 'يعرف';
+        const body = `${wantWord} ${
+          user.displayName ?? `${userWord} فضفضة`
+        } أن ${knowWord} من أنت على الرسالة "${
           message.content.length > 50
             ? message.content.substring(0, 50) + '...'
             : message.content
@@ -482,8 +487,10 @@ export const acceptWhoRequest = functions.https.onCall(
       })
       .then(() => reqSnap.ref.delete())
       .then(() => {
-        const body = `قام ${
-          user.displayName ?? 'مستخدم فضفضة'
+        const haveWord = user.gender === Gender.FEMALE ? 'قامت' : 'قام';
+        const userWord = user.gender === Gender.FEMALE ? 'مستخدمة' : 'مستخدم';
+        const body = `${haveWord} ${
+          user.displayName ?? `${userWord} فضفضة`
         } بقبول طلب معرفة المرسل على الرسالة "${
           req.message.content.length > 50
             ? req.message.content.substring(0, 50) + '...'
@@ -519,7 +526,9 @@ export const sendLoveNotification = functions.firestore
       const senderId = await getUIDByMessageId(change.after.id);
       const sender = await getUserById(senderId!);
 
-      const body = `أَحَبَّ ${reciever?.displayName} رسالتك "${
+      const lovedWord =
+        sender?.gender === Gender.FEMALE ? 'أَحَبَّت' : 'أَحَبَّ';
+      const body = `${lovedWord} ${reciever?.displayName} رسالتك "${
         message.content.length > 100
           ? message.content.substring(0, 100) + '...'
           : message.content
