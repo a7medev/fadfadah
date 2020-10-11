@@ -80,9 +80,6 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
         <Card.Title>
           <h4>كتابة رسالة</h4>
         </Card.Title>
-        <Card.Subtitle className="text-muted mb-3">
-          لن يعرف {user?.displayName} أنك من أرسلها
-        </Card.Subtitle>
 
         {error && (
           <Alert variant="danger" onClose={() => setError(null)} dismissible>
