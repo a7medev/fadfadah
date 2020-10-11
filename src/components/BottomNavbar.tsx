@@ -9,19 +9,25 @@ const BottomNavigation: React.FC = () => {
       bg="white"
       expand="lg"
       fixed="bottom"
-      className="justify-content-around d-sm-none"
-      style={{ height: 56, boxShadow: '0 -3px 5px -1px rgba(0, 0, 0, 0.05)' }}
+      className="d-sm-none bottom-navbar"
+      style={{ height: 56, padding: 0, alignItems: 'stretch' }}
     >
       <LinkContainer to="/outbox">
-        <FaPaperPlane className="bottom-nav-icon" size="25" />
+        <div className="bottom-nav-icon">
+          <FaPaperPlane size="25" />
+        </div>
       </LinkContainer>
 
       <LinkContainer to="/inbox">
-        <FaInbox className="bottom-nav-icon" size="25" />
+        <div className="bottom-nav-icon">
+          <FaInbox size="25" />
+        </div>
       </LinkContainer>
 
       <LinkContainer to="/settings">
-        <FaCog className="bottom-nav-icon" size="25" />
+        <div className="bottom-nav-icon">
+          <FaCog size="25" />
+        </div>
       </LinkContainer>
     </Navbar>
   );

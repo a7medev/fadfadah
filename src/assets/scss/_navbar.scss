@@ -1,5 +1,10 @@
 .navbar {
-  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid $body-bg;
+}
+
+.bottom-navbar {
+  border-bottom: 0;
+  border-top: 1px solid $body-bg;
 }
 
 .nav-link {
@@ -73,11 +78,18 @@
 
 .bottom-nav-icon {
   cursor: pointer;
-  opacity: 0.4;
-  transition: opacity 0.25s ease-in-out, color 0.25s ease-in-out;
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+
+  &:hover {
+    background-color: rgba($primary, 0.15);
+    color: lighten($primary, 10%);
+  }
 
   &.active {
-    opacity: 1;
     color: $primary;
   }
 }
@@ -104,18 +116,27 @@
 .dark {
   .navbar {
     background-color: $gray-800 !important;
+    border-bottom-color: $gray-700;
+    
     @extend .navbar-dark;
 
     .bar {
       background-color: white;
     }
   }
+
+  .bottom-navbar {
+    border-top-color: $gray-700;
+  }
+
   .main-links {
     border-color: $gray-700;
   }
+
   .navbar-collapse {
     background-color: $gray-800;
   }
+
   .nav-link {
     color: white !important;
   }

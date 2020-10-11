@@ -11,7 +11,11 @@ $theme-colors: (
   'whatsapp': #25d366
 );
 
+$body-bg: #eaebef;
+
 @import '~bootstrap/scss/bootstrap';
+
+$body-bg-dark: $gray-900;
 
 // Using Custom Font
 @font-face {
@@ -25,7 +29,7 @@ $theme-colors: (
 }
 
 body {
-  background-color: #eaebef;
+  background-color: $body-bg;
   text-align: right;
   overflow-y: scroll;
   user-select: none;
@@ -52,7 +56,7 @@ body {
 }
 
 .dark {
-  background-color: $gray-900;
+  background-color: $body-bg-dark;
   color: white;
 
   hr {
