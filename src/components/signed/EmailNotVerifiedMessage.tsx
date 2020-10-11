@@ -3,12 +3,12 @@ import { Alert, Button } from 'react-bootstrap';
 import { auth } from '../../config/firebase';
 
 export interface EmailNotVerifiedMessageProps {
-  setEmailNotVerified: React.Dispatch<React.SetStateAction<boolean>>
+  setShow: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const EmailNotVerifiedMessage: React.FC<EmailNotVerifiedMessageProps> = ({ setEmailNotVerified }) => {
+const EmailNotVerifiedMessage: React.FC<EmailNotVerifiedMessageProps> = ({ setShow }) => {
   function sendEmailVerification() {
-    setEmailNotVerified(false);
+    setShow(false);
     auth.currentUser?.sendEmailVerification();
   }
 

@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthContext';
 import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
 import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
 import UserCardSkeleton from '../UserCardSkeleton';
 import CompleteAccountData from './CompleteAccountData';
-import { auth } from '../../config/firebase';
 
 const slideVariants: Variants = {
   out: {
@@ -32,16 +31,22 @@ const fadeVariants: Variants = {
 };
 
 const SignedUserCard: React.FC = () => {
-  const { user } = useContext(AuthContext);
+  const { user, firebaseUser } = useContext(AuthContext);
 
   let photoSuffix = '';
   if (user?.photoURL?.includes('facebook')) photoSuffix = '?height=64';
   if (user?.photoURL?.includes('google')) photoSuffix = '=s64-c';
   if (user?.photoURL?.includes('firebase')) photoSuffix = '';
 
-  const [emailNotVerified, setEmailNotVerified] = useState(
-    !auth.currentUser?.emailVerified
+  const [showEmailNotVerified, setShowEmailNotVerified] = useState<boolean>(
+    !firebaseUser?.emailVerified && !!firebaseUser?.email
   );
+
+  useEffect(() => {
+    setShowEmailNotVerified(
+      !firebaseUser?.emailVerified && !!firebaseUser?.email
+    );
+  }, [firebaseUser]);
 
   return (
     <>
@@ -71,14 +76,14 @@ const SignedUserCard: React.FC = () => {
         </motion.div>
       )}
 
-      {emailNotVerified && auth.currentUser?.email && (
+      {showEmailNotVerified && (
         <motion.div
           initial="out"
           animate="in"
           exit="out"
           variants={slideVariants}
         >
-          <EmailNotVerifiedMessage setEmailNotVerified={setEmailNotVerified} />
+          <EmailNotVerifiedMessage setShow={setShowEmailNotVerified} />
         </motion.div>
       )}
 

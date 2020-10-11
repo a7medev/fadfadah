@@ -10,20 +10,28 @@ export interface AuthContextType {
   user?: MiniUser | null;
   setUser: React.Dispatch<React.SetStateAction<MiniUser | null | undefined>>;
   settings?: Settings | null;
-  setSettings: React.Dispatch<React.SetStateAction<Settings | null | undefined>>;
+  setSettings: React.Dispatch<
+    React.SetStateAction<Settings | null | undefined>
+  >;
+  firebaseUser?: firebase.User | null;
 }
 
-export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+export const AuthContext = createContext<AuthContextType>(
+  {} as AuthContextType
+);
 
 const AuthContextProvider: React.FC = ({ children }) => {
   const initialSignedIn = !!localStorage.getItem('signedIn');
   const [signedIn, setSignedIn] = useState<boolean>(initialSignedIn);
 
   const [user, setUser] = useState<MiniUser | null>();
+  const [firebaseUser, setFirebaseUser] = useState<firebase.User | null>();
   const [settings, setSettings] = useState<Settings | null>();
 
   useEffect(() => {
     const unsub = auth.onAuthStateChanged(async user => {
+      setFirebaseUser(user);
+
       if (!user) {
         setSignedIn(false);
         localStorage.removeItem('signedIn');
@@ -90,7 +98,9 @@ const AuthContextProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signedIn, user, setUser, settings, setSettings }}>
+    <AuthContext.Provider
+      value={{ signedIn, user, setUser, settings, setSettings, firebaseUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
