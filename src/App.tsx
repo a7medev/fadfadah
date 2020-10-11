@@ -17,7 +17,7 @@ import Inbox from './pages/signed/Inbox';
 import NotFound from './pages/NotFound';
 import WhoRequests from './pages/signed/WhoRequests';
 import useDarkMode from './hooks/useDarkMode';
-import { AuthContext } from './store/AuthContext';
+import { AuthContext } from './contexts/AuthContext';
 
 const App: React.FC = () => {
   useDarkMode();

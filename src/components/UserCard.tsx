@@ -5,7 +5,7 @@ import VerifiedIcon from './icons/Verified';
 import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';
-import { AuthContext } from '../store/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 import UserPhoto from './UserPhoto';
 

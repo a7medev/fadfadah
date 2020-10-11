@@ -5,7 +5,7 @@ import { functions, performance } from '../config/firebase';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
 import MessageBox from './MessageBox';
-import { AuthContext } from '../store/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import CreateMessageDto from '../types/CreateMessageDto';
 import TextareaAutosize from 'react-textarea-autosize';
 

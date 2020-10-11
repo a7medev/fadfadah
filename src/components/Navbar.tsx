@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect, useRef, useContext } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { AuthContext } from '../store/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { auth } from '../config/firebase';
 import logo from '../assets/images/logo.svg';
 

@@ -4,7 +4,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import './assets/scss/main.scss';
 import { BrowserRouter as Router } from 'react-router-dom';
-import AuthContextProvider from './store/AuthContext';
+import AuthContextProvider from './contexts/AuthContext';
 import 'moment/locale/ar';
 
 ReactDOM.render(

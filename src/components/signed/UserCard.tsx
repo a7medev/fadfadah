@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useContext } from 'react';
-import { AuthContext } from '../../store/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
 import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
@@ -89,27 +89,6 @@ const SignedUserCard: React.FC = () => {
           missingGender={!user.gender}
         />
       )}
-
-      {/* {!user?.displayName && (
-        <motion.div
-          initial="out"
-          animate="in"
-          exit="out"
-          variants={slideVariants}
-        >
-          <NameIsNotSet />
-        </motion.div>
-      )}
-      {username === null && (
-        <motion.div
-          initial="out"
-          animate="in"
-          exit="out"
-          variants={slideVariants}
-        >
-          <UsernameIsNotSet />
-        </motion.div>
-      )} */}
     </>
   );
 };

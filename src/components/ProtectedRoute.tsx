@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useContext } from 'react';
 import { Route, RouteProps, Redirect } from 'react-router-dom';
-import { AuthContext } from '../store/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 
 export interface ProtectedRouteProps extends RouteProps {
   auth?: boolean;

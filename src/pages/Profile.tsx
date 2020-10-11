@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import UserCard from '../components/UserCard';
 import SendMessage from '../components/SendMessage';
 import MiniUser from '../types/MiniUser';
-import { AuthContext } from '../store/AuthContext';
+import { AuthContext } from '../contexts/AuthContext';
 import { LinkContainer } from 'react-router-bootstrap';
 import { FaArrowRight } from 'react-icons/fa';
 import PageTransition from '../components/PageTransition';

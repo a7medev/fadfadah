@@ -4,7 +4,7 @@ import PageTransition from '../../components/PageTransition';
 import Prefrences from '../../components/settings/Prefrences';
 import MessageBox from '../../components/MessageBox';
 import { Container } from 'react-bootstrap';
-import { AuthContext } from '../../store/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import { Helmet } from 'react-helmet';
 import Account from '../../components/settings/Account';
 import ChangePassword from '../../components/settings/ChangePassword';

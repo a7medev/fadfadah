@@ -3,7 +3,7 @@ import { useState, useRef, useContext, FormEvent } from 'react';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
 import { auth, messages } from '../../config/firebase';
-import { AuthContext } from '../../store/AuthContext';
+import { AuthContext } from '../../contexts/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 import { Helmet } from 'react-helmet';
