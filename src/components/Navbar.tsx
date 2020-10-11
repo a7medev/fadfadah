@@ -4,7 +4,7 @@ import { Navbar, Nav, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { AuthContext } from '../store/AuthContext';
 import { auth } from '../config/firebase';
-import Logo from '../assets/images/logo.svg';
+import logo from '../assets/images/logo.svg';
 
 const Navigation: React.FC = () => {
   const { signedIn } = useContext(AuthContext);
@@ -33,7 +33,7 @@ const Navigation: React.FC = () => {
         <Navbar.Brand>
           <img
             alt="فضفضة"
-            src={Logo}
+            src={logo}
             width="30"
             height="30"
             className="d-inline-block align-top ml-2"
