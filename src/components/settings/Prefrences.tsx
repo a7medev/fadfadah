@@ -88,7 +88,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
 
   return (
     <Card body className="mb-4" id="prefrences">
-      <h5>التفضيلات</h5>
+      <h5 className="mb-3">التفضيلات</h5>
 
       <Form.Group controlId="block-unsigned-messages">
         <Form.Switch

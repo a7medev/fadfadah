@@ -93,7 +93,7 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
 
   return (
     <Card body className="mb-4" id="account-data">
-      <h5>بيانات الحساب</h5>
+      <h5 className="mb-3">بيانات الحساب</h5>
 
       <Form onSubmit={changeAccountData}>
         <Form.Group controlId="display-name">
