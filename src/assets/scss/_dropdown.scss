@@ -25,9 +25,14 @@
   }
   .dropdown-item {
     color: white;
+
     &:hover,
     &:focus {
       background-color: $gray-700;
+    }
+
+    &:active {
+      background-color: $primary;
     }
   }
 }
