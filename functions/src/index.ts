@@ -7,6 +7,8 @@ import * as sharp from 'sharp';
 import type Settings from '../types/Settings';
 import type Message from '../types/Message';
 import type WhoRequest from '../types/WhoRequest';
+import type UserData from '../types/UserData';
+import Gender from '../types/Gender';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -43,17 +45,23 @@ async function getUserById(
       username = snap.docs[0]?.id ?? null;
     }
 
+    const userDoc = await db.collection('users').doc(uid).get();
+    let { gender } = userDoc.data() as UserData;
+    gender = gender ? gender : Gender.MALE;
+
     const retrievableUser: {
       uid: string;
       displayName: string | undefined;
       photoURL: string;
       verified: boolean;
       username?: string | null;
+      gender: Gender;
     } = {
       uid,
       displayName,
       photoURL: photoURL + photoSuffix,
-      verified
+      verified,
+      gender
     };
 
     if (options?.withUsername) retrievableUser.username = username;
