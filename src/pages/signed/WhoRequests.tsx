@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { Alert, Button, Container } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from 'react-router-dom';
+import { messages } from '../../config/firebase';
 import Offline from '../../components/icons/Offline';
 import Loader from '../../components/Loader';
 import PageTransition from '../../components/PageTransition';
@@ -45,7 +46,7 @@ const WhoRequests: React.FC<WhoRequestsProps> = ({ location }) => {
         {whoRequestsError && !(whoRequestsError.code === 'internal') && (
           <Alert variant="danger">
             {/* @ts-ignore */}
-            {firebaseMessages[whoRequestsError.code] ?? 'حدثت مشكلة ما'}
+            {messages[whoRequestsError.code] ?? 'حدثت مشكلة ما'}
           </Alert>
         )}
         {loadingWhoRequests && <Loader />}
