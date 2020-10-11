@@ -129,6 +129,19 @@
     border-top-color: $gray-700;
   }
 
+  .bottom-nav-icon {
+    color: $gray-600;
+  
+    &:hover {
+      background-color: rgba($primary, 0.05);
+      color: lighten($primary, 5%);
+    }
+
+    &.active {
+      color: $primary;
+    }
+  }
+
   .main-links {
     border-color: $gray-700;
   }
