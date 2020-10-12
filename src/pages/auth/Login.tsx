@@ -12,10 +12,13 @@ const Login: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
+  const loginButton = useRef<HTMLButtonElement>(null);
+
   const [error, setError] = useState<string | null>(null);
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
+    loginButton.current!.disabled = true;
 
     try {
       await auth.signInWithEmailAndPassword(
@@ -26,6 +29,8 @@ const Login: React.FC = () => {
       console.error(err);
       // @ts-ignore
       setError(messages[err.code] || 'حدثت مشكلة ما');
+    } finally {
+      loginButton.current!.disabled = false;
     }
   }
 
@@ -73,12 +78,14 @@ const Login: React.FC = () => {
               هل نسيت كلمة المرور ؟
             </Link>
 
-            <Button block type="submit">
+            <Button block type="submit" ref={loginButton}>
               تسجيل الدخول
             </Button>
           </Form>
 
-          <p className="mt-3">ليس لديك حساب؟ <Link to="/register">أنشئ واحداً</Link></p>
+          <p className="mt-3">
+            ليس لديك حساب؟ <Link to="/register">أنشئ واحداً</Link>
+          </p>
 
           <hr />
 
