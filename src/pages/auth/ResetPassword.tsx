@@ -37,7 +37,10 @@ const ResetPassword: React.FC = () => {
       <Container>
         <Card body style={{ maxWidth: 600 }} className="mx-auto my-3">
           <Card.Title className="text-center">
-            <h3>إعادة تعيين كلمة المرور</h3>
+            <h3 className="mx-4" style={{ whiteSpace: 'pre' }}>
+              إعادة تعيين <wbr />
+              كلمة المرور
+            </h3>
           </Card.Title>
 
           {error && (
