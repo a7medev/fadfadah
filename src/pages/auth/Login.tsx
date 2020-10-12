@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useState, useRef, useContext, FormEvent } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
 import { auth, messages } from '../../config/firebase';
-import { AuthContext } from '../../contexts/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 import { Helmet } from 'react-helmet';
@@ -14,18 +13,15 @@ const Login: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-  const authContext = useContext(AuthContext);
-
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
 
     try {
-      const { user } = await auth.signInWithEmailAndPassword(
-        email.current?.value!,
-        password.current?.value!
+      await auth.signInWithEmailAndPassword(
+        email.current!.value,
+        password.current!.value
       );
 
-      authContext?.setUser(user);
     } catch (err) {
       console.error(err);
       // @ts-ignore
