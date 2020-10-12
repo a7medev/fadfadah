@@ -6,6 +6,7 @@ import { auth, messages } from '../../config/firebase';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
@@ -21,7 +22,6 @@ const Login: React.FC = () => {
         email.current!.value,
         password.current!.value
       );
-
     } catch (err) {
       console.error(err);
       // @ts-ignore
@@ -32,7 +32,7 @@ const Login: React.FC = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>تسجيل الدخول | فضفضة</title>        
+        <title>تسجيل الدخول | فضفضة</title>
       </Helmet>
 
       <Container>
@@ -42,11 +42,7 @@ const Login: React.FC = () => {
           </Card.Title>
 
           {error && (
-            <Alert
-              variant="danger"
-              onClose={() => setError(null)}
-              dismissible
-            >
+            <Alert variant="danger" onClose={() => setError(null)} dismissible>
               {error}
             </Alert>
           )}
@@ -60,7 +56,7 @@ const Login: React.FC = () => {
                 placeholder="اكتب بريد حسابك الإلكتروني"
               />
             </Form.Group>
-            <Form.Group controlId="password">
+            <Form.Group controlId="password" className="mb-1">
               <Form.Label>كلمة المرور</Form.Label>
               <Form.Control
                 ref={password}
@@ -69,8 +65,20 @@ const Login: React.FC = () => {
               />
             </Form.Group>
 
-            <Button block type="submit">تسجيل الدخول</Button>
+            <Link
+              to="/reset-password"
+              className="d-block text-left mb-2"
+              style={{ fontSize: '0.95rem' }}
+            >
+              هل نسيت كلمة المرور ؟
+            </Link>
+
+            <Button block type="submit">
+              تسجيل الدخول
+            </Button>
           </Form>
+
+          <p className="mt-3">ليس لديك حساب؟ <Link to="/register">أنشئ واحداً</Link></p>
 
           <hr />
 

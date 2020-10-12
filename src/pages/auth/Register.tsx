@@ -101,6 +101,8 @@ const Register: React.FC = () => {
             </Button>
           </Form>
 
+          <p className="mt-3">لديك حساب بالفعل؟ <Link to="/login">سجّل الدخول</Link></p>
+
           <hr />
 
           <SignInFacebook setError={setError} />
