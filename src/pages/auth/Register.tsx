@@ -13,9 +13,8 @@ const Register: React.FC = () => {
   const fullName = useRef<HTMLInputElement>(null);
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
-  // const username = useRef<HTMLInputElement>(null);
 
-  const authContext = useContext(AuthContext);
+  const { setUser } = useContext(AuthContext);
 
   const [error, setError] = useState<string | null>(null);
 
@@ -34,18 +33,18 @@ const Register: React.FC = () => {
         password.current?.value!
       );
 
-      user
-        ?.updateProfile({
+      user!
+        .updateProfile({
           displayName: name!
         })
         .then(() => {
-          authContext?.setUser(prevUser => ({
+          setUser(prevUser => ({
             ...prevUser!,
             displayName: name!
           }));
         });
 
-      user?.sendEmailVerification();
+      user!.sendEmailVerification();
     } catch (err) {
       console.log(err);
       // @ts-ignore
@@ -56,7 +55,7 @@ const Register: React.FC = () => {
   return (
     <PageTransition>
       <Helmet>
-        <title>إنشاء حساب | فضفضة</title>        
+        <title>إنشاء حساب | فضفضة</title>
       </Helmet>
 
       <Container>
