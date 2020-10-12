@@ -14,16 +14,21 @@ const Register: React.FC = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
+  const registerButton = useRef<HTMLButtonElement>(null);
+
   const { setUser } = useContext(AuthContext);
 
   const [error, setError] = useState<string | null>(null);
 
-  async function handleRegister(event: FormEvent) {
+  async function register(event: FormEvent) {
     event.preventDefault();
+    registerButton.current!.disabled = true;
 
     // Validate full name
-    if (!/^\p{L}+( \p{L}+)*$/u.test(fullName.current?.value.trim()!))
+    if (!/^\p{L}+( \p{L}+)*$/u.test(fullName.current?.value.trim()!)) {
+      registerButton.current!.disabled = false;
       return setError('رجاءاً أدخل اسماً صالحاً');
+    }
 
     const name = fullName.current?.value;
 
@@ -49,6 +54,8 @@ const Register: React.FC = () => {
       console.log(err);
       // @ts-ignore
       setError(messages[err.code] || 'حدثت مشكلة ما');
+    } finally {
+      registerButton.current!.disabled = false;
     }
   }
 
@@ -70,7 +77,7 @@ const Register: React.FC = () => {
             </Alert>
           )}
 
-          <Form onSubmit={handleRegister}>
+          <Form onSubmit={register}>
             <Form.Group controlId="name">
               <Form.Label>الاسم كامل</Form.Label>
               <Form.Control
@@ -96,12 +103,14 @@ const Register: React.FC = () => {
               />
             </Form.Group>
 
-            <Button block type="submit">
+            <Button block type="submit" ref={registerButton}>
               إنشاء حساب
             </Button>
           </Form>
 
-          <p className="mt-3">لديك حساب بالفعل؟ <Link to="/login">سجّل الدخول</Link></p>
+          <p className="mt-3">
+            لديك حساب بالفعل؟ <Link to="/login">سجّل الدخول</Link>
+          </p>
 
           <hr />
 
