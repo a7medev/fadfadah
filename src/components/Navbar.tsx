@@ -25,7 +25,7 @@ const Navigation: React.FC = () => {
       navItems.forEach(el =>
         el.removeEventListener('click', closeNavbarHandler)
       );
-  });
+  }, []);
 
   return (
     <Navbar bg="white" expand="lg" fixed="top">
