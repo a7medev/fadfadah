@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { useContext } from 'react';
 
-import { Switch, Route } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
+import { Router } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
 
 import { AuthContext } from './contexts/AuthContext';
@@ -35,19 +34,26 @@ const App: React.FC = () => {
 
       <SafeArea paddingTop="10px" noBottomNavbar={!signedIn}>
         <AnimatePresence exitBeforeEnter>
-          <Switch>
-            <ProtectedRoute path="/" component={Home} exact />
-            <ProtectedRoute path="/login" component={Login} />
-            <ProtectedRoute path="/register" component={Register} />
-            <ProtectedRoute path="/reset-password" component={ResetPassword} />
-            <ProtectedRoute auth path="/inbox" component={Inbox} />
-            <ProtectedRoute auth path="/outbox" component={Outbox} />
-            <ProtectedRoute auth path="/who-requests" component={WhoRequests} />
-            <ProtectedRoute auth path="/settings" component={Settings} />
-            <Route path="/u/:username" component={Profile} />
-            <Route path="/privacy-policy" component={PrivacyPolicy} />
-            <Route component={NotFound} />
-          </Switch>
+          <Router>
+            {/* No Auth */}
+            <Home path="/" />
+            <Login path="login" />
+            <Register path="register" />
+            <ResetPassword path="reset-password" />
+            {/* End No Auth */}
+
+            {/* Auth */}
+            <Inbox path="inbox" />
+            <Outbox path="outbox" />
+            <WhoRequests path="who-requests" />
+            <Settings path="settings" />
+            {/* End Auth */}
+
+            <Profile path="u/:username" />
+            <PrivacyPolicy path="privacy-policy" />
+
+            <NotFound default />
+          </Router>
         </AnimatePresence>
       </SafeArea>
 

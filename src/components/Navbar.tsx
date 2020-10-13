@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect, useRef, useContext } from 'react';
-import { Navbar, Nav, Button } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+
 import { AuthContext } from '../contexts/AuthContext';
+import { Navbar, Nav, Button } from 'react-bootstrap';
 import { auth } from '../config/firebase';
 import logo from '../assets/images/logo.svg';
+import Link from './router/Link';
 
 const Navigation: React.FC = () => {
   const { signedIn } = useContext(AuthContext);
@@ -29,18 +30,16 @@ const Navigation: React.FC = () => {
 
   return (
     <Navbar bg="white" expand="lg" fixed="top">
-      <LinkContainer to={signedIn ? '/inbox' : '/'}>
-        <Navbar.Brand>
-          <img
-            alt="فضفضة"
-            src={logo}
-            width="30"
-            height="30"
-            className="d-inline-block align-top ml-2"
-          />
-          <span className="font-weight-bold text-primary">فضفضه</span>
-        </Navbar.Brand>
-      </LinkContainer>
+      <Navbar.Brand>
+        <img
+          alt="فضفضة"
+          src={logo}
+          width="30"
+          height="30"
+          className="d-inline-block align-top ml-2"
+        />
+        <span className="font-weight-bold text-primary">فضفضه</span>
+      </Navbar.Brand>
 
       <Navbar.Toggle
         aria-controls="nav"
@@ -59,34 +58,34 @@ const Navigation: React.FC = () => {
       >
         <Nav className="main-links ml-auto mr-lg-3 pr-lg-2">
           {!signedIn && (
-            <LinkContainer to="/" exact>
-              <Nav.Link active={false}>الرئيسية</Nav.Link>
-            </LinkContainer>
+            <Nav.Link as={Link} to="/">
+              الرئيسية
+            </Nav.Link>
           )}
 
           {signedIn && (
             <>
-              <LinkContainer to="/inbox" exact>
-                <Nav.Link active={false}>الرسائل المستلمة</Nav.Link>
-              </LinkContainer>
+              <Nav.Link as={Link} to="/inbox">
+                الرسائل المستلمة
+              </Nav.Link>
 
-              <LinkContainer to="/outbox" exact>
-                <Nav.Link active={false}>الرسائل المرسلة</Nav.Link>
-              </LinkContainer>
+              <Nav.Link as={Link} to="/outbox">
+                الرسائل المرسلة
+              </Nav.Link>
 
-              <LinkContainer to="/who-requests" exact>
-                <Nav.Link active={false}>طلبات معرفة المرسل</Nav.Link>
-              </LinkContainer>
+              <Nav.Link as={Link} to="/who-requests">
+                طلبات معرفة المرسل
+              </Nav.Link>
 
-              <LinkContainer to="/settings" exact>
-                <Nav.Link active={false}>الإعدادات</Nav.Link>
-              </LinkContainer>
+              <Nav.Link as={Link} to="/settings">
+                الإعدادات
+              </Nav.Link>
             </>
           )}
 
-          <LinkContainer to="/privacy-policy" exact>
-            <Nav.Link active={false}>سياسة الخصوصية</Nav.Link>
-          </LinkContainer>
+          <Nav.Link as={Link} to="/privacy-policy">
+            سياسة الخصوصية
+          </Nav.Link>
         </Nav>
 
         <Nav className="mr-auto">
@@ -100,14 +99,17 @@ const Navigation: React.FC = () => {
             </Button>
           ) : (
             <>
-              <LinkContainer to="/login">
-                <Button variant="text-primary" className="ml-lg-1 mb-1 mb-lg-0">
-                  تسجيل الدخول
-                </Button>
-              </LinkContainer>
-              <LinkContainer to="/register">
-                <Button variant="text-primary">إنشاء حساب</Button>
-              </LinkContainer>
+              <Button
+                variant="text-primary"
+                className="ml-lg-1 mb-1 mb-lg-0"
+                as={Link}
+                to="/login"
+              >
+                تسجيل الدخول
+              </Button>
+              <Button variant="text-primary" as={Link} to="/register">
+                إنشاء حساب
+              </Button>
             </>
           )}
         </Nav>

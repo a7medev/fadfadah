@@ -6,10 +6,13 @@ import { auth, messages } from '../../config/firebase';
 import { AuthContext } from '../../contexts/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
-import { Link } from 'react-router-dom';
+import { RouteComponentProps, Link } from '@reach/router';
 import { Helmet } from 'react-helmet';
+import withoutAuth from '../../components/hoc/without-auth';
 
-const Register: React.FC = () => {
+export interface RegisterProps extends RouteComponentProps {};
+
+const Register: React.FC<RegisterProps> = () => {
   const fullName = useRef<HTMLInputElement>(null);
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
@@ -129,4 +132,4 @@ const Register: React.FC = () => {
   );
 };
 
-export default Register;
+export default withoutAuth<RegisterProps>(Register);

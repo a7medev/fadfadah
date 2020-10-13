@@ -1,12 +1,18 @@
 import * as React from 'react';
 import { useState, useRef, FormEvent } from 'react';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
-import PageTransition from '../../components/PageTransition';
-import { auth, messages } from '../../config/firebase';
-import { Helmet } from 'react-helmet';
-import MessageBox from '../../components/MessageBox';
 
-const ResetPassword: React.FC = () => {
+import { Helmet } from 'react-helmet';
+import { RouteComponentProps } from '@reach/router';
+import PageTransition from '../../components/PageTransition';
+
+import { auth, messages } from '../../config/firebase';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
+import MessageBox from '../../components/MessageBox';
+import withoutAuth from '../../components/hoc/without-auth';
+
+export interface ResetPasswordProps extends RouteComponentProps {};
+
+const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const email = useRef<HTMLInputElement>(null);
 
   const [message, setMessage] = useState<string | null>(null);
@@ -76,4 +82,4 @@ const ResetPassword: React.FC = () => {
   );
 };
 
-export default ResetPassword;
+export default withoutAuth<ResetPasswordProps>(ResetPassword);

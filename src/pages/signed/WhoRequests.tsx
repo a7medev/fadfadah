@@ -1,19 +1,26 @@
 import * as React from 'react';
 import { useEffect } from 'react';
-import { Alert, Button, Container } from 'react-bootstrap';
+
+import PageTransition from '../../components/PageTransition';
+import { RouteComponentProps, useLocation } from '@reach/router';
+
 import { Helmet } from 'react-helmet';
-import { RouteComponentProps } from 'react-router-dom';
+
+import { Alert, Button, Container } from 'react-bootstrap';
 import { messages } from '../../config/firebase';
+
 import Offline from '../../components/icons/Offline';
 import Loader from '../../components/Loader';
-import PageTransition from '../../components/PageTransition';
 import WhoRequest from '../../components/WhoRequest';
 import useWhoRequests from '../../hooks/useWhoRequests';
 import qs from 'qs';
+import withAuth from '../../components/hoc/with-auth';
 
 export interface WhoRequestsProps extends RouteComponentProps {}
 
-const WhoRequests: React.FC<WhoRequestsProps> = ({ location }) => {
+const WhoRequests: React.FC<WhoRequestsProps> = () => {
+  const location = useLocation();
+
   const {
     whoRequests,
     loadMore,
@@ -58,7 +65,11 @@ const WhoRequests: React.FC<WhoRequestsProps> = ({ location }) => {
                 <h5 className="text-center text-muted">لا يوجد طلبات</h5>
               )}
               {whoRequests.map(request => (
-                <WhoRequest {...request} removeReq={removeReq} key={request.id} />
+                <WhoRequest
+                  {...request}
+                  removeReq={removeReq}
+                  key={request.id}
+                />
               ))}
 
               <div className="text-center">
@@ -80,4 +91,4 @@ const WhoRequests: React.FC<WhoRequestsProps> = ({ location }) => {
   );
 };
 
-export default WhoRequests;
+export default withAuth<WhoRequestsProps>(WhoRequests);

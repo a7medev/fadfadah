@@ -2,17 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import './assets/scss/main.scss';
-import { BrowserRouter as Router } from 'react-router-dom';
 import AuthContextProvider from './contexts/AuthContext';
+import './assets/scss/main.scss';
 import 'moment/locale/ar';
 
 ReactDOM.render(
-  <Router>
-    <AuthContextProvider>
-      <App />
-    </AuthContextProvider>
-  </Router>,
+  <AuthContextProvider>
+    <App />
+  </AuthContextProvider>,
   document.getElementById('root')
 );
 

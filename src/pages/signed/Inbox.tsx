@@ -7,11 +7,12 @@ import Loader from '../../components/Loader';
 import { motion, Variants } from 'framer-motion';
 import PageTransition from '../../components/PageTransition';
 import SignedUserCard from '../../components/signed/UserCard';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useLocation } from '@reach/router';
 import qs from 'qs';
 import useInbox from '../../hooks/useInbox';
 import { Helmet } from 'react-helmet';
 import Offline from '../../components/icons/Offline';
+import withAuth from '../../components/hoc/with-auth';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -20,7 +21,9 @@ const fadeVariants: Variants = {
 
 export interface InboxProps extends RouteComponentProps {}
 
-const Inbox: React.FC<InboxProps> = ({ location }) => {
+const Inbox: React.FC<InboxProps> = () => {
+  const location = useLocation();
+
   const {
     inbox,
     loadMore,
@@ -80,4 +83,4 @@ const Inbox: React.FC<InboxProps> = ({ location }) => {
   );
 };
 
-export default Inbox;
+export default withAuth<InboxProps>(Inbox);

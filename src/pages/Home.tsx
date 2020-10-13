@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
 import PageTransition from '../components/PageTransition';
 import Mailbox from '../assets/images/mailbox-animated.svg';
 import './Home.scss';
 import { Helmet } from 'react-helmet';
+import { RouteComponentProps } from '@reach/router';
+import Link from '../components/router/Link';
 
-const Home: React.FC = () => {
+export interface HomeProps extends RouteComponentProps {}
+
+const Home: React.FC<HomeProps> = () => {
   return (
     <PageTransition>
       <Helmet>
@@ -22,14 +25,22 @@ const Home: React.FC = () => {
                 فضفضة يسمح لك بالإفصاح عما بداخلك للآخرين.
               </p>
 
-              <LinkContainer to="/login">
-                <Button className="join-btn mb-2 mb-lg-0 ml-lg-2">تسجيل الدخول</Button>
-              </LinkContainer>
-              <LinkContainer to="/register">
-                <Button variant="outline-primary" className="join-btn">
-                  إنشاء حساب
-                </Button>
-              </LinkContainer>
+              <Button
+                className="join-btn mb-2 mb-lg-0 ml-lg-2"
+                as={Link}
+                to="/login"
+              >
+                تسجيل الدخول
+              </Button>
+
+              <Button
+                variant="outline-primary"
+                className="join-btn"
+                as={Link}
+                to="/register"
+              >
+                إنشاء حساب
+              </Button>
             </div>
           </Col>
 

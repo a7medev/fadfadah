@@ -1,7 +1,7 @@
 import * as React from 'react';
 import MiniUser from '../types/MiniUser';
 import VerifiedIcon from './icons/Verified';
-import { useHistory } from 'react-router-dom';
+import { navigate } from '@reach/router';
 import UserPhoto from './UserPhoto';
 
 export interface UserDataProps {
@@ -9,10 +9,8 @@ export interface UserDataProps {
 }
 
 const UserData: React.FC<UserDataProps> = ({ user }) => {
-  const history = useHistory();
-
   return (
-    <div className="d-flex align-items-center" onClick={user.username ? () => history.push(`/u/${user.username}`) : undefined}>
+    <div className="d-flex align-items-center" onClick={user.username ? () => navigate(`/u/${user.username}`) : undefined}>
       <UserPhoto url={user.photoURL} displayName={user.displayName} size={40} />
       <div className="flex-grow-1 mr-2">
         <p className="mb-n1">

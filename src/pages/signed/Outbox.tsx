@@ -8,10 +8,11 @@ import { motion, Variants } from 'framer-motion';
 import PageTransition from '../../components/PageTransition';
 import useOutbox from '../../hooks/useOutbox';
 import SignedUserCard from '../../components/signed/UserCard';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useLocation } from '@reach/router';
 import qs from 'qs';
 import Offline from '../../components/icons/Offline';
 import { Helmet } from 'react-helmet';
+import withAuth from '../../components/hoc/with-auth';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -20,7 +21,9 @@ const fadeVariants: Variants = {
 
 export interface OutboxProps extends RouteComponentProps {}
 
-const Outbox: React.FC<OutboxProps> = ({ location }) => {
+const Outbox: React.FC<OutboxProps> = () => {
+  const location = useLocation();
+
   const {
     outbox,
     loadMore,
@@ -82,4 +85,4 @@ const Outbox: React.FC<OutboxProps> = ({ location }) => {
   );
 };
 
-export default Outbox;
+export default withAuth<OutboxProps>(Outbox);

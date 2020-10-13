@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useContext } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps, redirectTo } from '@reach/router';
 import { Container, Button } from 'react-bootstrap';
 import { functions } from '../config/firebase';
 import Loader from '../components/Loader';
@@ -9,7 +9,6 @@ import UserCard from '../components/UserCard';
 import SendMessage from '../components/SendMessage';
 import MiniUser from '../types/MiniUser';
 import { AuthContext } from '../contexts/AuthContext';
-import { LinkContainer } from 'react-router-bootstrap';
 import { FaArrowRight } from 'react-icons/fa';
 import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet';
@@ -19,12 +18,7 @@ import Offline from '../components/icons/Offline';
 export interface ProfileProps
   extends RouteComponentProps<{ username: string }> {}
 
-const Profile: React.FC<ProfileProps> = ({
-  match: {
-    params: { username }
-  },
-  history
-}) => {
+const Profile: React.FC<ProfileProps> = ({ username }) => {
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState<boolean>(false);
   const [user, setUser] = useState<MiniUser | null>(null);
@@ -43,8 +37,8 @@ const Profile: React.FC<ProfileProps> = ({
           setLoading(false);
           setOffline(true);
         });
-    } else history.replace('/inbox');
-  }, [username, currentUser, history]);
+    } else redirectTo('/inbox');
+  }, [username, currentUser]);
 
   return (
     <PageTransition>
@@ -75,12 +69,10 @@ const Profile: React.FC<ProfileProps> = ({
             className="text-center"
           >
             <p className="text-muted h2 mt-5 mb-3">هذا المستخدم غير موجود</p>
-            <LinkContainer to="/inbox">
-              <Button>
-                <FaArrowRight className="ml-1" size="1em" />
-                عودة إلى الرئيسية
-              </Button>
-            </LinkContainer>
+            <Button as={Link} to="/inbox">
+              <FaArrowRight className="ml-1" size="1em" />
+              عودة إلى الرئيسية
+            </Button>
           </motion.div>
         )}
       </Container>

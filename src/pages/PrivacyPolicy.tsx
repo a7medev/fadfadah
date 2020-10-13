@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { Container, Card } from 'react-bootstrap';
-import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet';
+import { Container, Card } from 'react-bootstrap';
+import { RouteComponentProps } from '@reach/router';
+import PageTransition from '../components/PageTransition';
 
-const PrivacyPolicy: React.FC = () => {
+export interface PrivacyPolicyProps extends RouteComponentProps {}
+
+const PrivacyPolicy: React.FC<PrivacyPolicyProps> = () => {
   return (
     <PageTransition>
       <Helmet>

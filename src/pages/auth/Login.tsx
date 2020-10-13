@@ -1,14 +1,21 @@
 import * as React from 'react';
 import { useState, useRef, FormEvent } from 'react';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
+
+import { Helmet } from 'react-helmet';
+
 import PageTransition from '../../components/PageTransition';
-import { auth, messages } from '../../config/firebase';
+import { RouteComponentProps, Link } from '@reach/router';
+
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
-import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
 
-const Login: React.FC = () => {
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
+import { auth, messages } from '../../config/firebase';
+import withoutAuth from '../../components/hoc/without-auth';
+
+export interface LoginProps extends RouteComponentProps {}
+
+const Login: React.FC<LoginProps> = () => {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
 
@@ -97,4 +104,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default withoutAuth<LoginProps>(Login);
