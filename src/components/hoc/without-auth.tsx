@@ -9,7 +9,7 @@ function withoutAuth<TProps = {}>(
   return props => {
     const { signedIn } = useContext(AuthContext);
 
-    return signedIn ? <Redirect to="/inbox" /> : <Route {...props} />;
+    return signedIn ? <Redirect to="/inbox" noThrow /> : <Route {...props} />;
   };
 }
 

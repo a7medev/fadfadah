@@ -9,7 +9,7 @@ function withAuth<TProps = {}>(
   return props => {
     const { signedIn } = useContext(AuthContext);
 
-    return signedIn ? <Route {...props} /> : <Redirect to="/login" />;
+    return signedIn ? <Route {...props} /> : <Redirect to="/login" noThrow />;
   };
 }
 
