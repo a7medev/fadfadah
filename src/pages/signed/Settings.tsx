@@ -8,6 +8,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 import { Helmet } from 'react-helmet';
 import Account from '../../components/settings/Account';
 import ChangePassword from '../../components/settings/ChangePassword';
+import DeleteAccount from '../../components/settings/DeleteAccount';
 
 const Settings: React.FC = () => {
   const { user, settings, setSettings } = useContext(AuthContext);
@@ -35,6 +36,8 @@ const Settings: React.FC = () => {
         <Account setMessage={setMessage} />
 
         <ChangePassword setMessage={setMessage} />
+
+        <DeleteAccount />
       </Container>
     </PageTransition>
   );
