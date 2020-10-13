@@ -10,20 +10,6 @@
     ],
     "source": "functions"
   },
-  "hosting": {
-    "public": "build",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
   "storage": {
     "rules": "storage.rules"
   },
