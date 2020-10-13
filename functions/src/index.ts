@@ -548,6 +548,8 @@ export const sendLoveNotification = functions.firestore
 export const resizeProfilePhoto = functions.storage
   .object()
   .onFinalize(async object => {
+    if (object.metadata?.resizedImage === 'true') return false;
+
     const bucket = storage.bucket(object.bucket);
     const filePath = object.name!;
 
@@ -555,13 +557,11 @@ export const resizeProfilePhoto = functions.storage
     const profilePhotoPath = /^[^/]+\/profile_photo\/[^/]+$/;
     if (!profilePhotoPath.test(filePath)) return false;
 
-    const fileName = filePath.split('/').pop()!;
+    const photoName = filePath.split('/').pop()!;
     const bucketDir = path.dirname(filePath);
 
     const workingDir = path.join(os.tmpdir(), 'profile_photos');
     const tmpFilePath = path.join(workingDir, 'source.png');
-
-    if (fileName.includes('__photo__@')) return false;
 
     await fs.ensureDir(workingDir);
 
@@ -569,7 +569,6 @@ export const resizeProfilePhoto = functions.storage
       destination: tmpFilePath
     });
 
-    const photoName = `__photo__@${fileName}`;
     const photoPath = path.join(workingDir, photoName);
 
     await sharp(tmpFilePath).resize(100, 100).toFile(photoPath);
@@ -579,18 +578,15 @@ export const resizeProfilePhoto = functions.storage
     await Promise.all(prevPhotos.map(photo => photo.delete()));
 
     await bucket.upload(photoPath, {
-      destination: path.join(bucketDir, photoName)
+      destination: filePath,
+      metadata: {
+        metadata: {
+          resizedImage: 'true'
+        }
+      }
     });
 
-    await fs.remove(workingDir);
-
-    const userId = filePath.split('/').shift()!;
-
-    const photoURL = `https://firebasestorage.googleapis.com/v0/b/fad-fadah.appspot.com/o/${userId}%2Fprofile_photo%2F${photoName}?alt=media`;
-
-    return auth.updateUser(userId, {
-      photoURL
-    });
+    return fs.remove(workingDir);
   });
 
 // Data Joining Functions
