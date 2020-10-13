@@ -1,7 +1,8 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { auth, storage } from '../../config/firebase';
+import { AuthContext } from '../../contexts/AuthContext';
 // import Gender from '../../types/Gender';
 
 export interface AccountProps {
@@ -11,6 +12,8 @@ export interface AccountProps {
 const Account: React.FC<AccountProps> = ({ setMessage }) => {
   const [photoFileText, setPhotoFileText] = useState('اضغط لتحديد ملف الصورة');
   const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
+
+  const { setUser } = useContext(AuthContext);
 
   const saveDataButton = useRef<HTMLButtonElement>(null);
   const displayName = useRef<HTMLInputElement>(null);
@@ -34,14 +37,18 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
 
     // Changing the name
     const nameIsChanged =
-      (user.displayName ?? '') !== displayName.current?.value;
+      (user.displayName ?? '') !== displayName.current!.value;
 
     if (nameIsChanged) {
       user
         .updateProfile({
-          displayName: displayName.current?.value
+          displayName: displayName.current!.value
         })
         .then(() => {
+          setUser(prevUser => ({
+            ...prevUser!,
+            displayName: auth.currentUser!.displayName
+          }));
           setMessage('تم تحديث الاسم بنجاح');
         })
         .catch(() => {
@@ -77,6 +84,10 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
           })
         )
         .then(() => {
+          setUser(prevUser => ({
+            ...prevUser!,
+            photoURL: auth.currentUser!.photoURL
+          }));
           setMessage('تم تحديث الصورة الشخصية بنجاح');
         })
         .catch(err => {
