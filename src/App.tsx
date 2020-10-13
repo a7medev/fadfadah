@@ -34,7 +34,7 @@ const App: React.FC = () => {
 
       <SafeArea paddingTop="10px" noBottomNavbar={!signedIn}>
         <AnimatePresence exitBeforeEnter>
-          <Router>
+          <Router primary={false}>
             {/* No Auth */}
             <Home path="/" />
             <Login path="login" />
