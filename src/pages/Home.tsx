@@ -6,6 +6,7 @@ import './Home.scss';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
 import Link from '../components/router/Link';
+import withoutAuth from '../components/hoc/without-auth';
 
 export interface HomeProps extends RouteComponentProps {}
 
@@ -53,4 +54,4 @@ const Home: React.FC<HomeProps> = () => {
   );
 };
 
-export default Home;
+export default withoutAuth(Home);
