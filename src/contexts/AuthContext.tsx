@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createContext, useState, useEffect } from 'react';
-import { auth, db, messaging } from '../config/firebase';
+import { analytics, auth, db, messaging } from '../config/firebase';
 import MiniUser from '../types/MiniUser';
 import Settings from '../types/Settings';
 import UserData from '../types/UserData';
@@ -70,6 +70,9 @@ const AuthContextProvider: React.FC = ({ children }) => {
 
       const { displayName, photoURL } = user;
 
+      analytics.setUserId(uid);
+      analytics.setUserProperties({ gender });
+      
       setSettings(settings);
       setUser({
         uid,
