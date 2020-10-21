@@ -63,7 +63,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
         text={messageText!}
       />
 
-      <Card>
+      <Card className="mb-2">
         <Card.Body className="d-flex flex-wrap py-3">
           <div className="d-flex flex-grow-1">
             <UserPhoto
