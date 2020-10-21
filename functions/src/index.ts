@@ -417,7 +417,8 @@ export const sendWhoRequest = functions.https.onCall(
     db.collection('users')
       .doc(authorId)
       .collection('who_requests')
-      .add({
+      .doc(messageId)
+      .set({
         from: user.uid,
         message: {
           id: messageId,
@@ -425,7 +426,7 @@ export const sendWhoRequest = functions.https.onCall(
         },
         sentAt: new Date()
       })
-      .then(snap => {
+      .then(() => {
         const wantWord = user.gender === Gender.FEMALE ? 'تريد' : 'يريد';
         const userWord = user.gender === Gender.FEMALE ? 'مستخدمة' : 'مستخدم';
         const knowWord = user.gender === Gender.FEMALE ? 'تعرف' : 'يعرف';
@@ -442,7 +443,7 @@ export const sendWhoRequest = functions.https.onCall(
             title: 'فضفضة',
             body,
             icon: user.photoURL ?? '/images/avatar.svg',
-            clickAction: `/who-requests?goto=${snap.id}`
+            clickAction: `/who-requests?goto=${messageId}`
           }
         });
       })
