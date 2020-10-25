@@ -110,11 +110,15 @@ async function sendNotification(
   messaging.sendToDevice(tokens, payload).catch(err => console.error(err));
 }
 
-export const initUserAccount = functions.auth.user().onCreate(user => {
+export const initUserAccount = functions.auth.user().onCreate(async user => {
   return db
     .collection('users')
     .doc(user.uid)
     .set({
+      uid: user.uid,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      verified: false,
       settings: {
         blockUnsignedMessages: false,
         airplaneMode: false
@@ -265,16 +269,41 @@ export const setUsername = functions.https.onCall(
 
     const { size: hasUsername } = await db
       .collection('usernames')
-      .where('userId', '==', context.auth?.uid)
+      .where('userId', '==', context.auth.uid)
       .get();
 
     if (hasUsername) return false;
 
     const snap = await db.collection('usernames').doc(username).get();
+
     if (snap.exists) return false;
-    return snap.ref.set({ userId: context.auth?.uid });
+
+    return snap.ref
+      .set({ userId: context.auth.uid })
+      .then(() =>
+        db
+          .collection('users')
+          .doc(context.auth!.uid)
+          .set({ username: true }, { merge: true })
+      );
   }
 );
+
+export const setUserVerifiedState = functions.firestore
+  .document('/verified/{userId}')
+  .onCreate(snap => {
+    return db.collection('users').doc(snap.id).update({
+      verified: true
+    });
+  });
+
+export const removeUserVerifiedState = functions.firestore
+  .document('/verified/{userId}')
+  .onDelete(snap => {
+    return db.collection('users').doc(snap.id).update({
+      verified: false
+    });
+  });
 
 export const getUserData = functions.https.onCall(
   async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
