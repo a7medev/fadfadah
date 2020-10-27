@@ -1,16 +1,16 @@
 import * as React from 'react';
-import { useRef, useState, useContext, FormEvent } from 'react';
+import { useRef, useState, FormEvent } from 'react';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import PageTransition from '../../components/PageTransition';
 import { auth, messages } from '../../config/firebase';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
 import { RouteComponentProps, Link } from '@reach/router';
 import { Helmet } from 'react-helmet';
 import withoutAuth from '../../components/hoc/without-auth';
 
-export interface RegisterProps extends RouteComponentProps {};
+export interface RegisterProps extends RouteComponentProps {}
 
 const Register: React.FC<RegisterProps> = () => {
   const fullName = useRef<HTMLInputElement>(null);
@@ -19,7 +19,7 @@ const Register: React.FC<RegisterProps> = () => {
 
   const registerButton = useRef<HTMLButtonElement>(null);
 
-  const { setUser } = useContext(AuthContext);
+  const { setUser } = useAuth();
 
   const [error, setError] = useState<string | null>(null);
 

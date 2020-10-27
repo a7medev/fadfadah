@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
 import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
@@ -31,7 +31,7 @@ const fadeVariants: Variants = {
 };
 
 const SignedUserCard: React.FC = () => {
-  const { user, firebaseUser } = useContext(AuthContext);
+  const { user, firebaseUser } = useAuth();
 
   let photoSuffix = '';
   if (user?.photoURL?.includes('facebook')) photoSuffix = '?height=64';

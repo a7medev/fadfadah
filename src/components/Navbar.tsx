@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { useState, useEffect, useRef, useContext } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { auth } from '../config/firebase';
 import logo from '../assets/images/logo.svg';
 import Link from './router/Link';
 
 const Navigation: React.FC = () => {
-  const { signedIn } = useContext(AuthContext);
+  const { signedIn } = useAuth();
 
   const [collapseOffCanvas, setCollapseOffCanvas] = useState(false);
 

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useContext } from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
 import VerifiedIcon from './icons/Verified';
 import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 import UserPhoto from './UserPhoto';
 
@@ -37,13 +36,17 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
   const { protocol, host } = window.location;
   const link = `${protocol}//${host}/u/${user.username}`;
 
-  const { user: currentUser } = useContext(AuthContext);
+  const { user: currentUser } = useAuth();
 
   return (
     <Card className="mb-2">
       <Card.Body className="d-flex user-data">
         <div className="d-flex align-items-center flex-grow-1">
-          <UserPhoto url={user.photoURL} displayName={user.displayName} size={55} />
+          <UserPhoto
+            url={user.photoURL}
+            displayName={user.displayName}
+            size={55}
+          />
 
           <div className="mr-3">
             <Card.Title>

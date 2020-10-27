@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { analytics, auth, db, messaging } from '../config/firebase';
 import MiniUser from '../types/MiniUser';
 import Settings from '../types/Settings';
@@ -19,6 +19,8 @@ export interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType
 );
+
+export const useAuth = () => useContext(AuthContext);
 
 const AuthContextProvider: React.FC = ({ children }) => {
   const initialSignedIn = !!localStorage.getItem('signedIn');
@@ -72,7 +74,7 @@ const AuthContextProvider: React.FC = ({ children }) => {
 
       analytics.setUserId(uid);
       analytics.setUserProperties({ gender });
-      
+
       setSettings(settings);
       setUser({
         uid,

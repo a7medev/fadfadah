@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useState, useRef, useContext, FormEvent } from 'react';
+import { useState, useRef, FormEvent } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { auth, db, functions, messages } from '../../config/firebase';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import Gender from '../../types/Gender';
 
 export interface CompleteAccountDataProps {
@@ -23,7 +23,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
   const username = useRef<HTMLInputElement>(null);
   const [gender, setGender] = useState<string>();
 
-  const { user, setUser } = useContext(AuthContext);
+  const { user, setUser } = useAuth();
 
   const [displayNameError, setDisplayNameError] = useState<string | null>(null);
   const [usernameError, setUsernameError] = useState<string | null>(null);

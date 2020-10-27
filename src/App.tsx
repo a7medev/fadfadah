@@ -1,10 +1,9 @@
 import * as React from 'react';
-import { useContext } from 'react';
 
 import { Router } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
 
-import { AuthContext } from './contexts/AuthContext';
+import { useAuth } from './contexts/AuthContext';
 
 import SafeArea from './components/SafeArea';
 import Navigation from './components/Navbar';
@@ -26,7 +25,7 @@ import useDarkMode from './hooks/useDarkMode';
 
 const App: React.FC = () => {
   useDarkMode();
-  const { signedIn } = useContext(AuthContext);
+  const { signedIn } = useAuth();
 
   return (
     <>

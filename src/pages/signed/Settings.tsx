@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 
 import { RouteComponentProps } from '@reach/router';
 import PageTransition from '../../components/PageTransition';
 
 import { Helmet } from 'react-helmet';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Container } from 'react-bootstrap';
 
 import Prefrences from '../../components/settings/Prefrences';
@@ -18,7 +18,7 @@ import withAuth from '../../components/hoc/with-auth';
 export interface SettingsProps extends RouteComponentProps {}
 
 const Settings: React.FC<SettingsProps> = () => {
-  const { user, settings, setSettings } = useContext(AuthContext);
+  const { user, settings, setSettings } = useAuth();
 
   const [message, setMessage] = useState<string | null>(null);
 

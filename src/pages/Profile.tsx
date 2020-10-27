@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, RouteComponentProps, redirectTo } from '@reach/router';
 import { Container, Button } from 'react-bootstrap';
 import { functions } from '../config/firebase';
@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 import UserCard from '../components/UserCard';
 import SendMessage from '../components/SendMessage';
 import MiniUser from '../types/MiniUser';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { FaArrowRight } from 'react-icons/fa';
 import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet';
@@ -22,7 +22,7 @@ const Profile: React.FC<ProfileProps> = ({ username }) => {
   const [loading, setLoading] = useState(true);
   const [offline, setOffline] = useState<boolean>(false);
   const [user, setUser] = useState<MiniUser | null>(null);
-  const { user: currentUser } = useContext(AuthContext);
+  const { user: currentUser } = useAuth();
 
   useEffect(() => {
     if (username !== currentUser?.username) {

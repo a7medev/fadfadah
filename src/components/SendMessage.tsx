@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import { functions, performance } from '../config/firebase';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
 import MessageBox from './MessageBox';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import CreateMessageDto from '../types/CreateMessageDto';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -18,7 +18,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
 
-  const { user: currentUser, signedIn } = useContext(AuthContext);
+  const { user: currentUser, signedIn } = useAuth();
 
   const [isAnonymous, setIsAnonymous] = useState(true);
 
