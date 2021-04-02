@@ -1,7 +1,5 @@
 {
   "projects": {
-    "default": "fad-fadah",
-    "dev": "fadfadah-sandbox",
-    "prod": "fad-fadah"
+    "default": "fad-fadah"
   }
 }
