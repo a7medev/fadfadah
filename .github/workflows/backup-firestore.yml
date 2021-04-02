@@ -5,9 +5,9 @@ on:
     - cron: 0 0 * * 0
 
 env:
-  PROJECT_ID: fad-fadah
-  BUCKET: gs://fadfadah-backups
-
+  PROJECT_ID: fadfadah-app
+  BUCKET: gs://fadfadah-app-backups
+  
 jobs:
   backup:
     runs-on: ubuntu-latest
