@@ -1,38 +1,38 @@
-import * as React from 'react';
-import { useState, useRef, FormEvent } from 'react';
-
+import React, { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
-import PageTransition from '../../components/PageTransition';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 
 import { auth, messages } from '../../config/firebase';
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
-import MessageBox from '../../components/MessageBox';
 import withoutAuth from '../../components/hoc/without-auth';
+import PageTransition from '../../components/PageTransition';
+import MessageBox from '../../components/MessageBox';
 
-export interface ResetPasswordProps extends RouteComponentProps {};
+export interface ResetPasswordProps extends RouteComponentProps {}
 
 const ResetPassword: React.FC<ResetPasswordProps> = () => {
-  const email = useRef<HTMLInputElement>(null);
-
+  const [email, setEmail] = useState('');
   const [message, setMessage] = useState<string | null>(null);
-
   const [error, setError] = useState<string | null>(null);
 
-  const resetPassword = async (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
-      await auth.sendPasswordResetEmail(email.current!.value);
+      await auth.sendPasswordResetEmail(email);
       setMessage(
         'تم إرسال رابط إعادة تعيين كلمة المرور على بريدك الإلكتروني، افحص صندوق الوارد لمزيد من المعلومات.'
       );
     } catch (err) {
       console.error(err);
-      // @ts-ignore
-      setError(messages[err.code] || 'حدثت مشكلة ما');
+
+      if (err.code in messages) {
+        setError(messages[err.code]);
+      } else {
+        setError('حدثت مشكلة ما');
+      }
     }
-  }
+  };
 
   return (
     <PageTransition>
@@ -41,7 +41,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
       </Helmet>
 
       <Container>
-        <Card body style={{ maxWidth: 600 }} className="mx-auto my-3">
+        <Card body className={authStyles.card}>
           <Card.Title className="text-center">
             <h3 className="mx-4" style={{ whiteSpace: 'pre' }}>
               إعادة تعيين <wbr />
@@ -62,11 +62,12 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
             onClose={() => setMessage(null)}
           />
 
-          <Form onSubmit={resetPassword}>
+          <Form onSubmit={handleSubmit}>
             <Form.Group controlId="email">
               <Form.Label>البريد الإلكتروني</Form.Label>
               <Form.Control
-                ref={email}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 type="email"
                 placeholder="اكتب بريد حسابك الإلكتروني"
               />

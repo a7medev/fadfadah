@@ -56,6 +56,8 @@ const Register: React.FC<RegisterProps> = () => {
 
       if (err.code in messages) {
         setError(messages[err.code]);
+      } else {
+        setError('حدثت مشكلة ما');
       }
     } finally {
       setIsLoading(true);
