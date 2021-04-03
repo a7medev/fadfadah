@@ -1,45 +1,42 @@
-import * as React from 'react';
-import { useState, useRef, FormEvent } from 'react';
-
+import React, { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet';
-
-import PageTransition from '../../components/PageTransition';
+import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { RouteComponentProps, Link } from '@reach/router';
 
+import { auth, messages } from '../../config/firebase';
+import PageTransition from '../../components/PageTransition';
 import SignInFacebook from '../../components/auth/SignInFacebook';
 import SignInGoogle from '../../components/auth/SignInGoogle';
-
-import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
-import { auth, messages } from '../../config/firebase';
 import withoutAuth from '../../components/hoc/without-auth';
+import authStyles from './Auth.module.scss';
 
 export interface LoginProps extends RouteComponentProps {}
 
 const Login: React.FC<LoginProps> = () => {
-  const email = useRef<HTMLInputElement>(null);
-  const password = useRef<HTMLInputElement>(null);
-
-  const loginButton = useRef<HTMLButtonElement>(null);
-
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async (event: FormEvent) => {
+  const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    loginButton.current!.disabled = true;
+
+    setIsLoading(true);
 
     try {
-      await auth.signInWithEmailAndPassword(
-        email.current!.value,
-        password.current!.value
-      );
+      await auth.signInWithEmailAndPassword(email, password);
     } catch (err) {
       console.error(err);
-      // @ts-ignore
-      setError(messages[err.code] || 'حدثت مشكلة ما');
+
+      if (err.code in messages) {
+        setError(messages[err.code]);
+      } else {
+        setError('حدثت مشكلة ما');
+      }
     } finally {
-      loginButton.current!.disabled = false;
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <PageTransition>
@@ -48,7 +45,7 @@ const Login: React.FC<LoginProps> = () => {
       </Helmet>
 
       <Container>
-        <Card body style={{ maxWidth: 600 }} className="mx-auto my-3">
+        <Card body className={authStyles.card}>
           <Card.Title className="text-center">
             <h3>تسجيل الدخول</h3>
           </Card.Title>
@@ -59,11 +56,12 @@ const Login: React.FC<LoginProps> = () => {
             </Alert>
           )}
 
-          <Form onSubmit={handleLogin}>
+          <Form onSubmit={handleSubmit}>
             <Form.Group controlId="email">
               <Form.Label>البريد الإلكتروني</Form.Label>
               <Form.Control
-                ref={email}
+                value={email}
+                onChange={e => setEmail(e.target.value)}
                 type="email"
                 placeholder="اكتب بريد حسابك الإلكتروني"
               />
@@ -71,7 +69,8 @@ const Login: React.FC<LoginProps> = () => {
             <Form.Group controlId="password" className="mb-1">
               <Form.Label>كلمة المرور</Form.Label>
               <Form.Control
-                ref={password}
+                value={password}
+                onChange={e => setPassword(e.target.value)}
                 type="password"
                 placeholder="اكتب كلمة مرور حسابك"
               />
@@ -85,7 +84,7 @@ const Login: React.FC<LoginProps> = () => {
               هل نسيت كلمة المرور ؟
             </Link>
 
-            <Button block type="submit" ref={loginButton}>
+            <Button block type="submit" disabled={isLoading}>
               تسجيل الدخول
             </Button>
           </Form>
