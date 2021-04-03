@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Navbar } from 'react-bootstrap';
 import { FaPaperPlane, FaCog, FaInbox } from 'react-icons/fa';
-import Link from './router/Link';
+import Link from './Link';
 
 const BottomNavigation: React.FC = () => {
   return (

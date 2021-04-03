@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useState, useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { auth, storage } from '../../config/firebase';
-import { useAuth } from '../../contexts/AuthContext';
+import { auth, storage } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
 // import Gender from '../../types/Gender';
 
 export interface AccountProps {

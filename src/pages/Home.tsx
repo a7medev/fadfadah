@@ -5,8 +5,8 @@ import Mailbox from '../assets/images/mailbox-animated.svg';
 import styles from './Home.module.scss';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
-import Link from '../components/router/Link';
-import withoutAuth from '../components/hoc/without-auth';
+import Link from '../components/Link';
+import withoutAuth from '../components/withoutAuth';
 
 export interface HomeProps extends RouteComponentProps {}
 

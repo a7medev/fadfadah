@@ -9,12 +9,12 @@ import { Helmet } from 'react-helmet';
 import { Alert, Button, Container } from 'react-bootstrap';
 import { messages } from '../../config/firebase';
 
-import Offline from '../../components/icons/Offline';
+import Offline from '../../components/OfflineIcon';
 import Loader from '../../components/Loader';
 import WhoRequest from '../../components/WhoRequest';
 import useWhoRequests from '../../hooks/useWhoRequests';
 import qs from 'qs';
-import withAuth from '../../components/hoc/with-auth';
+import withAuth from '../../components/withAuth';
 
 export interface WhoRequestsProps extends RouteComponentProps {}
 

@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { auth } from '../config/firebase';
 import logo from '../assets/images/logo.svg';
-import Link from './router/Link';
+import Link from './Link';
 
 const Navigation: React.FC = () => {
   const { signedIn } = useAuth();

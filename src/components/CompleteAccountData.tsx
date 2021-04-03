@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState, useRef, FormEvent } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
-import { auth, db, functions, messages } from '../../config/firebase';
-import { useAuth } from '../../contexts/AuthContext';
-import Gender from '../../types/Gender';
+import { auth, db, functions, messages } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
+import Gender from '../types/Gender';
 
 export interface CompleteAccountDataProps {
   missingUsername?: boolean;

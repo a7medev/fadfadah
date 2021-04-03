@@ -4,7 +4,7 @@ import { RouteComponentProps } from '@reach/router';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 
 import { auth, messages } from '../../config/firebase';
-import withoutAuth from '../../components/hoc/without-auth';
+import withoutAuth from '../../components/withoutAuth';
 import PageTransition from '../../components/PageTransition';
 import MessageBox from '../../components/MessageBox';
 import authStyles from './Auth.module.scss';

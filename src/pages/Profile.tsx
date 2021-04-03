@@ -13,7 +13,7 @@ import { FaArrowRight } from 'react-icons/fa';
 import PageTransition from '../components/PageTransition';
 import { Helmet } from 'react-helmet';
 import UserCardSkeleton from '../components/UserCardSkeleton';
-import Offline from '../components/icons/Offline';
+import Offline from '../components/OfflineIcon';
 
 export interface ProfileProps
   extends RouteComponentProps<{ username: string }> {}

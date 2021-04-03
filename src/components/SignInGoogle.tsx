@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useCallback } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { auth as firebaseAuth, messages } from '../../config/firebase';
+import { auth as firebaseAuth, messages } from '../config/firebase';
 import { Button } from 'react-bootstrap';
 import { FaGoogle } from 'react-icons/fa';
 

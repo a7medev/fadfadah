@@ -8,12 +8,12 @@ import { Helmet } from 'react-helmet';
 import { useAuth } from '../../contexts/AuthContext';
 import { Container } from 'react-bootstrap';
 
-import Prefrences from '../../components/settings/Prefrences';
+import Prefrences from '../../components/PrefrencesSettings';
 import MessageBox from '../../components/MessageBox';
-import Account from '../../components/settings/Account';
-import ChangePassword from '../../components/settings/ChangePassword';
-import DeleteAccount from '../../components/settings/DeleteAccount';
-import withAuth from '../../components/hoc/with-auth';
+import Account from '../../components/AccountSettings';
+import ChangePassword from '../../components/ChangePasswordSettings';
+import DeleteAccount from '../../components/DeleteAccountSettings';
+import withAuth from '../../components/withAuth';
 
 export interface SettingsProps extends RouteComponentProps {}
 

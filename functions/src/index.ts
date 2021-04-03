@@ -9,6 +9,8 @@ import type WhoRequest from './types/WhoRequest';
 import type UserData from './types/UserData';
 import Gender from './types/Gender';
 import resizePhoto from './utils/resizePhoto';
+import MiniUser from './types/MiniUser';
+import Settings from './types/Settings';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -109,22 +111,31 @@ const sendNotification = async (
 };
 
 export const initUserAccount = functions.auth.user().onCreate(async user => {
+  interface UserDoc extends MiniUser {
+    settings: Settings;
+  }
+
+  const userDoc: UserDoc = {
+    uid: user.uid,
+    verified: false,
+    settings: {
+      blockUnsignedMessages: false,
+      airplaneMode: false
+    }
+  };
+
+  if (user.displayName) {
+    userDoc.displayName = user.displayName;
+  }
+
+  if (user.photoURL) {
+    userDoc.photoURL = user.photoURL;
+  }
+
   return db
     .collection('users')
     .doc(user.uid)
-    .set(
-      {
-        uid: user.uid,
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        verified: false,
-        settings: {
-          blockUnsignedMessages: false,
-          airplaneMode: false
-        }
-      },
-      { merge: true }
-    )
+    .set(userDoc, { merge: true })
     .catch(err => console.error(err));
 });
 

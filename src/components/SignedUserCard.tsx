@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
-import UserCard from '../UserCard';
+import UserCard from './UserCard';
 import { motion, Variants } from 'framer-motion';
-import UserCardSkeleton from '../UserCardSkeleton';
+import UserCardSkeleton from './UserCardSkeleton';
 import CompleteAccountData from './CompleteAccountData';
-import resizePhoto from '../../utils/resizePhoto';
+import resizePhoto from '../utils/resizePhoto';
 
 const slideVariants: Variants = {
   out: {

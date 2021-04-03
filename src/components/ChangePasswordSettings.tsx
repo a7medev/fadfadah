@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { auth, messages } from '../../config/firebase';
+import { auth, messages } from '../config/firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 

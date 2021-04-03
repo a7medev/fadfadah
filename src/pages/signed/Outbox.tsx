@@ -7,12 +7,12 @@ import Loader from '../../components/Loader';
 import { motion, Variants } from 'framer-motion';
 import PageTransition from '../../components/PageTransition';
 import useOutbox from '../../hooks/useOutbox';
-import SignedUserCard from '../../components/signed/UserCard';
+import SignedUserCard from '../../components/SignedUserCard';
 import { RouteComponentProps, useLocation } from '@reach/router';
 import qs from 'qs';
-import Offline from '../../components/icons/Offline';
+import Offline from '../../components/OfflineIcon';
 import { Helmet } from 'react-helmet';
-import withAuth from '../../components/hoc/with-auth';
+import withAuth from '../../components/withAuth';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },

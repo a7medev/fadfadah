@@ -6,13 +6,13 @@ import { messages as firebaseMessages } from '../../config/firebase';
 import Loader from '../../components/Loader';
 import { motion, Variants } from 'framer-motion';
 import PageTransition from '../../components/PageTransition';
-import SignedUserCard from '../../components/signed/UserCard';
+import SignedUserCard from '../../components/SignedUserCard';
 import { RouteComponentProps, useLocation } from '@reach/router';
 import qs from 'qs';
 import useInbox from '../../hooks/useInbox';
 import { Helmet } from 'react-helmet';
-import Offline from '../../components/icons/Offline';
-import withAuth from '../../components/hoc/with-auth';
+import Offline from '../../components/OfflineIcon';
+import withAuth from '../../components/withAuth';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },

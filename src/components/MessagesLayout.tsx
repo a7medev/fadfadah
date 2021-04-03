@@ -3,7 +3,7 @@ import { Col } from 'react-bootstrap';
 import Masonry from 'react-masonry-component';
 import Message from '../types/Message';
 import MessageCard from './MessageCard';
-import NoMessages from './icons/NoMessages';
+import NoMessages from './NoMessagesIcon';
 
 export interface MessagesLayoutProps {
   messages: Message<string>[];

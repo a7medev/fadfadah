@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
-import VerifiedIcon from './icons/Verified';
+import VerifiedIcon from './VerifiedIcon';
 import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';

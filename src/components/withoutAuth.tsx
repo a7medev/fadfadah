@@ -1,15 +1,15 @@
 import { Redirect } from '@reach/router';
 import * as React from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 
-function withAuth<TProps = {}>(
+function withoutAuth<TProps = {}>(
   Route: React.ComponentType<TProps>
 ): React.FC<TProps> {
   return props => {
     const { signedIn } = useAuth();
 
-    return signedIn ? <Route {...props} /> : <Redirect to="/login" noThrow />;
+    return signedIn ? <Redirect to="/inbox" noThrow /> : <Route {...props} />;
   };
 }
 
-export default withAuth;
+export default withoutAuth;

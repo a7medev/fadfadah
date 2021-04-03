@@ -1,6 +1,6 @@
 import * as React from 'react';
 import MiniUser from '../types/MiniUser';
-import VerifiedIcon from './icons/Verified';
+import VerifiedIcon from './VerifiedIcon';
 import { navigate } from '@reach/router';
 import UserPhoto from './UserPhoto';
 
