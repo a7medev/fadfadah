@@ -9,7 +9,7 @@ import MessageBox from '../MessageBox';
 const DeleteAccount: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);
 
-  function deleteAccount() {
+  const deleteAccount = () => {
     const isSure = window.confirm('هل أنت متأكد من رغبتك في حذف الحساب؟');
 
     if (isSure) {

@@ -14,7 +14,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
   const newPassword = useRef<HTMLInputElement>(null);
   const currentPassword = useRef<HTMLInputElement>(null);
 
-  function changePassword(event: React.FormEvent) {
+  const changePassword = (event: React.FormEvent) => {
     event.preventDefault();
     changePasswordButton.current!.disabled = true;
 

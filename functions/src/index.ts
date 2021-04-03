@@ -16,10 +16,10 @@ const auth = admin.auth();
 const storage = admin.storage();
 const messaging = admin.messaging();
 
-async function getUserById(
+const getUserById = async (
   userId: string,
   options?: { withUsername?: boolean }
-) {
+) => {
   if (!userId) return null;
 
   try {
@@ -68,9 +68,9 @@ async function getUserById(
     console.error(err);
     return null;
   }
-}
+};
 
-async function getUIDByUsername(username: string) {
+const getUIDByUsername = async (username: string) => {
   const doc = await db
     .collection('usernames')
     .doc(username.toLowerCase())
@@ -79,9 +79,9 @@ async function getUIDByUsername(username: string) {
   const { userId } = doc.data()!;
 
   return userId;
-}
+};
 
-async function getUIDByMessageId(messageId: string) {
+const getUIDByMessageId = async (messageId: string) => {
   const {
     docs: [message]
   } = await db
@@ -92,12 +92,12 @@ async function getUIDByMessageId(messageId: string) {
   const userId = message?.ref.parent.parent?.id;
 
   return userId;
-}
+};
 
-async function sendNotification(
+const sendNotification = async (
   userId: string,
   payload: admin.messaging.MessagingPayload
-) {
+) => {
   const devices = await db
     .collection('devices')
     .where('userId', '==', userId)
@@ -106,7 +106,7 @@ async function sendNotification(
 
   // Send Notifications
   messaging.sendToDevice(tokens, payload).catch(err => console.error(err));
-}
+};
 
 export const initUserAccount = functions.auth.user().onCreate(async user => {
   return db
@@ -345,7 +345,7 @@ export const blockUser = functions.https.onCall(
         'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
       );
 
-    function block(uid: string, isSender: boolean) {
+    const block = (uid: string, isSender: boolean) => {
       if (context.auth?.uid === id)
         throw new functions.https.HttpsError(
           'invalid-argument',
@@ -358,7 +358,7 @@ export const blockUser = functions.https.onCall(
         .collection('blocked')
         .doc(uid)
         .set({ userId: uid, isSender });
-    }
+    };
 
     switch (type) {
       case 'uid':

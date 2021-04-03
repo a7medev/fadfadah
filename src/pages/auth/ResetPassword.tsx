@@ -19,7 +19,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-  async function resetPassword(event: FormEvent) {
+  const resetPassword = async (event: FormEvent) => {
     event.preventDefault();
 
     try {

@@ -23,7 +23,7 @@ const Login: React.FC<LoginProps> = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-  async function handleLogin(event: FormEvent) {
+  const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
     loginButton.current!.disabled = true;
 

@@ -23,7 +23,7 @@ const Register: React.FC<RegisterProps> = () => {
 
   const [error, setError] = useState<string | null>(null);
 
-  async function register(event: FormEvent) {
+  const register = async (event: FormEvent) => {
     event.preventDefault();
     registerButton.current!.disabled = true;
 

@@ -14,7 +14,7 @@ const blockUser = functions.httpsCallable('blockUser');
 const Block: React.FC<BlockProps> = ({ activator: Activator, id, type }) => {
   const [message, setMessage] = useState<string | null>(null);
 
-  function block() {
+  const block = () => {
     blockUser({ id, type })
       .then(() => {
         setMessage('تم حظر المستخدم بنجاح');

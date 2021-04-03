@@ -4,7 +4,7 @@ import Message from '../types/Message';
 
 const getInbox = functions.httpsCallable('getInbox');
 
-function useInbox() {
+const useInbox = () => {
   const [inbox, setInbox] = useState<Message<string>[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -35,7 +35,7 @@ function useInbox() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function loadMore() {
+  const loadMore = () => {
     setLoadingMore(true);
 
     getInbox({ last: last.current })
@@ -51,7 +51,7 @@ function useInbox() {
       .finally(() => setLoadingMore(false));
   }
 
-  function removeMessage(id: string) {
+  const removeMessage = (id: string) => {
     setInbox(prevInbox => prevInbox.filter(message => message.id !== id));
   }
 

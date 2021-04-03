@@ -4,7 +4,7 @@ import WhoRequest from '../types/WhoRequest';
 
 const getWhoRequests = functions.httpsCallable('getWhoRequests');
 
-function useWhoRequests() {
+const useWhoRequests = () => {
   const [whoRequests, setWhoRequests] = useState<WhoRequest[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -36,7 +36,7 @@ function useWhoRequests() {
     // eslint-disable-next-line
   }, []);
 
-  function loadMore() {
+  const loadMore = () => {
     setLoadingMore(true);
 
     getWhoRequests({ last: last.current })
@@ -52,7 +52,7 @@ function useWhoRequests() {
       .finally(() => setLoadingMore(false));
   }
 
-  function removeReq(id: string) {
+  const removeReq = (id: string) => {
     setWhoRequests(prevReqs => prevReqs.filter(req => req.id !== id));
   }
 

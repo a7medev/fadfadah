@@ -26,7 +26,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
     initialAutoDetectTheme
   );
 
-  function changeTheme(event: React.FormEvent) {
+  const changeTheme = (event: React.FormEvent) => {
     if (autoDetectThemeOn) return;
 
     const darkModeOn = (event.target as HTMLInputElement).checked;
@@ -36,7 +36,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
     localStorage.setItem('darkMode', `${darkModeOn}`);
   }
 
-  function changeAutoDetectTheme(event: React.FormEvent) {
+  const changeAutoDetectTheme = (event: React.FormEvent) => {
     const autoDetectThemeOn = (event.target as HTMLInputElement).checked;
 
     if (autoDetectThemeOn) localStorage.removeItem('darkMode');
@@ -46,7 +46,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
     setDarkModeOn(detectTheme);
   }
 
-  function changeBlockUnsignedMessages(event: React.FormEvent) {
+  const changeBlockUnsignedMessages = (event: React.FormEvent) => {
     const blockUnsignedMessages = (event.target as HTMLInputElement).checked;
 
     db.collection('users').doc(user!.uid).set(
@@ -66,7 +66,7 @@ const Prefrences: React.FC<PrefrencesProps> = ({
     );
   }
 
-  function changeAirplaneMode(event: React.FormEvent) {
+  const changeAirplaneMode = (event: React.FormEvent) => {
     const airplaneMode = (event.target as HTMLInputElement).checked;
 
     db.collection('users').doc(user!.uid).set(

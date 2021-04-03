@@ -29,7 +29,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
   const [usernameError, setUsernameError] = useState<string | null>(null);
   const [genderError, setGenderError] = useState<string | null>(null);
 
-  async function saveUsername() {
+  const saveUsername = async () => {
     // Validate username
     if (!/^[A-Z_0-9]+$/i.test(username.current?.value.trim()!))
       return setUsernameError(
@@ -59,7 +59,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
     }
   }
 
-  function saveDisplayName() {
+  const saveDisplayName = () => {
     if (!/^\p{L}+( \p{L}+)*$/u.test(fullName.current!.value.trim()))
       return setDisplayNameError('رجاءاً أدخل اسماً صالحاً');
 
@@ -80,7 +80,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
       });
   }
 
-  function saveGender() {
+  const saveGender = () => {
     return db
       .collection('users')
       .doc(user!.uid)
@@ -100,7 +100,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
       });
   }
 
-  function completeAccountData(event: FormEvent) {
+  const completeAccountData = (event: FormEvent) => {
     event.preventDefault();
 
     if (missingDisplayName) saveDisplayName();

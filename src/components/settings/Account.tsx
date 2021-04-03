@@ -22,13 +22,13 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
 
   const user = auth.currentUser;
 
-  async function handlePhotoChange(event: any) {
+  const handlePhotoChange = async (event: any) => {
     const photoFile: File = event.target.files[0];
     setPhotoFileText(photoFile ? photoFile.name : 'اضغط لتحديد ملف الصورة');
     setPhotoFile(photoFile);
   }
 
-  function changeAccountData(event: React.FormEvent) {
+  const changeAccountData = (event: React.FormEvent) => {
     event.preventDefault();
 
     saveDataButton.current!.disabled = true;

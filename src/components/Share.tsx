@@ -12,7 +12,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
   const [show, setShow] = useState(false);
   const linkToShare = useRef<HTMLInputElement>(null);
 
-  function copyToClipboard() {
+  const copyToClipboard = () => {
     linkToShare.current?.select();
     document.execCommand('copy');
   }

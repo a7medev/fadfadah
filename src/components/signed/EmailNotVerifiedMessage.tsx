@@ -7,7 +7,7 @@ export interface EmailNotVerifiedMessageProps {
 }
 
 const EmailNotVerifiedMessage: React.FC<EmailNotVerifiedMessageProps> = ({ setShow }) => {
-  function sendEmailVerification() {
+  const sendEmailVerification = () => {
     setShow(false);
     auth.currentUser?.sendEmailVerification();
   }

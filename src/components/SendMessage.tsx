@@ -24,7 +24,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
 
   const sendButton = useRef<HTMLButtonElement>(null);
 
-  function sendMessage(event: React.FormEvent) {
+  const sendMessage = (event: React.FormEvent) => {
     event.preventDefault();
 
     const message: CreateMessageDto = {

@@ -57,12 +57,12 @@ const MessageCard: React.FC<MessageCardProps> = ({
     }
   }, [id, love]);
 
-  function deleteMessage() {
+  const deleteMessage = () => {
     removeMessage(id!);
     db.collection('messages').doc(id).delete();
   }
 
-  async function whoIsTheAuthor() {
+  const whoIsTheAuthor = async () => {
     try {
       const result = await sendWhoRequest(id);
       if (result) setMessage('تم إرسال طلب معرفة المرسل إلى صاحب الرسالة');

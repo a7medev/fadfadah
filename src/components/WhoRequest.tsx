@@ -20,7 +20,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
 }) => {
   const [messageText, setMessageText] = useState<string | null>(null);
 
-  function handleAccept() {
+  const handleAccept = () => {
     acceptWhoRequest(id)
       .then(({ data: accepted }) => {
         if (accepted) {
@@ -38,7 +38,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
       });
   }
 
-  function handleDelete() {
+  const handleDelete = () => {
     db.collection('users')
       .doc(auth.currentUser!.uid)
       .collection('who_requests')
