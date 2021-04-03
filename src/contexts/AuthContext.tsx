@@ -20,9 +20,17 @@ export const AuthContext = createContext<AuthContextType>(
   {} as AuthContextType
 );
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const value = useContext(AuthContext);
 
-const AuthContextProvider: React.FC = ({ children }) => {
+  if (value === undefined) {
+    throw new Error('You must wrap the app with AuthProvider to use useAuth');
+  }
+
+  return value;
+};
+
+const AuthProvider: React.FC = ({ children }) => {
   const initialSignedIn = !!localStorage.getItem('signedIn');
   const [signedIn, setSignedIn] = useState<boolean>(initialSignedIn);
 
@@ -111,4 +119,4 @@ const AuthContextProvider: React.FC = ({ children }) => {
   );
 };
 
-export default AuthContextProvider;
+export default AuthProvider;

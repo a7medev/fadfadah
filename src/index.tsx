@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import AuthContextProvider from './contexts/AuthContext';
+import AuthProvider from './contexts/AuthContext';
 import './assets/scss/main.scss';
 import 'moment/locale/ar';
 
 ReactDOM.render(
-  <AuthContextProvider>
+  <AuthProvider>
     <App />
-  </AuthContextProvider>,
+  </AuthProvider>,
   document.getElementById('root')
 );
 
