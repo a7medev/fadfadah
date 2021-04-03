@@ -6,6 +6,7 @@ import UserCard from '../UserCard';
 import { motion, Variants } from 'framer-motion';
 import UserCardSkeleton from '../UserCardSkeleton';
 import CompleteAccountData from './CompleteAccountData';
+import resizePhoto from '../../utils/resizePhoto';
 
 const slideVariants: Variants = {
   out: {
@@ -33,10 +34,7 @@ const fadeVariants: Variants = {
 const SignedUserCard: React.FC = () => {
   const { user, firebaseUser } = useAuth();
 
-  let photoSuffix = '';
-  if (user?.photoURL?.includes('facebook')) photoSuffix = '?height=64';
-  if (user?.photoURL?.includes('google')) photoSuffix = '=s64-c';
-  if (user?.photoURL?.includes('firebase')) photoSuffix = '';
+  const resizedPhoto = resizePhoto(user?.photoURL);
 
   const [showEmailNotVerified, setShowEmailNotVerified] = useState<boolean>(
     !firebaseUser?.emailVerified && !!firebaseUser?.email
@@ -60,7 +58,7 @@ const SignedUserCard: React.FC = () => {
           <UserCard
             user={{
               ...user,
-              photoURL: user.photoURL + photoSuffix
+              photoURL: resizedPhoto
             }}
           />
         </motion.div>

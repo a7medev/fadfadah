@@ -8,6 +8,7 @@ import type Message from '../types/Message';
 import type WhoRequest from '../types/WhoRequest';
 import type UserData from '../types/UserData';
 import Gender from '../types/Gender';
+import resizePhoto from './utils/resizePhoto';
 
 admin.initializeApp();
 const db = admin.firestore();
@@ -23,10 +24,7 @@ async function getUserById(
 
   try {
     const { uid, displayName, photoURL } = await auth.getUser(userId);
-    let photoSuffix = '';
-    if (photoURL?.includes('facebook')) photoSuffix = '?height=64';
-    if (photoURL?.includes('google')) photoSuffix = '=s64-c';
-    if (photoURL?.includes('firebase')) photoSuffix = '';
+    const resizedPhoto = resizePhoto(photoURL);
 
     const { exists: verified } = await db
       .collection('verified_users')
@@ -51,14 +49,14 @@ async function getUserById(
     const retrievableUser: {
       uid: string;
       displayName: string | undefined;
-      photoURL: string;
+      photoURL: string | null;
       verified: boolean;
       username?: string | null;
       gender: Gender;
     } = {
       uid,
       displayName,
-      photoURL: photoURL + photoSuffix,
+      photoURL: resizedPhoto,
       verified,
       gender
     };
