@@ -39,7 +39,7 @@ export const performance = firebase.performance();
 
 db.enablePersistence({ synchronizeTabs: true });
 
-export const messages = {
+export const messages: { [key: string]: string } = {
   'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بحساب آخر بالفعل',
   'auth/weak-password': 'يجب أن تحتوي كلمة المرور على 6 حروف أو أكثر',
   'auth/invalid-email': 'رجاءاً أدخل بريد إلكتروني صالح',
