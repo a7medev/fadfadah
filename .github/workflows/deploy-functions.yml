@@ -1,0 +1,31 @@
+name: Deploy Cloud Functions
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - functions/**
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Setup Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: '14.x'
+
+      - name: Install packages
+        working-directory: functions
+        run: yarn
+
+      - name: Deploy to Firebase Cloud Functions
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only functions
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
