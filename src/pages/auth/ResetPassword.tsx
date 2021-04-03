@@ -7,6 +7,7 @@ import { auth, messages } from '../../config/firebase';
 import withoutAuth from '../../components/hoc/without-auth';
 import PageTransition from '../../components/PageTransition';
 import MessageBox from '../../components/MessageBox';
+import authStyles from './Auth.module.scss';
 
 export interface ResetPasswordProps extends RouteComponentProps {}
 
