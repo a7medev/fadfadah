@@ -21,14 +21,14 @@ jobs:
       - name: Build the app
         run: yarn build
         env:
-          REACT_APP_FIREBASE_API_KEY: AIzaSyB9QiKhNpNd0-FXrxSlYShusU_95quET8I
-          REACT_APP_FIREBASE_AUTH_DOMAIN: fad-fadah.firebaseapp.com
-          REACT_APP_FIREBASE_DATABASE_URL: https://fad-fadah.firebaseio.com
-          REACT_APP_FIREBASE_PROJECT_ID: fad-fadah
-          REACT_APP_FIREBASE_STORAGE_BUCKET: fad-fadah.appspot.com
-          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: '514590012549'
-          REACT_APP_FIREBASE_APP_ID: 1:514590012549:web:d679963f9c71faebba65ec
-          REACT_APP_FIREBASE_MEASUREMENT_ID: G-L6L6JWXE14
+          REACT_APP_FIREBASE_API_KEY: AIzaSyC9VQy2EtTg9QBL6vIdws3178CWM136LkE
+          REACT_APP_FIREBASE_AUTH_DOMAIN: fadfadah-app.firebaseapp.com
+          REACT_APP_FIREBASE_PROJECT_ID: fadfadah-app
+          REACT_APP_FIREBASE_STORAGE_BUCKET: fadfadah-app.appspot.com
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: '137606338'
+          REACT_APP_FIREBASE_APP_ID: 1:137606338:web:6b8fa2d11138278ab9f75b
+          REACT_APP_FIREBASE_MEASUREMENT_ID: G-KFX596R655
+
 
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
