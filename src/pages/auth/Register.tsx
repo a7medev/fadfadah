@@ -69,7 +69,7 @@ const Register: React.FC<RegisterProps> = () => {
       </Helmet>
 
       <Container>
-        <Card body className={`${authStyles.card} mx-auto my-3`}>
+        <Card body className={authStyles.card}>
           <Card.Title className="text-center">
             <h3>إنشاء حساب</h3>
           </Card.Title>
