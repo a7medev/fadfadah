@@ -22,7 +22,7 @@ jobs:
         run: yarn build
         env:
           REACT_APP_FIREBASE_API_KEY: AIzaSyC9VQy2EtTg9QBL6vIdws3178CWM136LkE
-          REACT_APP_FIREBASE_AUTH_DOMAIN: fadfadah-app.firebaseapp.com
+          REACT_APP_FIREBASE_AUTH_DOMAIN: fadfadah.me
           REACT_APP_FIREBASE_PROJECT_ID: fadfadah-app
           REACT_APP_FIREBASE_STORAGE_BUCKET: fadfadah-app.appspot.com
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: '137606338'
