@@ -112,16 +112,19 @@ export const initUserAccount = functions.auth.user().onCreate(async user => {
   return db
     .collection('users')
     .doc(user.uid)
-    .set({
-      uid: user.uid,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      verified: false,
-      settings: {
-        blockUnsignedMessages: false,
-        airplaneMode: false
-      }
-    })
+    .set(
+      {
+        uid: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        verified: false,
+        settings: {
+          blockUnsignedMessages: false,
+          airplaneMode: false
+        }
+      },
+      { merge: true }
+    )
     .catch(err => console.error(err));
 });
 
