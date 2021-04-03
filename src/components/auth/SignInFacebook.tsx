@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useCallback } from 'react';
-import { auth } from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 import { auth as firebaseAuth, messages } from '../../config/firebase';
 import { Button } from 'react-bootstrap';
 import { FaFacebook } from 'react-icons/fa';
 
-export const facebookProvider = new auth.FacebookAuthProvider();
+export const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
 export interface SignInFacebookProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>

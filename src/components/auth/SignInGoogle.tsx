@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useCallback } from 'react';
-import { auth } from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 import { auth as firebaseAuth, messages } from '../../config/firebase';
 import { Button } from 'react-bootstrap';
 import { FaGoogle } from 'react-icons/fa';
 
-export const googleProvider = new auth.GoogleAuthProvider();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 export interface SignInGoogleProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>

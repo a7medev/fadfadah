@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
+import type firebase from 'firebase';
+
 import { functions } from '../config/firebase';
 import WhoRequest from '../types/WhoRequest';
 

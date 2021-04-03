@@ -29,13 +29,11 @@ export const messaging = firebase.messaging();
 export const analytics = firebase.analytics();
 export const performance = firebase.performance();
 
-// if (window.location.hostname === 'localhost') {
-//   db.settings({
-//     host: 'localhost:8080',
-//     ssl: false
-//   });
-//   firebase.functions().useFunctionsEmulator('http://localhost:5001');
-// }
+if (process.env.NODE_ENV === 'development') {
+  auth.useEmulator('http://localhost:9099');
+  db.useEmulator('localhost', 8080);
+  functions.useEmulator('localhost', 5001);
+}
 
 db.enablePersistence({ synchronizeTabs: true });
 

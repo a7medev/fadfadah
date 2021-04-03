@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import { auth, messages } from '../../config/firebase';
-import { auth as appAuth } from 'firebase/app';
+import firebase from 'firebase/app';
 import 'firebase/auth';
 
 export interface ChangePasswordProps {
@@ -20,7 +20,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
 
     const user = auth.currentUser!;
     const emailProvider = user?.providerData.find(
-      provider => provider?.providerId === appAuth.EmailAuthProvider.PROVIDER_ID
+      provider => provider?.providerId === firebase.auth.EmailAuthProvider.PROVIDER_ID
     );
 
     if (!emailProvider)
@@ -28,7 +28,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
         'يمكن للأشخاص الذين يملكون حساباً مربوطاً بالبريد الإلكتروني فقط تغيير كلمة المرور'
       );
 
-    const cred = appAuth.EmailAuthProvider.credential(
+    const cred = firebase.auth.EmailAuthProvider.credential(
       emailProvider.email!,
       currentPassword.current?.value!
     );

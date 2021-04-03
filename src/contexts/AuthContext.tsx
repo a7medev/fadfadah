@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { createContext, useContext, useState, useEffect } from 'react';
+import type firebase from 'firebase';
+
 import { analytics, auth, db, messaging } from '../config/firebase';
 import MiniUser from '../types/MiniUser';
 import Settings from '../types/Settings';
