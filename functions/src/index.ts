@@ -4,10 +4,10 @@ import * as path from 'path';
 import * as fs from 'fs-extra';
 import * as os from 'os';
 import * as sharp from 'sharp';
-import type Message from '../types/Message';
-import type WhoRequest from '../types/WhoRequest';
-import type UserData from '../types/UserData';
-import Gender from '../types/Gender';
+import type Message from './types/Message';
+import type WhoRequest from './types/WhoRequest';
+import type UserData from './types/UserData';
+import Gender from './types/Gender';
 import resizePhoto from './utils/resizePhoto';
 
 admin.initializeApp();
