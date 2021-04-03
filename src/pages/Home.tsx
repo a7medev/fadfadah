@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import PageTransition from '../components/PageTransition';
 import Mailbox from '../assets/images/mailbox-animated.svg';
-import './Home.scss';
+import styles from './Home.module.scss';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
 import Link from '../components/router/Link';
@@ -19,7 +19,9 @@ const Home: React.FC<HomeProps> = () => {
 
       <Container className="text-center">
         <Row>
-          <Col className="content d-flex align-items-center justify-content-center">
+          <Col
+            className={`${styles.content} d-flex align-items-center justify-content-center`}
+          >
             <div className="text-lg-right">
               <h1 className="display-4 mb-2">فَضْفَضَة</h1>
               <p className="lead text-black-50 mb-4">
@@ -27,7 +29,7 @@ const Home: React.FC<HomeProps> = () => {
               </p>
 
               <Button
-                className="join-btn mb-2 mb-lg-0 ml-lg-2"
+                className={`${styles.joinButton} mb-2 mb-lg-0 ml-lg-2`}
                 as={Link}
                 to="/login"
               >
@@ -36,7 +38,7 @@ const Home: React.FC<HomeProps> = () => {
 
               <Button
                 variant="outline-primary"
-                className="join-btn"
+                className={styles.joinButton}
                 as={Link}
                 to="/register"
               >
@@ -45,7 +47,7 @@ const Home: React.FC<HomeProps> = () => {
             </div>
           </Col>
 
-          <Col lg="6" className="mailbox-img">
+          <Col lg="6" className={styles.mailboxImage}>
             <img src={Mailbox} alt="فضفضة" draggable={false} />
           </Col>
         </Row>
