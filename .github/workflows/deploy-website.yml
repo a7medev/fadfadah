@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    paths-ignore:
+      - functions/**
   workflow_dispatch:
 
 jobs:
@@ -28,7 +30,6 @@ jobs:
           REACT_APP_FIREBASE_MESSAGING_SENDER_ID: '137606338'
           REACT_APP_FIREBASE_APP_ID: 1:137606338:web:6b8fa2d11138278ab9f75b
           REACT_APP_FIREBASE_MEASUREMENT_ID: G-KFX596R655
-
 
       - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
