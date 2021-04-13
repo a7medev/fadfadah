@@ -9,14 +9,12 @@ export interface AccountProps {
 }
 
 const Account: React.FC<AccountProps> = ({ setMessage }) => {
+  const { user, setUser } = useAuth();
+
   const [photoFileText, setPhotoFileText] = useState('اضغط لتحديد ملف الصورة');
   const [photoFile, setPhotoFile] = useState<File>();
-  const [displayName, setDisplayName] = useState('');
+  const [displayName, setDisplayName] = useState(user?.displayName || '');
   const [isLoading, setIsLoading] = useState(false);
-
-  const { setUser } = useAuth();
-
-  const user = auth.currentUser;
 
   const handlePhotoChange = async (event: any) => {
     const photoFile: File = event.target.files[0];
