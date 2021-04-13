@@ -3,13 +3,14 @@ import { Helmet } from 'react-helmet';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { RouteComponentProps, Link } from '@reach/router';
 
-import { auth, db, messages } from '../../config/firebase';
+import { auth, db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import PageTransition from '../../components/PageTransition';
 import SignInFacebook from '../../components/SignInFacebook';
 import SignInGoogle from '../../components/SignInGoogle';
 import withoutAuth from '../../components/withoutAuth';
 import authStyles from './Auth.module.scss';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export interface RegisterProps extends RouteComponentProps {}
 
@@ -50,15 +51,10 @@ const Register: React.FC<RegisterProps> = () => {
         .doc(user.uid)
         .set({ displayName: name }, { merge: true });
       await user.updateProfile({ displayName: name });
-      setUser(user => user && ({ ...user, displayName: name }));
+      setUser(user => user && { ...user, displayName: name });
     } catch (err) {
       console.error(err);
-
-      if (err.code in messages) {
-        setError(messages[err.code]);
-      } else {
-        setError('حدثت مشكلة ما');
-      }
+      setError(getErrorMessage(err.code));
     } finally {
       setIsLoading(true);
     }

@@ -1,18 +1,17 @@
-import * as React from 'react';
-import { useEffect } from 'react';
-import { Container, Alert, Button } from 'react-bootstrap';
-import MessagesLayout from '../../components/MessagesLayout';
-import { messages as firebaseMessages } from '../../config/firebase';
-import Loader from '../../components/Loader';
-import { motion, Variants } from 'framer-motion';
-import PageTransition from '../../components/PageTransition';
-import useOutbox from '../../hooks/useOutbox';
-import SignedUserCard from '../../components/SignedUserCard';
-import { RouteComponentProps, useLocation } from '@reach/router';
+import React, { useEffect } from 'react';
 import qs from 'qs';
-import Offline from '../../components/OfflineIcon';
 import { Helmet } from 'react-helmet';
+import { RouteComponentProps, useLocation } from '@reach/router';
+import { Container, Alert, Button } from 'react-bootstrap';
+import { motion, Variants } from 'framer-motion';
+
+import MessagesLayout from '../../components/MessagesLayout';
+import Loader from '../../components/Loader';
+import PageTransition from '../../components/PageTransition';
+import SignedUserCard from '../../components/SignedUserCard';
+import useOutbox from '../../hooks/useOutbox';
 import withAuth from '../../components/withAuth';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 const fadeVariants: Variants = {
   out: { opacity: 0 },
@@ -28,17 +27,16 @@ const Outbox: React.FC<OutboxProps> = () => {
     outbox,
     loadMore,
     hasMore,
-    loadingMore,
+    isLoading,
+    isLoadingMore,
     removeMessage,
-    loading: loadingOutbox,
-    offline: outboxOffline,
-    error: outboxError
+    error
   } = useOutbox();
   const { goto } = qs.parse(location.search, { ignoreQueryPrefix: true });
 
   useEffect(() => {
-    if (!loadingOutbox && goto) window.location.href = `#${goto}`;
-  }, [loadingOutbox, goto]);
+    if (!isLoading && goto) window.location.href = `#${goto}`;
+  }, [isLoading, goto]);
 
   return (
     <PageTransition>
@@ -51,23 +49,20 @@ const Outbox: React.FC<OutboxProps> = () => {
 
         <h4 className="mt-4 mb-3">الرسائل المرسلة</h4>
 
-        {outboxOffline && <Offline />}
+        {error && <Alert variant="danger">{getErrorMessage(error.code)}</Alert>}
 
-        {outboxError && !(outboxError.code === 'internal') && (
-          <Alert variant="danger">
-            {/* @ts-ignore */}
-            {firebaseMessages[outboxError.code] ?? 'حدثت مشكلة ما'}
-          </Alert>
-        )}
-        {loadingOutbox && <Loader />}
-        {!loadingOutbox &&
-          !(outboxOffline && outbox.length === 0) &&
-          !outboxOffline &&
+        {isLoading ? (
+          <Loader />
+        ) : (
           outbox && (
             <motion.div initial="out" animate="in" variants={fadeVariants}>
-              <MessagesLayout messages={outbox} removeMessage={removeMessage} outbox />
+              <MessagesLayout
+                messages={outbox}
+                removeMessage={removeMessage}
+                outbox
+              />
               <div className="text-center">
-                {hasMore && !loadingMore && (
+                {hasMore && !isLoadingMore && (
                   <Button
                     variant="text-primary"
                     className="rounded-pill"
@@ -76,10 +71,11 @@ const Outbox: React.FC<OutboxProps> = () => {
                     عرض المزيد
                   </Button>
                 )}
-                {loadingMore && <Loader small />}
+                {isLoadingMore && <Loader small />}
               </div>
             </motion.div>
-          )}
+          )
+        )}
       </Container>
     </PageTransition>
   );

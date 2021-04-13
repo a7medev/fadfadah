@@ -3,11 +3,12 @@ import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 
-import { auth, messages } from '../../config/firebase';
+import { auth } from '../../config/firebase';
 import withoutAuth from '../../components/withoutAuth';
 import PageTransition from '../../components/PageTransition';
 import MessageBox from '../../components/MessageBox';
 import authStyles from './Auth.module.scss';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export interface ResetPasswordProps extends RouteComponentProps {}
 
@@ -26,12 +27,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
       );
     } catch (err) {
       console.error(err);
-
-      if (err.code in messages) {
-        setError(messages[err.code]);
-      } else {
-        setError('حدثت مشكلة ما');
-      }
+      setError(getErrorMessage(err.code));
     }
   };
 

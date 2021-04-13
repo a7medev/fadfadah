@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState, useRef, FormEvent } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
-import { auth, db, functions, messages } from '../config/firebase';
+import { auth, db, functions } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import Gender from '../types/Gender';
+import getErrorMessage from '../utils/getErrorMessage';
 
 export interface CompleteAccountDataProps {
   missingUsername?: boolean;
@@ -54,8 +55,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
       }));
     } catch (err) {
       console.error(err);
-      // @ts-ignore
-      setError(messages[err.code]);
+      setUsernameError(getErrorMessage(err.code));
     }
   }
 
@@ -75,8 +75,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
       )
       .catch(err => {
         console.error(err);
-        // @ts-ignore
-        setDisplayNameError(messages[err.code] || 'حدثت مشكلة ما');
+        setDisplayNameError(getErrorMessage(err.code));
       });
   }
 
@@ -95,8 +94,7 @@ const CompleteAccountData: React.FC<CompleteAccountDataProps> = ({
       )
       .catch(err => {
         console.error(err);
-        // @ts-ignore
-        setGenderError(messages[err.code] || 'حدثت مشكلة ما');
+        setGenderError(getErrorMessage(err.code));
       });
   }
 

@@ -2,9 +2,11 @@ import * as React from 'react';
 import { useCallback } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { auth as firebaseAuth, messages } from '../config/firebase';
 import { Button } from 'react-bootstrap';
 import { FaFacebook } from 'react-icons/fa';
+
+import { auth as firebaseAuth } from '../config/firebase';
+import getErrorMessage from '../utils/getErrorMessage';
 
 export const facebookProvider = new firebase.auth.FacebookAuthProvider();
 
@@ -17,8 +19,7 @@ const SignInFacebook: React.FC<SignInFacebookProps> = ({ setError }) => {
     firebaseAuth.signInWithPopup(facebookProvider)
       .catch(err => {
         console.error(err);
-        // @ts-ignore
-        setError(messages[err.code] || 'حدثت مشكلة ما');
+        setError(getErrorMessage(err.code));
       })
   }, [setError])
 

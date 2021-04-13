@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { auth, messages } from '../config/firebase';
 import firebase from 'firebase/app';
 import 'firebase/auth';
+
+import { auth } from '../config/firebase';
+import getErrorMessage from '../utils/getErrorMessage';
 
 export interface ChangePasswordProps {
   setMessage: React.Dispatch<React.SetStateAction<string | null>>;
@@ -39,8 +41,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
         setMessage('تم تغيير كلمة المرور بنجاح');
       })
       .catch(err => {
-        // @ts-ignore
-        setMessage(messages[err.code] ?? 'حدثت مشكلة ما');
+        setMessage(getErrorMessage(err.code));
       })
       .finally(() => {
         changePasswordButton.current!.disabled = false;

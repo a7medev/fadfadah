@@ -3,12 +3,13 @@ import { Helmet } from 'react-helmet';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { RouteComponentProps, Link } from '@reach/router';
 
-import { auth, messages } from '../../config/firebase';
+import { auth } from '../../config/firebase';
 import PageTransition from '../../components/PageTransition';
 import SignInFacebook from '../../components/SignInFacebook';
 import SignInGoogle from '../../components/SignInGoogle';
 import withoutAuth from '../../components/withoutAuth';
 import authStyles from './Auth.module.scss';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export interface LoginProps extends RouteComponentProps {}
 
@@ -27,12 +28,7 @@ const Login: React.FC<LoginProps> = () => {
       await auth.signInWithEmailAndPassword(email, password);
     } catch (err) {
       console.error(err);
-
-      if (err.code in messages) {
-        setError(messages[err.code]);
-      } else {
-        setError('حدثت مشكلة ما');
-      }
+      setError(getErrorMessage(err.code));
     } finally {
       setIsLoading(false);
     }

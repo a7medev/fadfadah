@@ -78,6 +78,8 @@ const AuthProvider: React.FC = ({ children }) => {
         .get();
 
       const userDoc = await db.collection('users').doc(uid).get();
+
+      // FIXME: it's broken when signup
       const { settings, gender } = userDoc.data() as UserData;
 
       const { displayName, photoURL } = user;

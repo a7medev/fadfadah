@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { Col } from 'react-bootstrap';
 import Masonry from 'react-masonry-component';
+import type { Timestamp } from '@firebase/firestore-types';
+
 import Message from '../types/Message';
 import MessageCard from './MessageCard';
 import NoMessages from './NoMessagesIcon';
 
 export interface MessagesLayoutProps {
-  messages: Message<string>[];
+  messages: Message<Timestamp>[];
   removeMessage: (id: string) => void;
   outbox?: boolean;
 }

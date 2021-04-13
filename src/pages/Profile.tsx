@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Link, RouteComponentProps, redirectTo } from '@reach/router';
 import { Container, Button } from 'react-bootstrap';
-import { functions } from '../config/firebase';
+import { db } from '../config/firebase';
 import Loader from '../components/Loader';
 import { motion } from 'framer-motion';
 import UserCard from '../components/UserCard';
@@ -15,29 +15,45 @@ import { Helmet } from 'react-helmet';
 import UserCardSkeleton from '../components/UserCardSkeleton';
 import Offline from '../components/OfflineIcon';
 
+const getUser = async (username?: string) => {
+  if (!username) return null;
+
+  const snap = await db
+    .collection('users')
+    .where('username', '==', username)
+    .limit(1)
+    .get();
+
+  const [userDoc] = snap.docs;
+
+  if (!userDoc) return null;
+
+  return userDoc.data() as MiniUser;
+};
+
 export interface ProfileProps
   extends RouteComponentProps<{ username: string }> {}
 
 const Profile: React.FC<ProfileProps> = ({ username }) => {
-  const [loading, setLoading] = useState(true);
-  const [offline, setOffline] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isOffline, setIsOffline] = useState<boolean>(false);
   const [user, setUser] = useState<MiniUser | null>(null);
   const { user: currentUser } = useAuth();
 
   useEffect(() => {
-    if (username !== currentUser?.username) {
-      const getUserData = functions.httpsCallable('getUserData');
-      getUserData({ id: username, type: 'username' })
-        .then(result => {
-          setOffline(false);
-          setLoading(false);
-          setUser(result.data);
-        })
-        .catch(err => {
-          setLoading(false);
-          setOffline(true);
-        });
-    } else redirectTo('/inbox');
+    if (username === currentUser?.username) return redirectTo('/inbox');
+
+    getUser(username)
+      .then(user => {
+        setUser(user);
+        setIsOffline(false);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setIsLoading(false);
+        setIsOffline(true);
+      });
   }, [username, currentUser]);
 
   return (
@@ -47,12 +63,12 @@ const Profile: React.FC<ProfileProps> = ({ username }) => {
       </Helmet>
 
       <Container>
-        {loading ? (
+        {isLoading ? (
           <>
             <UserCardSkeleton />
             <Loader style={{ marginTop: 150, marginBottom: 20 }} />
           </>
-        ) : offline ? (
+        ) : isOffline ? (
           <div className="my-3">
             <Offline />
           </div>

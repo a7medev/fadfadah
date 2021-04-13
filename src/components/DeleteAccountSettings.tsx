@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState } from 'react';
-
 import { Alert, Button, Card } from 'react-bootstrap';
 import { FaExclamationTriangle } from 'react-icons/fa';
-import { auth, messages } from '../config/firebase';
+
+import { auth } from '../config/firebase';
+import getErrorMessage from '../utils/getErrorMessage';
 import MessageBox from './MessageBox';
 
 const DeleteAccount: React.FC = () => {
@@ -19,13 +20,10 @@ const DeleteAccount: React.FC = () => {
           setMessage('تم حذف الحساب بنجاح');
         })
         .catch(err => {
-          setMessage(
-            // @ts-ignore
-            messages[err.code] ?? 'حدثت مشكلة ما أثناء محاولة حذف الحساب'
-          );
+          setMessage(getErrorMessage(err.code));
         });
     }
-  }
+  };
 
   return (
     <>

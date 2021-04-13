@@ -12,11 +12,12 @@
   "engines": {
     "node": "14"
   },
-  "main": "lib/src/index.js",
+  "main": "lib/index.js",
   "dependencies": {
     "firebase-admin": "^9.1.1",
     "firebase-functions": "^3.11.0",
     "fs-extra": "^9.0.1",
+    "lodash": "^4.17.21",
     "sharp": "^0.26.1"
   },
   "devDependencies": {

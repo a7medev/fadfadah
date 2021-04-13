@@ -1,72 +1,96 @@
-import { useState, useEffect, useRef } from 'react';
-import type firebase from 'firebase';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type {
+  DocumentData,
+  Timestamp,
+  FirestoreError
+} from '@firebase/firestore-types';
 
-import { functions } from '../config/firebase';
+import { db } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
 import Message from '../types/Message';
 
-const getInbox = functions.httpsCallable('getInbox');
+const LIMIT = 12;
+
+const getInbox = async (userId: string, last?: DocumentData | null) => {
+  let ref = db
+    .collection('messages')
+    .where('to.uid', '==', userId)
+    .limit(LIMIT)
+    .orderBy('createdAt', 'desc');
+
+  if (last) ref = ref.startAfter(last);
+
+  const { docs } = await ref.get();
+  const inbox = docs.map(doc => ({
+    ...(doc.data() as Message<Timestamp>),
+    id: doc.id
+  }));
+
+  const lastDoc = docs.length === LIMIT ? docs[docs.length - 1] : null;
+
+  return { inbox, lastDoc };
+};
 
 const useInbox = () => {
-  const [inbox, setInbox] = useState<Message<string>[]>([]);
+  const [inbox, setInbox] = useState<Message<Timestamp>[]>([]);
   const [hasMore, setHasMore] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [offline, setOffline] = useState(false);
-  const [error, setError] = useState<firebase.functions.HttpsError | null>(
-    null
-  );
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<FirestoreError | null>(null);
 
-  const last = useRef<string>();
+  const last = useRef<DocumentData | null>(null);
+  const { firebaseUser } = useAuth();
 
   useEffect(() => {
-    getInbox()
-      .then(({ data: inbox }) => {
-        if (inbox.length >= 8) {
-          last.current = inbox[inbox.length - 1].id;
-          setHasMore(true);
-        } else setHasMore(false);
+    if (!firebaseUser) return;
+
+    getInbox(firebaseUser.uid)
+      .then(({ inbox, lastDoc }) => {
+        last.current = lastDoc;
+
+        if (lastDoc) setHasMore(true);
+        else setHasMore(false);
 
         setInbox(inbox);
       })
-      .catch(err => {
-        if (err.code === 'internal' || err.code === 'deadline-exceeded')
-          setOffline(true);
-        setError(err);
-      })
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const loadMore = () => {
-    setLoadingMore(true);
-
-    getInbox({ last: last.current })
-      .then(({ data: inbox }) => {
-        last.current = inbox[inbox - 1];
-
-        if (inbox.length >= 8) setHasMore(true);
-        else setHasMore(false);
-
-        setInbox(prevInbox => [...prevInbox, ...inbox]);
-      })
       .catch(err => setError(err))
-      .finally(() => setLoadingMore(false));
-  }
+      .finally(() => setIsLoading(false));
+  }, [firebaseUser]);
+
+  const loadMore = useCallback(async () => {
+    if (!firebaseUser) return;
+
+    setIsLoadingMore(true);
+
+    try {
+      const { inbox, lastDoc } = await getInbox(firebaseUser.uid, last.current);
+      last.current = lastDoc;
+
+      if (lastDoc) setHasMore(true);
+      else setHasMore(false);
+
+      setInbox(currInbox => [...currInbox, ...inbox]);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [firebaseUser]);
 
   const removeMessage = (id: string) => {
-    setInbox(prevInbox => prevInbox.filter(message => message.id !== id));
-  }
+    setInbox(currInbox => currInbox.filter(message => message.id !== id));
+  };
 
   return {
     inbox,
     loadMore,
     hasMore,
-    loadingMore,
-    loading,
-    offline,
+    isLoadingMore,
+    isLoading,
     error,
     removeMessage
   };
-}
+};
 
 export default useInbox;

@@ -1,72 +1,106 @@
-import { useState, useEffect, useRef } from 'react';
-import type firebase from 'firebase';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type {
+  DocumentData,
+  Timestamp,
+  FirestoreError
+} from '@firebase/firestore-types';
 
-import { functions } from '../config/firebase';
+import { db } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
 import Message from '../types/Message';
 
-const getOutbox = functions.httpsCallable('getOutbox');
+const LIMIT = 12;
+
+const getOutbox = async (userId: string, last?: DocumentData | null) => {
+  let ref = db
+    .collection('users')
+    .doc(userId)
+    .collection('messages')
+    .limit(LIMIT)
+    .orderBy('createdAt', 'desc');
+
+  if (last) ref = ref.startAfter(last);
+
+  const { docs } = await ref.get();
+  const outboxPromises = docs
+    .filter(doc => doc.exists)
+    .map(async ({ id }) => {
+      const doc = await db.collection('messages').doc(id).get();
+
+      return { ...doc.data() as Message<Timestamp>, id };
+    });
+
+  const outbox = await Promise.all(outboxPromises);
+
+  const lastDoc = docs.length === LIMIT ? docs[docs.length - 1] : null;
+
+  return { outbox, lastDoc };
+};
 
 const useOutbox = () => {
-  const [outbox, setOutbox] = useState<Message<string>[]>([]);
+  const [outbox, setOutbox] = useState<Message<Timestamp>[]>([]);
   const [hasMore, setHasMore] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [offline, setOffline] = useState(false);
-  const [error, setError] = useState<firebase.functions.HttpsError | null>(
-    null
-  );
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<FirestoreError | null>(null);
 
-  const last = useRef<string>();
+  const last = useRef<DocumentData | null>();
+  const { firebaseUser } = useAuth();
 
   useEffect(() => {
-    getOutbox()
-      .then(({ data: outbox }) => {
-        if (outbox.length >= 8) {
-          setHasMore(true);
-          last.current = outbox[outbox.length - 1].id;
-        } else setHasMore(false);
+    if (!firebaseUser) return;
 
-        setOutbox(outbox);
-      })
-      .catch(err => {
-        if (err.code === 'internal' || err.code === 'deadline-exceeded')
-          setOffline(true);
-        setError(err);
-      })
-      .finally(() => setLoading(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    getOutbox(firebaseUser.uid)
+      .then(({ outbox, lastDoc }) => {
+        last.current = lastDoc;
 
-  const loadMore = () => {
-    setLoadingMore(true);
-
-    getOutbox({ last: last.current })
-      .then(({ data: outbox }) => {
-        last.current = outbox[outbox.length - 1].id;
-
-        if (outbox.length >= 8) setHasMore(true);
+        if (lastDoc) setHasMore(true);
         else setHasMore(false);
 
-        setOutbox(prevOutbox => [...prevOutbox, ...outbox]);
+        setOutbox(outbox);
+        console.log(outbox)
       })
       .catch(err => setError(err))
-      .finally(() => setLoadingMore(false));
-  }
+      .finally(() => setIsLoading(false));
+  }, [firebaseUser]);
+
+  const loadMore = useCallback(async () => {
+    if (!firebaseUser) return;
+
+    setIsLoadingMore(true);
+
+    try {
+      const { outbox, lastDoc } = await getOutbox(
+        firebaseUser.uid,
+        last.current
+      );
+      last.current = lastDoc;
+
+      if (lastDoc) setHasMore(true);
+      else setHasMore(false);
+
+      setOutbox(currInbox => [...currInbox, ...outbox]);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [firebaseUser]);
 
   const removeMessage = (id: string) => {
     setOutbox(prevOutbox => prevOutbox.filter(message => message.id !== id));
-  }
+  };
 
   return {
     outbox,
     loadMore,
     hasMore,
-    loadingMore,
-    loading,
-    offline,
+    isLoadingMore,
+    isLoading,
     error,
     removeMessage
   };
-}
+};
 
 export default useOutbox;

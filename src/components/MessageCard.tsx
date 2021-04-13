@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect, useRef } from 'react';
+import type { Timestamp } from '@firebase/firestore-types';
 import Message from '../types/Message';
 import { Card, Dropdown } from 'react-bootstrap';
 import Moment from 'react-moment';
@@ -25,7 +26,7 @@ const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
 
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 
-export interface MessageCardProps extends Message<string> {
+export interface MessageCardProps extends Message<Timestamp> {
   removeMessage: (id: string) => void;
   outbox?: boolean;
 }
@@ -106,7 +107,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
               className="text-muted"
               style={{ position: 'relative', top: 4 }}
             >
-              {createdAt}
+              {createdAt.toDate()}
             </Moment>
 
             {outbox ? (

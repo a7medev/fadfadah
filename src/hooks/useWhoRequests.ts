@@ -1,58 +1,80 @@
-import { useState, useEffect, useRef } from 'react';
-import type firebase from 'firebase';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type { DocumentData, FirestoreError } from '@firebase/firestore-types';
 
-import { functions } from '../config/firebase';
-import WhoRequest from '../types/WhoRequest';
+import { db } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
+import type WhoRequest from '../types/WhoRequest';
 
-const getWhoRequests = functions.httpsCallable('getWhoRequests');
+const LIMIT = 12;
+
+const getWhoRequests = async (userId: string, last?: DocumentData | null) => {
+  let ref = db
+    .collection('users')
+    .doc(userId)
+    .collection('who_requests')
+    .limit(LIMIT)
+    .orderBy('sentAt', 'desc');
+
+  if (last) ref = ref.startAfter(last);
+
+  const { docs } = await ref.get();
+  const whoRequests = docs.map(doc => ({
+    ...(doc.data() as WhoRequest),
+    id: doc.id
+  }));
+
+  const lastDoc = docs.length === LIMIT ? docs[docs.length - 1] : null;
+
+  return { whoRequests, lastDoc };
+};
 
 const useWhoRequests = () => {
   const [whoRequests, setWhoRequests] = useState<WhoRequest[]>([]);
   const [hasMore, setHasMore] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [offline, setOffline] = useState(false);
-  const [error, setError] = useState<firebase.functions.HttpsError | null>(
-    null
-  );
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<FirestoreError | null>(null);
 
-  const last = useRef<string>();
+  const last = useRef<DocumentData | null>(null);
+  const { firebaseUser } = useAuth();
 
   useEffect(() => {
-    getWhoRequests()
-      .then(({ data: whoRequests }) => {
-        if (whoRequests.length >= 8) {
-          last.current = whoRequests[whoRequests.length - 1].id;
-          setHasMore(true);
-        } else setHasMore(false);
+    if (!firebaseUser) return;
+
+    getWhoRequests(firebaseUser.uid)
+      .then(({ whoRequests, lastDoc }) => {
+        last.current = lastDoc;
+
+        if (lastDoc) setHasMore(true);
+        else setHasMore(false);
 
         setWhoRequests(whoRequests);
       })
-      .catch(err => {
-        if (err.code === 'internal' || err.code === 'deadline-exceeded')
-          setOffline(true);
-        setError(err);
-      })
-      .finally(() => setLoading(false));
-
-    // eslint-disable-next-line
-  }, []);
-
-  const loadMore = () => {
-    setLoadingMore(true);
-
-    getWhoRequests({ last: last.current })
-      .then(({ data: whoRequests }) => {
-        last.current = whoRequests[whoRequests - 1];
-
-        if (whoRequests.length >= 8) setHasMore(true);
-        else setHasMore(false);
-
-        setWhoRequests(prevWhoRequests => [...prevWhoRequests, ...whoRequests]);
-      })
       .catch(err => setError(err))
-      .finally(() => setLoadingMore(false));
-  }
+      .finally(() => setIsLoading(false));
+  }, [firebaseUser]);
+
+  const loadMore = useCallback(async () => {
+    if (!firebaseUser) return;
+
+    setIsLoadingMore(true);
+
+    try {
+      const { whoRequests, lastDoc } = await getWhoRequests(firebaseUser.uid, last.current);
+      last.current = lastDoc;
+
+      if (lastDoc) setHasMore(true);
+      else setHasMore(false);
+
+      setWhoRequests(currWhoRequests => [...currWhoRequests, ...whoRequests]);
+    } catch (err) {
+      console.error(err);
+      setError(err);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [firebaseUser]);
+
 
   const removeReq = (id: string) => {
     setWhoRequests(prevReqs => prevReqs.filter(req => req.id !== id));
@@ -62,11 +84,10 @@ const useWhoRequests = () => {
     whoRequests,
     loadMore,
     hasMore,
-    removeReq,
-    loadingMore,
-    loading,
-    offline,
-    error
+    isLoadingMore,
+    isLoading,
+    error,
+    removeReq
   };
 }
 
