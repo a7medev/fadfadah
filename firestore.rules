@@ -1,47 +1,46 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // TODO: remove this when finished
-    match /{doc=**} {
-      allow read, write: if true;
+    function keys(keys) {
+      return request.resource.data.keys().hasOnly(keys);
+    }
+    function editableKeys(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
     }
 
     match /users/{userId} {
-      function isTheUser() {
+      function isOwner() {
         return request.auth.uid == userId;
       }
-      allow read: if isTheUser();
 
-      function blockUnsignedMessagesIsValid() {
-        return request.resource.data.settings.blockUnsignedMessages is bool;
+      function settingsIsValid() {
+        let settings = request.resource.data.settings;
+        return settings is map
+            && settings.keys().hasOnly(['blockUnsignedMessages', 'airplaneMode'])
+            && settings.blockUnsignedMessages is bool
+            && settings.airplaneMode is bool;
+      }
+      function userIsValid() {
+        let data = request.resource.data;
+        return keys(['uid', 'username', 'displayName', 'photoURL', 'gender', 'verified', 'username', 'settings'])
+            && data.uid is string
+            && data.verified is bool
+            && (data.gender in [null, 'male', 'female'])
+            && (data.username == null || data.username is string)
+            && (data.displayName == null || data.displayName is string)
+            && (data.photoURL == null || data.photoURL is string)
+            && settingsIsValid();
       }
 
-      function airplaneModeIsValid() {
-        return request.resource.data.settings.airplaneMode is bool;
-      }
-
-      allow create, update: if isTheUser() &&
-        airplaneModeIsValid() &&
-        blockUnsignedMessagesIsValid();
-
+      allow get: if true;
+      allow create: if isOwner()
+                    && userIsValid();
+      allow update: if isOwner()
+                    && userIdIsValid()
+                    && editableKeys(['displayName', 'photoURL', 'settings', 'gender']);
       match /who_requests/{requestId} {
-        allow delete: if isTheUser();
+        allow read, delete: if isOwner();
       }
-    }
-
-    match /usernames/{username} {
-      function isUsernameOfTheUser() {
-        return request.auth.uid == resource.data.userId;
-      }
-      allow read: if isUsernameOfTheUser();
-    }
-
-    match /verified_users/{userId} {
-      function userIsCheckingHimSelf() {
-        return request.auth.uid == userId;
-      }
-
-      allow read: if userIsCheckingHimSelf();
     }
 
     match /devices/{token} {
@@ -51,42 +50,33 @@ service cloud.firestore {
       function tokenIsValid() {
         return token == request.resource.data.token;
       }
-      function userIsTheOwner() {
+      function isOwner() {
         return request.auth.uid == resource.data.userId;
       }
-      allow create: if tokenIsValid() &&
-        userIdIsValid();
-      allow update: if tokenIsValid() &&
-        userIdIsValid() &&
-        userIsTheOwner();
-      allow delete: if userIsTheOwner();
+
+      allow create: if keys(['token', 'userId']) 
+                    && tokenIsValid()
+                    && userIdIsValid();
+      allow update: if keys(['token', 'userId'])
+                    && tokenIsValid()
+                    && userIdIsValid()
+                    && isOwner();
+      allow delete: if isOwner();
     }
 
     match /messages/{messageId} {
-      function userIsReciever() {
+      function isReciever() {
         return resource.data.to == request.auth.uid;
       }
-      function userIsAuthor() {
-        return exists(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId));
-      }
-      function toIsNotEdited() {
-        return resource.data.to == request.resource.data.to;
-      }
-      function contentIsNotEdited() {
-        return resource.data.content == request.resource.data.content;
-      }
-      function createdAtIsNotEdited() {
-        return resource.data.createdAt == request.resource.data.createdAt;
+      function isAuthor() {
+        return resource.data.from.uid == request.auth.uid
+            || exists(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId));
       }
 
-      // Allow Reciever to edit the Love state
-      allow update: if userIsReciever() &&
-        toIsNotEdited() &&
-        contentIsNotEdited() &&
-        createdAtIsNotEdited();
-
-      // Allow Author & Reciever to delete a message
-      allow delete: if userIsAuthor() || userIsReciever();
+      allow update: if isReciever()
+                    && editableKeys(['love']);
+      allow delete: if isAuthor()
+                    || isReciever();
     }
   }
 }
