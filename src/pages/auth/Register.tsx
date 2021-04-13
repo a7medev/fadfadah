@@ -50,7 +50,6 @@ const Register: React.FC<RegisterProps> = () => {
         .collection('users')
         .doc(user.uid)
         .set({ displayName: name }, { merge: true });
-      await user.updateProfile({ displayName: name });
       setUser(user => user && { ...user, displayName: name });
     } catch (err) {
       console.error(err);
