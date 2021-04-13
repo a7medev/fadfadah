@@ -59,7 +59,10 @@ const useOutbox = () => {
 
         setOutbox(outbox);
       })
-      .catch(err => setError(err))
+      .catch(err => {
+        console.error(err);
+        setError(err);
+      })
       .finally(() => setIsLoading(false));
   }, [firebaseUser]);
 

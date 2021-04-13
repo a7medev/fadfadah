@@ -64,13 +64,17 @@ const AuthProvider: React.FC = ({ children }) => {
       setSignedIn(true);
       localStorage.setItem('signedIn', 'true');
 
-      const userDoc = await db.collection('users').doc(uid).get();
+      try {
+        const userDoc = await db.collection('users').doc(uid).get();
 
-      // FIXME: it's broken when signup
-      const { settings, ...miniUser } = userDoc.data() as UserData;
+        // FIXME: it's broken when signup
+        const { settings, ...miniUser } = userDoc.data() as UserData;
 
-      setSettings(settings);
-      setUser(miniUser);
+        setSettings(settings);
+        setUser(miniUser);
+      } catch (err) {
+        console.error(err);
+      }
 
       // Store the token of the user
       messaging
