@@ -108,25 +108,31 @@ async function sendNotification(
   messaging.sendToDevice(tokens, payload).catch(err => console.error(err));
 }
 
-export const initUserAccount = functions.auth.user().onCreate(async user => {
-  return db
-    .collection('users')
-    .doc(user.uid)
-    .set({
-      uid: user.uid,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      verified: false,
-      settings: {
-        blockUnsignedMessages: false,
-        airplaneMode: false
-      }
-    })
-    .catch(err => console.error(err));
-});
+const REGION = 'europe-west3';
 
-export const sendMessage = functions.https.onCall(
-  async ({ content, to, isAnonymous }, context) => {
+export const initUserAccount = functions
+  .region(REGION)
+  .auth.user()
+  .onCreate(async user => {
+    return db
+      .collection('users')
+      .doc(user.uid)
+      .set({
+        uid: user.uid,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+        verified: false,
+        settings: {
+          blockUnsignedMessages: false,
+          airplaneMode: false
+        }
+      })
+      .catch(err => console.error(err));
+  });
+
+export const sendMessage = functions
+  .region(REGION)
+  .https.onCall(async ({ content, to, isAnonymous }, context) => {
     if (!content || !to)
       throw new functions.https.HttpsError(
         'invalid-argument',
@@ -237,11 +243,11 @@ export const sendMessage = functions.https.onCall(
     }
 
     return true;
-  }
-);
+  });
 
-export const usernameIsAvailable = functions.https.onCall(
-  async (username: string, context) => {
+export const usernameIsAvailable = functions
+  .region(REGION)
+  .https.onCall(async (username: string, context) => {
     // Only users without a username can check for username
     const { size: hasUsername } = await db
       .collection('usernames')
@@ -256,11 +262,11 @@ export const usernameIsAvailable = functions.https.onCall(
       .get()
       .then(snap => !snap.exists)
       .catch(err => console.error(err));
-  }
-);
+  });
 
-export const setUsername = functions.https.onCall(
-  async (passedUsername: string, context) => {
+export const setUsername = functions
+  .region(REGION)
+  .https.onCall(async (passedUsername: string, context) => {
     const username = passedUsername.trim().toLowerCase();
 
     if (!context.auth || !/^[A-Z_0-9]+$/i.test(username)) return false;
@@ -284,40 +290,44 @@ export const setUsername = functions.https.onCall(
           .doc(context.auth!.uid)
           .set({ username: true }, { merge: true })
       );
-  }
-);
+  });
 
-export const setUserVerifiedState = functions.firestore
-  .document('/verified/{userId}')
+export const setUserVerifiedState = functions
+  .region(REGION)
+  .firestore.document('/verified/{userId}')
   .onCreate(snap => {
     return db.collection('users').doc(snap.id).update({
       verified: true
     });
   });
 
-export const removeUserVerifiedState = functions.firestore
-  .document('/verified/{userId}')
+export const removeUserVerifiedState = functions
+  .region(REGION)
+  .firestore.document('/verified/{userId}')
   .onDelete(snap => {
     return db.collection('users').doc(snap.id).update({
       verified: false
     });
   });
 
-export const getUserData = functions.https.onCall(
-  async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
-    if (type === 'username') {
-      const userId = await getUIDByUsername(id);
-      return userId ? { ...(await getUserById(userId)), username: id } : null;
-    } else if (type === 'uid') {
-      return getUserById(id, { withUsername: true });
-    } else {
-      return null;
+export const getUserData = functions
+  .region(REGION)
+  .https.onCall(
+    async ({ id, type }: { id: string; type: 'username' | 'uid' }) => {
+      if (type === 'username') {
+        const userId = await getUIDByUsername(id);
+        return userId ? { ...(await getUserById(userId)), username: id } : null;
+      } else if (type === 'uid') {
+        return getUserById(id, { withUsername: true });
+      } else {
+        return null;
+      }
     }
-  }
-);
+  );
 
-export const removeMessageData = functions.firestore
-  .document('/messages/{messageId}')
+export const removeMessageData = functions
+  .region(REGION)
+  .firestore.document('/messages/{messageId}')
   .onDelete(async (_, { params }) => {
     const { docs: messages } = await db
       .collectionGroup('messages')
@@ -334,88 +344,94 @@ export const removeMessageData = functions.firestore
     );
   });
 
-export const blockUser = functions.https.onCall(
-  async (
-    { id, type }: { id: string; type: 'uid' | 'username' | 'messageId' },
-    context
-  ) => {
-    if (!context.auth)
-      throw new functions.https.HttpsError(
-        'unauthenticated',
-        'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
-      );
-
-    function block(uid: string, isSender: boolean) {
-      if (context.auth?.uid === id)
+export const blockUser = functions
+  .region(REGION)
+  .https.onCall(
+    async (
+      { id, type }: { id: string; type: 'uid' | 'username' | 'messageId' },
+      context
+    ) => {
+      if (!context.auth)
         throw new functions.https.HttpsError(
-          'invalid-argument',
-          'لا يمكنك القيام بحظر نفسك'
+          'unauthenticated',
+          'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
         );
 
-      return db
-        .collection('users')
-        .doc(context.auth!.uid)
-        .collection('blocked')
-        .doc(uid)
-        .set({ userId: uid, isSender });
-    }
-
-    switch (type) {
-      case 'uid':
-        return block(id, false);
-      case 'username':
-        const uid = await getUIDByUsername(id);
-        return block(uid, false);
-      case 'messageId':
-        /** Locating the message in the author's subcollection of messages */
-        const authorId = await getUIDByMessageId(id);
-
-        if (!authorId)
+      function block(uid: string, isSender: boolean) {
+        if (context.auth?.uid === id)
           throw new functions.https.HttpsError(
-            'not-found',
-            'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا حظره، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
+            'invalid-argument',
+            'لا يمكنك القيام بحظر نفسك'
           );
 
-        return block(authorId, true);
-      default:
-        throw new functions.https.HttpsError(
-          'invalid-argument',
-          'لا نستطيع إيجاد المستخدم الذي تحاول حظره'
-        );
+        return db
+          .collection('users')
+          .doc(context.auth!.uid)
+          .collection('blocked')
+          .doc(uid)
+          .set({ userId: uid, isSender });
+      }
+
+      switch (type) {
+        case 'uid':
+          return block(id, false);
+        case 'username':
+          const uid = await getUIDByUsername(id);
+          return block(uid, false);
+        case 'messageId':
+          /** Locating the message in the author's subcollection of messages */
+          const authorId = await getUIDByMessageId(id);
+
+          if (!authorId)
+            throw new functions.https.HttpsError(
+              'not-found',
+              'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا حظره، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
+            );
+
+          return block(authorId, true);
+        default:
+          throw new functions.https.HttpsError(
+            'invalid-argument',
+            'لا نستطيع إيجاد المستخدم الذي تحاول حظره'
+          );
+      }
     }
-  }
-);
+  );
 
-export const removeUserData = functions.auth.user().onDelete(user => {
-  // Delete User's data like: Setttings, Messages he sent ...etc
-  db.collection('users')
-    .doc(user.uid)
-    .delete()
-    .catch(err => console.error(err));
+export const removeUserData = functions
+  .region(REGION)
+  .auth.user()
+  .onDelete(user => {
+    // Delete User's data like: Setttings, Messages he sent ...etc
+    db.collection('users')
+      .doc(user.uid)
+      .delete()
+      .catch(err => console.error(err));
 
-  // Delete User's verified status
-  db.collection('verified_users')
-    .doc(user.uid)
-    .delete()
-    .catch(err => console.error(err));
+    // Delete User's verified status
+    db.collection('verified_users')
+      .doc(user.uid)
+      .delete()
+      .catch(err => console.error(err));
 
-  // Delete the messages are sent to the User
-  db.collection('messages')
-    .where('to', '==', user.uid)
-    .get()
-    .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
-    .catch(err => console.error(err));
+    // Delete the messages are sent to the User
+    db.collection('messages')
+      .where('to', '==', user.uid)
+      .get()
+      .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
+      .catch(err => console.error(err));
 
-  // Delete User's signed devices and FCM tokens
-  db.collection('devices')
-    .where('userId', '==', user.uid)
-    .get()
-    .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
-    .catch(err => console.error(err));
-});
+    // Delete User's signed devices and FCM tokens
+    db.collection('devices')
+      .where('userId', '==', user.uid)
+      .get()
+      .then(({ docs }) => Promise.all(docs.map(doc => doc.ref.delete())))
+      .catch(err => console.error(err));
+  });
 
-export const sendWhoRequest = functions.https.onCall(
-  async (messageId: string, context) => {
+export const sendWhoRequest = functions
+  .region(REGION)
+  .https.onCall(async (messageId: string, context) => {
     if (!context.auth)
       throw new functions.https.HttpsError(
         'unauthenticated',
@@ -477,11 +493,11 @@ export const sendWhoRequest = functions.https.onCall(
       .catch(err => console.error(err));
 
     return true;
-  }
-);
+  });
 
-export const acceptWhoRequest = functions.https.onCall(
-  async (reqId, context) => {
+export const acceptWhoRequest = functions
+  .region(REGION)
+  .https.onCall(async (reqId, context) => {
     if (!context.auth)
       throw new functions.https.HttpsError(
         'unauthenticated',
@@ -540,11 +556,11 @@ export const acceptWhoRequest = functions.https.onCall(
         console.error(err);
         return false;
       });
-  }
-);
+  });
 
-export const sendLoveNotification = functions.firestore
-  .document('/messages/{messageId}')
+export const sendLoveNotification = functions
+  .region(REGION)
+  .firestore.document('/messages/{messageId}')
   .onUpdate(async change => {
     const message = change.after.data();
     // Love State Changed
@@ -573,8 +589,9 @@ export const sendLoveNotification = functions.firestore
     }
   });
 
-export const resizeProfilePhoto = functions.storage
-  .object()
+export const resizeProfilePhoto = functions
+  .region(REGION)
+  .storage.object()
   .onFinalize(async object => {
     if (object.metadata?.resizedImage === 'true') return false;
 
@@ -618,143 +635,151 @@ export const resizeProfilePhoto = functions.storage
   });
 
 // Data Joining Functions
-export const getInbox = functions.https.onCall(async (data, context) => {
-  if (!context.auth)
-    throw new functions.https.HttpsError(
-      'unauthenticated',
-      'فقط المستخدمين المُسَجَّلين يستطيعون استلام الرسائل.'
-    );
+export const getInbox = functions
+  .region(REGION)
+  .https.onCall(async (data, context) => {
+    if (!context.auth)
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'فقط المستخدمين المُسَجَّلين يستطيعون استلام الرسائل.'
+      );
 
-  const userId = context.auth.uid;
+    const userId = context.auth.uid;
 
-  let ref = db
-    .collection('messages')
-    .where('to', '==', userId)
-    .orderBy('createdAt', 'desc')
-    .limit(8);
+    let ref = db
+      .collection('messages')
+      .where('to', '==', userId)
+      .orderBy('createdAt', 'desc')
+      .limit(8);
 
-  if (data?.last) {
-    const lastDoc = await db.collection('messages').doc(data.last).get();
-    ref = ref.startAfter(lastDoc);
-  }
+    if (data?.last) {
+      const lastDoc = await db.collection('messages').doc(data.last).get();
+      ref = ref.startAfter(lastDoc);
+    }
 
-  return ref.get().then(snap => {
-    return Promise.all(
-      snap.docs
-        .map(doc => ({
-          id: doc.id,
-          ...(doc.data() as Message<admin.firestore.Timestamp>)
-        }))
-        .map(async message => {
-          if (message.from) {
-            const author = await getUserById(message.from, {
-              withUsername: true
-            });
-            (message as any).from = author;
-          }
+    return ref.get().then(snap => {
+      return Promise.all(
+        snap.docs
+          .map(doc => ({
+            id: doc.id,
+            ...(doc.data() as Message<admin.firestore.Timestamp>)
+          }))
+          .map(async message => {
+            if (message.from) {
+              const author = await getUserById(message.from, {
+                withUsername: true
+              });
+              (message as any).from = author;
+            }
 
-          (message as any).createdAt = message.createdAt.toDate().toISOString();
+            (message as any).createdAt = message.createdAt
+              .toDate()
+              .toISOString();
 
-          return message;
-        })
-    );
+            return message;
+          })
+      );
+    });
   });
-});
 
-export const getOutbox = functions.https.onCall(async (data, context) => {
-  if (!context.auth)
-    throw new functions.https.HttpsError(
-      'unauthenticated',
-      'فقط المستخدمين المُسَجَّلين يستطيعون رؤية رسائلهم المرسلة.'
-    );
+export const getOutbox = functions
+  .region(REGION)
+  .https.onCall(async (data, context) => {
+    if (!context.auth)
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'فقط المستخدمين المُسَجَّلين يستطيعون رؤية رسائلهم المرسلة.'
+      );
 
-  const userId = context.auth.uid;
+    const userId = context.auth.uid;
 
-  let ref = db
-    .collection('users')
-    .doc(userId)
-    .collection('messages')
-    .orderBy('createdAt', 'desc');
-
-  if (data?.last) {
-    const lastDoc = await db
+    let ref = db
       .collection('users')
       .doc(userId)
       .collection('messages')
-      .doc(data.last)
-      .get();
-    ref = ref.startAfter(lastDoc);
-  }
+      .orderBy('createdAt', 'desc');
 
-  return ref
-    .limit(8)
-    .get()
-    .then(snap =>
-      Promise.all(
-        snap.docs
-          .filter(doc => doc.exists)
-          .map(async ({ id }) => {
-            const doc = await db.collection('messages').doc(id).get();
+    if (data?.last) {
+      const lastDoc = await db
+        .collection('users')
+        .doc(userId)
+        .collection('messages')
+        .doc(data.last)
+        .get();
+      ref = ref.startAfter(lastDoc);
+    }
 
-            const { content, createdAt, love, to } = doc.data()!;
+    return ref
+      .limit(8)
+      .get()
+      .then(snap =>
+        Promise.all(
+          snap.docs
+            .filter(doc => doc.exists)
+            .map(async ({ id }) => {
+              const doc = await db.collection('messages').doc(id).get();
 
-            const reciever = await getUserById(to, { withUsername: true });
+              const { content, createdAt, love, to } = doc.data()!;
 
-            const message = {
-              id: doc.id,
-              content,
-              love,
-              to: reciever,
-              createdAt: createdAt.toDate().toISOString()
-            };
-            return message;
-          })
-      )
-    );
-});
+              const reciever = await getUserById(to, { withUsername: true });
 
-export const getWhoRequests = functions.https.onCall(async (data, context) => {
-  if (!context.auth)
-    throw new functions.https.HttpsError(
-      'unauthenticated',
-      'يمكن للأشخاص المسجلين فقط استقبال طلبات معرفة المرسل.'
-    );
+              const message = {
+                id: doc.id,
+                content,
+                love,
+                to: reciever,
+                createdAt: createdAt.toDate().toISOString()
+              };
+              return message;
+            })
+        )
+      );
+  });
 
-  const userId = context.auth.uid;
+export const getWhoRequests = functions
+  .region(REGION)
+  .https.onCall(async (data, context) => {
+    if (!context.auth)
+      throw new functions.https.HttpsError(
+        'unauthenticated',
+        'يمكن للأشخاص المسجلين فقط استقبال طلبات معرفة المرسل.'
+      );
 
-  let ref = db
-    .collection('users')
-    .doc(userId)
-    .collection('who_requests')
-    .limit(8);
+    const userId = context.auth.uid;
 
-  if (data?.last) {
-    const lastDoc = await db
+    let ref = db
       .collection('users')
       .doc(userId)
       .collection('who_requests')
-      .doc(data.last)
-      .get();
-    ref = ref.startAfter(lastDoc);
-  }
+      .limit(8);
 
-  return ref.get().then(snap =>
-    Promise.all(
-      snap.docs
-        .map(doc => ({
-          id: doc.id,
-          ...(doc.data() as WhoRequest)
-        }))
-        .map(async req => {
-          const from = await getUserById(req.from, { withUsername: true });
+    if (data?.last) {
+      const lastDoc = await db
+        .collection('users')
+        .doc(userId)
+        .collection('who_requests')
+        .doc(data.last)
+        .get();
+      ref = ref.startAfter(lastDoc);
+    }
 
-          return {
-            id: req.id,
-            from,
-            message: req.message,
-            sentAt: req.sentAt.toDate().toISOString()
-          };
-        })
-    )
-  );
-});
+    return ref.get().then(snap =>
+      Promise.all(
+        snap.docs
+          .map(doc => ({
+            id: doc.id,
+            ...(doc.data() as WhoRequest)
+          }))
+          .map(async req => {
+            const from = await getUserById(req.from, { withUsername: true });
+
+            return {
+              id: req.id,
+              from,
+              message: req.message,
+              sentAt: req.sentAt.toDate().toISOString()
+            };
+          })
+      )
+    );
+  });
