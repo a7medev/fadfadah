@@ -58,7 +58,6 @@ const useOutbox = () => {
         else setHasMore(false);
 
         setOutbox(outbox);
-        console.log(outbox)
       })
       .catch(err => setError(err))
       .finally(() => setIsLoading(false));

@@ -23,21 +23,27 @@ service cloud.firestore {
       function userIsValid() {
         let data = request.resource.data;
         return keys(['uid', 'username', 'displayName', 'photoURL', 'gender', 'verified', 'username', 'settings'])
-            && data.uid is string
+            && data.uid == request.auth.uid
             && data.verified is bool
-            && (data.gender in [null, 'male', 'female'])
-            && (data.username == null || data.username is string)
-            && (data.displayName == null || data.displayName is string)
-            && (data.photoURL == null || data.photoURL is string)
+            && (!('gender' in data) || data.gender in [null, 'male', 'female'])
+            && (!('username' in data) || data.username is string)
+            && (!('displayName' in data) || data.displayName is string)
+            && (!('photoURL' in data) || data.photoURL is string)
             && settingsIsValid();
       }
 
       allow get: if true;
+      allow list: if request.query.limit == 1;
       allow create: if isOwner()
                     && userIsValid();
       allow update: if isOwner()
-                    && userIdIsValid()
+                    && userIsValid()
                     && editableKeys(['displayName', 'photoURL', 'settings', 'gender']);
+
+      match /messages/{messageId} {
+        allow read: if isOwner();
+      }
+
       match /who_requests/{requestId} {
         allow read, delete: if isOwner();
       }
@@ -66,17 +72,16 @@ service cloud.firestore {
 
     match /messages/{messageId} {
       function isReciever() {
-        return resource.data.to == request.auth.uid;
+        return resource.data.to.uid == request.auth.uid;
       }
       function isAuthor() {
         return resource.data.from.uid == request.auth.uid
             || exists(/databases/$(database)/documents/users/$(request.auth.uid)/messages/$(messageId));
       }
-
       allow update: if isReciever()
                     && editableKeys(['love']);
-      allow delete: if isAuthor()
-                    || isReciever();
+      allow read, delete: if isAuthor()
+                          || isReciever();
     }
   }
 }

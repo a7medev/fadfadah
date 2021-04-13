@@ -1,9 +1,7 @@
-import Gender from './Gender';
+import MiniUser from './MiniUser';
 import Settings from './Settings';
 
-interface UserData {
-  id?: string;
-  gender?: Gender;
+interface UserData extends MiniUser {
   settings?: Settings;
 }
 

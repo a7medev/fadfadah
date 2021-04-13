@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createContext, useContext, useState, useEffect } from 'react';
 import type firebase from 'firebase';
 
-import { analytics, auth, db, messaging } from '../config/firebase';
+import { auth, db, messaging } from '../config/firebase';
 import MiniUser from '../types/MiniUser';
 import Settings from '../types/Settings';
 import UserData from '../types/UserData';
@@ -64,38 +64,13 @@ const AuthProvider: React.FC = ({ children }) => {
       setSignedIn(true);
       localStorage.setItem('signedIn', 'true');
 
-      // Get the username
-      const {
-        docs: [usernameDoc]
-      } = await db.collection('usernames').where('userId', '==', uid).get();
-
-      const username = usernameDoc?.id ?? null;
-
-      // Get the verified state
-      const { exists: verified } = await db
-        .collection('verified_users')
-        .doc(user.uid)
-        .get();
-
       const userDoc = await db.collection('users').doc(uid).get();
 
       // FIXME: it's broken when signup
-      const { settings, gender } = userDoc.data() as UserData;
-
-      const { displayName, photoURL } = user;
-
-      analytics.setUserId(uid);
-      analytics.setUserProperties({ gender });
+      const { settings, ...miniUser } = userDoc.data() as UserData;
 
       setSettings(settings);
-      setUser({
-        uid,
-        displayName,
-        photoURL,
-        username,
-        verified,
-        gender
-      });
+      setUser(miniUser);
 
       // Store the token of the user
       messaging
