@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { auth, storage } from '../config/firebase';
+import { auth, db, storage } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
-// import Gender from '../../types/Gender';
 
 export interface AccountProps {
   setMessage: React.Dispatch<React.SetStateAction<string | null>>;
@@ -11,14 +10,11 @@ export interface AccountProps {
 
 const Account: React.FC<AccountProps> = ({ setMessage }) => {
   const [photoFileText, setPhotoFileText] = useState('اضغط لتحديد ملف الصورة');
-  const [photoFile, setPhotoFile] = useState<File | undefined>(undefined);
+  const [photoFile, setPhotoFile] = useState<File>();
+  const [displayName, setDisplayName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const { setUser } = useAuth();
-
-  const saveDataButton = useRef<HTMLButtonElement>(null);
-  const displayName = useRef<HTMLInputElement>(null);
-
-  // const [gender, setGender] = useState<string>(Gender.MALE);
 
   const user = auth.currentUser;
 
@@ -26,48 +22,48 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
     const photoFile: File = event.target.files[0];
     setPhotoFileText(photoFile ? photoFile.name : 'اضغط لتحديد ملف الصورة');
     setPhotoFile(photoFile);
-  }
+  };
 
   const changeAccountData = (event: React.FormEvent) => {
     event.preventDefault();
 
-    saveDataButton.current!.disabled = true;
+    setIsLoading(true);
 
-    if (!user) return;
+    if (!user) {
+      return setIsLoading(false);
+    }
 
-    // Changing the name
-    const nameIsChanged =
-      (user.displayName ?? '') !== displayName.current!.value;
+    const isNameChanged = (user.displayName ?? '') !== displayName;
 
-    if (nameIsChanged) {
-      user
-        .updateProfile({
-          displayName: displayName.current!.value
-        })
+    if (isNameChanged) {
+      db.collection('users')
+        .doc(user.uid)
+        .update({ displayName })
         .then(() => {
-          setUser(prevUser => ({
-            ...prevUser!,
-            displayName: auth.currentUser!.displayName
-          }));
+          setUser(prevUser => {
+            if (prevUser) {
+              return { ...prevUser, displayName };
+            }
+            return null;
+          });
           setMessage('تم تحديث الاسم بنجاح');
         })
         .catch(() => {
           setMessage('حدثت مشكلة أثناء محاولة تحديث الاسم');
         })
         .finally(() => {
-          if (!photoFile) saveDataButton.current!.disabled = false;
+          if (!photoFile) setIsLoading(false);
         });
     } else if (!photoFile) {
-      saveDataButton.current!.disabled = false;
+      setIsLoading(false);
     }
 
-    // Changing the profile photo
     if (photoFile) {
       const isImage = /image\/.+/.test(photoFile.type);
 
       if (!isImage || !user) {
         setMessage('رجاءاً تأكد من تحديد ملف الصورة صالح');
-        saveDataButton.current!.disabled = false;
+        setIsLoading(false);
         return;
       }
 
@@ -79,9 +75,7 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
       task
         .then(task => task.ref.getDownloadURL())
         .then(photoURL =>
-          user.updateProfile({
-            photoURL
-          })
+          db.collection('users').doc(user.uid).update({ photoURL })
         )
         .then(() => {
           setUser(prevUser => ({
@@ -94,13 +88,11 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
           console.error('Error uploading profile photo', err);
           setMessage('حدثت مشكلة أثناء محاولة تحديث الصورة الشخصية');
         })
-        .finally(() => {
-          saveDataButton.current!.disabled = false;
-        });
+        .finally(() => setIsLoading(false));
     } else {
-      saveDataButton.current!.disabled = false;
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <Card body className="mb-4" id="account-data">
@@ -111,8 +103,8 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
           <Form.Label>الاسم كامل</Form.Label>
           <Form.Control
             placeholder="اكتب اسمك هنا"
-            defaultValue={user?.displayName ?? ''}
-            ref={displayName}
+            value={displayName}
+            onChange={e => setDisplayName(e.target.value)}
           />
         </Form.Group>
 
@@ -126,39 +118,8 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
             onChange={handlePhotoChange}
           />
         </Form.Group>
-        {/* 
-        <Form.Group>
-          <Form.Label>النوع</Form.Label>
-          <Form.Row>
-            <Form.Check
-              type="radio"
-              custom
-              name="gender"
-              id="male"
-              label="ذكر"
-              value={Gender.MALE}
-              checked={gender === Gender.MALE}
-              onChange={(event: React.FormEvent) => {
-                setGender((event.target as HTMLInputElement).value);
-              }}
-              className="ml-3"
-            />
-            <Form.Check
-              type="radio"
-              custom
-              name="gender"
-              id="female"
-              label="أنثى"
-              value={Gender.FEMALE}
-              checked={gender === Gender.FEMALE}
-              onChange={(event: React.FormEvent) => {
-                setGender((event.target as HTMLInputElement).value);
-              }}
-            />
-          </Form.Row>
-        </Form.Group> */}
 
-        <Button type="submit" ref={saveDataButton}>
+        <Button type="submit" disabled={isLoading}>
           حفظ البيانات
         </Button>
       </Form>
