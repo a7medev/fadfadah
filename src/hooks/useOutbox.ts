@@ -27,10 +27,14 @@ const getOutbox = async (userId: string, last?: DocumentData | null) => {
     .map(async ({ id }) => {
       const doc = await db.collection('messages').doc(id).get();
 
-      return { ...doc.data() as Message<Timestamp>, id };
+      return { ...(doc.data() as Message<Timestamp>), id };
     });
 
-  const outbox = await Promise.all(outboxPromises);
+  const result = await Promise.all(
+    outboxPromises.map(p => p.catch(err => console.error(err)))
+  );
+
+  const outbox = result.filter(m => m) as Message<Timestamp>[];
 
   const lastDoc = docs.length === LIMIT ? docs[docs.length - 1] : null;
 
