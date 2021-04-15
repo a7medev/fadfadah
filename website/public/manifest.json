@@ -42,17 +42,17 @@
       "url": "/inbox",
       "icons": [
         {
-          "src": "icons/messages-64x64.png",
+          "src": "icons/inbox-64x64.png",
           "type": "image/png",
           "sizes": "64x64"
         },
         {
-          "src": "icons/messages-192x192.png",
+          "src": "icons/inbox-192x192.png",
           "type": "image/png",
           "sizes": "192x192"
         },
         {
-          "src": "icons/messages-512x512.png",
+          "src": "icons/inbox-512x512.png",
           "type": "image/png",
           "sizes": "512x512"
         }
@@ -63,17 +63,17 @@
       "url": "/outbox",
       "icons": [
         {
-          "src": "icons/messages-64x64.png",
+          "src": "icons/outbox-64x64.png",
           "type": "image/png",
           "sizes": "64x64"
         },
         {
-          "src": "icons/messages-192x192.png",
+          "src": "icons/outbox-192x192.png",
           "type": "image/png",
           "sizes": "192x192"
         },
         {
-          "src": "icons/messages-512x512.png",
+          "src": "icons/outbox-512x512.png",
           "type": "image/png",
           "sizes": "512x512"
         }
