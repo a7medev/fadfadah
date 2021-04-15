@@ -6,6 +6,10 @@ const NotFound = () => {
 
   return (
     <div className={styles.container}>
+      <Head>
+        <meta property="og:image" content="/images/card-image.png" />
+      </Head>
+
       <img
         src="/images/logo.png"
         width={200}

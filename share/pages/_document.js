@@ -15,7 +15,6 @@ class MyDocument extends Document {
           />
           <meta name="author" content="https://fadfadah.me/" />
 
-          <meta property="og:image" content="/images/card-image.png" />
           <meta property="og:title" content="" />
           <meta property="og:description" content="" />
 
