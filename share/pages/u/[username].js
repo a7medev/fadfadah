@@ -1,5 +1,6 @@
 import Head from 'next/head';
 
+import UserDetails from '../../components/UserDetails';
 import { db } from '../../config/firebase';
 
 export const getServerSideProps = async ({ params }) => {
@@ -16,23 +17,22 @@ export const getServerSideProps = async ({ params }) => {
     return { notFound: true };
   }
 
-  return { props: { user: userDoc.data() } };
+  const user = userDoc.data();
+  const displayName = user.displayName || 'مستخدم فضفضة';
+  const photoURL = user.photoURL || '/images/avatar.png';
+
+  return { props: { user: { ...user, displayName, photoURL } } };
 };
 
 const Profile = ({ user }) => {
-  const name = user.displayName || 'مستخدم فضفضة';
-  const photoURL = user.photoURL || '/images/avatar.png';
-
   return (
     <div>
       <Head>
-        <title>{name} | فضفضة</title>
-        <meta property="og:image" content={photoURL} />
+        <title>{user.displayName} | فضفضة</title>
+        <meta property="og:image" content={user.photoURL} />
       </Head>
 
-      <img src={photoURL} />
-      <h1>{name}</h1>
-      <h2>@{user.username}</h2>
+      <UserDetails user={user} />
     </div>
   );
 };
