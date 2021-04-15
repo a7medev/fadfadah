@@ -2,6 +2,7 @@ import Head from 'next/head';
 
 import UserDetails from '../../components/UserDetails';
 import useRedirectToFadfadah from '../../hooks/useRedirectToFadfadah';
+import resizePhoto from '../../utils/resizePhoto';
 import { db } from '../../config/firebase';
 
 export const getServerSideProps = async ({ params }) => {
@@ -20,7 +21,7 @@ export const getServerSideProps = async ({ params }) => {
 
   const user = userDoc.data();
   const displayName = user.displayName || 'مستخدم فضفضة';
-  const photoURL = user.photoURL || '/images/avatar.png';
+  const photoURL = resizePhoto(user.photoURL, 500) || '/images/avatar.png';
 
   return { props: { user: { ...user, displayName, photoURL } } };
 };
