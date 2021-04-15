@@ -32,6 +32,6 @@ jobs:
       - name: Deploy to Firebase Cloud Functions
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions
+          args: deploy -f --only functions
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
