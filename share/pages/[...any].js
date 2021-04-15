@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import styles from './index.module.css';
 
-const Index = () => {
+const Any = () => {
   useEffect(() => {
     location.replace('https://fadfadah.me');
   }, []);
@@ -19,4 +19,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Any;
