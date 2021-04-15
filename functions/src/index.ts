@@ -572,14 +572,16 @@ export const sendLoveNotification = functions
     const message = change.after.data();
     // Love State Changed
     if (message.love && message.love !== change.before.data().love) {
-      const reciever = await getUserById(message.to);
+      let sender = message.to;
 
-      const senderId = await getUIDByMessageId(change.after.id);
-      const sender = await getUserById(senderId!);
+      if (!sender) {
+        const senderId = await getUIDByMessageId(change.after.id);
+        sender = await getUserById(senderId!);
+      }
 
       const lovedWord =
         sender?.gender === Gender.FEMALE ? 'أَحَبَّت' : 'أَحَبَّ';
-      const body = `${lovedWord} ${reciever?.displayName} رسالتك "${
+      const body = `${lovedWord} ${message.to.displayName} رسالتك "${
         message.content.length > 100
           ? message.content.substring(0, 100) + '...'
           : message.content
@@ -589,7 +591,7 @@ export const sendLoveNotification = functions
         notification: {
           body,
           title: 'فضفضة',
-          icon: reciever?.photoURL ?? '/images/avatar.svg',
+          icon: message.to.photoURL ?? '/images/avatar.svg',
           clickAction: `/outbox?goto=${change.after.id}`
         }
       }).catch(err => console.error(err));
