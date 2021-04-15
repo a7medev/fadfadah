@@ -306,7 +306,7 @@ export const setUsername = functions
 export const removeMessageData = functions
   .region(REGION)
   .firestore.document('/messages/{messageId}')
-  .onDelete(async (_, { params }) => {
+  .onDelete(async (__, { params }) => {
     const { docs: messages } = await db
       .collectionGroup('messages')
       .where('messageId', '==', params.messageId)
