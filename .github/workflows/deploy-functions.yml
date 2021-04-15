@@ -27,7 +27,7 @@ jobs:
         working-directory: functions
         run: |
           rm -rf node_modules/sharp
-          npm install --arch=x64 --platform=linux sharp
+          npm install --arch=x64 --platform=linuxmusl sharp
 
       - name: Deploy to Firebase Cloud Functions
         uses: w9jds/firebase-action@master
