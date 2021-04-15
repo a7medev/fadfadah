@@ -1,12 +1,8 @@
-import { useEffect } from 'react';
-
+import useRedirectToFadfadah from '../hooks/useRedirectToFadfadah';
 import styles from './index.module.css';
 
 const NotFound = () => {
-  useEffect(() => {
-    const link = 'https://fadfadah.me' + location.pathname + location.search;
-    location.replace(link);
-  }, []);
+  useRedirectToFadfadah();
 
   return (
     <div className={styles.container}>

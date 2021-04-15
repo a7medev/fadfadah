@@ -1,6 +1,7 @@
 import Head from 'next/head';
 
 import UserDetails from '../../components/UserDetails';
+import useRedirectToFadfadah from '../../hooks/useRedirectToFadfadah';
 import { db } from '../../config/firebase';
 
 export const getServerSideProps = async ({ params }) => {
@@ -25,6 +26,8 @@ export const getServerSideProps = async ({ params }) => {
 };
 
 const Profile = ({ user }) => {
+  useRedirectToFadfadah();
+
   return (
     <div>
       <Head>
