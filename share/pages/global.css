@@ -1,5 +1,8 @@
+@font-face {
+  font-family: 'JF Flat';
+  src: url('/fonts/jf-flat.ttf') format('truetype');
+}
+
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  font-family: 'JF Flat';
 }
