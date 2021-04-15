@@ -14,6 +14,8 @@ import getUIDByMessageId from './utils/getUIDByMessageId';
 import getUIDByUsername from './utils/getUIDByUsername';
 import getUserById from './utils/getUserById';
 import sendNotification from './utils/sendNotification';
+import getSender from './utils/getSender';
+import Message from './types/Message';
 
 const { HttpsError } = functions.https;
 
@@ -569,25 +571,18 @@ export const sendLoveNotification = functions
   .region(REGION)
   .firestore.document('/messages/{messageId}')
   .onUpdate(async change => {
-    const message = change.after.data();
+    const message = change.after.data() as Message<unknown>;
     // Love State Changed
     if (message.love && message.love !== change.before.data().love) {
-      let sender = message.to;
-
-      if (!sender) {
-        const senderId = await getUIDByMessageId(change.after.id);
-        sender = await getUserById(senderId!);
-      }
-
+      const sender = await getSender(change.after.id, message);
       const lovedWord =
-        sender?.gender === Gender.FEMALE ? 'أَحَبَّت' : 'أَحَبَّ';
-      const body = `${lovedWord} ${message.to.displayName} رسالتك "${
+        message.to.gender === Gender.FEMALE ? 'أَحَبَّت' : 'أَحَبَّ';
+      const messageContent =
         message.content.length > 100
           ? message.content.substring(0, 100) + '...'
-          : message.content
-      }"`;
-
-      sendNotification(sender?.uid ?? '', {
+          : message.content;
+      const body = `${lovedWord} ${message.to.displayName} رسالتك "${messageContent}"`;
+      sendNotification(sender.uid, {
         notification: {
           body,
           title: 'فضفضة',
