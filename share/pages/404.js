@@ -2,9 +2,10 @@ import { useEffect } from 'react';
 
 import styles from './index.module.css';
 
-const Any = () => {
+const NotFound = () => {
   useEffect(() => {
-    location.replace('https://fadfadah.me');
+    const link = 'https://fadfadah.me' + location.pathname + location.search;
+    location.replace(link);
   }, []);
 
   return (
@@ -19,4 +20,4 @@ const Any = () => {
   );
 };
 
-export default Any;
+export default NotFound;
