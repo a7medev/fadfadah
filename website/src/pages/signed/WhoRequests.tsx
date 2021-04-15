@@ -10,6 +10,7 @@ import WhoRequest from '../../components/WhoRequest';
 import useWhoRequests from '../../hooks/useWhoRequests';
 import withAuth from '../../components/withAuth';
 import getErrorMessage from '../../utils/getErrorMessage';
+import SignedUserCard from '../../components/SignedUserCard';
 
 export interface WhoRequestsProps extends RouteComponentProps {}
 
@@ -39,8 +40,9 @@ const WhoRequests: React.FC<WhoRequestsProps> = () => {
       </Helmet>
 
       <Container className="pt-2">
-        <h4 className="mb-3">طلبات معرفة المرسل</h4>
-        <hr />
+        <SignedUserCard />
+
+        <h4 className="mt-4 mb-3">طلبات معرفة المرسل</h4>
 
         {error && <Alert variant="danger">{getErrorMessage(error.code)}</Alert>}
         {isLoading ? (
