@@ -15,6 +15,7 @@ const resizePhoto = (photoURL, size = 64) => {
     return photoURL + resizeString;
   }
 
+  // Facebook sign in profile photo
   if (photoURL.includes('facebook')) {
     return photoURL + `?height=${size}`;
   }
