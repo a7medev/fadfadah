@@ -627,7 +627,7 @@ export const resizeProfilePhoto = functions
 
     const photoPath = path.join(workingDir, photoName);
 
-    await sharp(tmpFilePath).resize(100, 100).toFile(photoPath);
+    await sharp(tmpFilePath).resize(350, 350).toFile(photoPath);
 
     // Remove previous photos
     const [prevPhotos] = await bucket.getFiles({ directory: bucketDir });
