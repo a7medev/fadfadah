@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { motion, AnimatePresence, Variants, Transition } from 'framer-motion';
 

@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
 import { db } from '../config/firebase';
 import useDarkMode from '../hooks/useDarkMode';

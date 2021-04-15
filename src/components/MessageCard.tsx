@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { Timestamp } from '@firebase/firestore-types';
 import Message from '../types/Message';
 import { Card, Dropdown } from 'react-bootstrap';

@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { db, auth, functions } from '../config/firebase';
 import IWhoRequest from '../types/WhoRequest';

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Container, Button, Row, Col } from 'react-bootstrap';
 import PageTransition from '../components/PageTransition';
 import Mailbox from '../assets/images/mailbox-animated.svg';

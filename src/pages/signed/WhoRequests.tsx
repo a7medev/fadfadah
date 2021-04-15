@@ -1,6 +1,5 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import qs from 'qs';
-import { useEffect } from 'react';
 import { RouteComponentProps, useLocation } from '@reach/router';
 import { Helmet } from 'react-helmet';
 import { Alert, Button, Container } from 'react-bootstrap';

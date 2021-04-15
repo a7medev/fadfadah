@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import MiniUser from '../types/MiniUser';
 import VerifiedIcon from './VerifiedIcon';
 import { navigate } from '@reach/router';

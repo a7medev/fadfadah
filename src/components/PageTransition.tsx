@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { motion, Variants, Transition } from 'framer-motion';
 
 const pageVariants: Variants = {

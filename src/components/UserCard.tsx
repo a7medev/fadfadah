@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
 import VerifiedIcon from './VerifiedIcon';
 import MiniUser from '../types/MiniUser';

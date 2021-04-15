@@ -1,5 +1,5 @@
 import { Redirect } from '@reach/router';
-import * as React from 'react';
+import React from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 function withAuth<TProps = {}>(

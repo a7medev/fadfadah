@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaFacebook, FaTwitter, FaWhatsapp, FaRegCopy } from 'react-icons/fa';
 import { Button, Modal, Form } from 'react-bootstrap';
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Alert, Button } from 'react-bootstrap';
 import { auth } from '../config/firebase';
 

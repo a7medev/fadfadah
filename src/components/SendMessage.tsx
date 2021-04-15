@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import { functions, performance } from '../config/firebase';
 import 'firebase/firestore';
