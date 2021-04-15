@@ -8,9 +8,15 @@ const getSender = (messageId: string, message: Message<unknown>) => {
 
   return new Promise<MiniUser>(async (resolve, reject) => {
     const senderId = await getUIDByMessageId(messageId);
-    if (!senderId) return reject('Sender not found');
+    if (!senderId) {
+      reject('Sender not found');
+      return;
+    }
     const sender = await getUserById(senderId);
-    if (!sender) return reject('Sender not found');
+    if (!sender) {
+      reject('Sender not found');
+      return;
+    }
     resolve(sender);
   });
 };
