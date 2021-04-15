@@ -21,7 +21,13 @@ jobs:
 
       - name: Install packages
         working-directory: functions
-        run: yarn
+        run: npm install
+      
+      - name: Fix Sharp installation
+        working-directory: functions
+        run: |
+          rm -rf node_modules/sharp
+          npm install --arch=x64 --platform=linuxmusl sharp
 
       - name: Deploy to Firebase Cloud Functions
         uses: w9jds/firebase-action@master
