@@ -1,4 +1,4 @@
-const resizePhoto = (photoURL?: string | null, size = 64) => {
+const resizePhoto = (photoURL, size = 64) => {
   if (!photoURL) {
     return null;
   }
