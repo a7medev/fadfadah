@@ -33,8 +33,7 @@ export interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
-  const { protocol, host } = window.location;
-  const link = `${protocol}//${host}/u/${user.username}`;
+  const link = 'https://share.fadfadah.me/u/' + user.username;
 
   const { user: currentUser } = useAuth();
 
