@@ -23,12 +23,6 @@ class MyDocument extends Document {
           <meta name="twitter:title" />
           <meta name="twitter:description" />
           <meta name="twitter:domain" content="https://fadfadah.me/" />
-          <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-            integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
-            crossorigin="anonymous"
-          />
         </Head>
         <body>
           <Main />

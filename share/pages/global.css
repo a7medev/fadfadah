@@ -3,6 +3,11 @@
   src: url('/fonts/jf-flat.ttf') format('truetype');
 }
 
+body {
+  padding: 0;
+  margin: 0;
+}
+
 * {
   font-family: 'JF Flat';
 }
