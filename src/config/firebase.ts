@@ -24,7 +24,9 @@ firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 export const storage = firebase.storage();
-export const functions = firebase.functions();
+export const functions = firebase
+  .app()
+  .functions(process.env.REACT_APP_FIREBASE_FUNCTIONS_REGION);
 export const messaging = firebase.messaging();
 export const analytics = firebase.analytics();
 export const performance = firebase.performance();
