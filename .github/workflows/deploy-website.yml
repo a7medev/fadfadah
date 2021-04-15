@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-    paths-ignore:
-      - functions/**
+    paths:
+      - website/**
   workflow_dispatch:
 
 jobs:
@@ -19,8 +19,10 @@ jobs:
         with:
           node-version: '14.x'
       - name: Install packages
+        working-directory: website
         run: yarn
       - name: Build the app
+        working-directory: website
         run: yarn build
         env:
           REACT_APP_FIREBASE_API_KEY: AIzaSyC9VQy2EtTg9QBL6vIdws3178CWM136LkE

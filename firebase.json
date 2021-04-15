@@ -31,7 +31,7 @@
     }
   },
   "hosting": {
-    "public": "build",
+    "public": "website/build",
     "ignore": [
       "firebase.json",
       "**/.*",
