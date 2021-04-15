@@ -1,3 +1,5 @@
+import Head from 'next/head';
+
 import useRedirectToFadfadah from '../hooks/useRedirectToFadfadah';
 import styles from './index.module.css';
 
