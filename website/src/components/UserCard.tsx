@@ -65,7 +65,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         </div>
 
         <Dropdown>
-          <Dropdown.Toggle variant="text-dark">
+          <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
             <FaEllipsisV size="0.9em" />
           </Dropdown.Toggle>
 
