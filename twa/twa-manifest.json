@@ -1,0 +1,56 @@
+{
+  "packageId": "me.fadfadah.twa",
+  "host": "fadfadah.me",
+  "name": "فضفضة",
+  "launcherName": "فضفضة",
+  "display": "standalone",
+  "themeColor": "#00CF95",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#00CF95",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://fadfadah.me/icons/android-chrome-512x512.png",
+  "maskableIconUrl": "https://fadfadah.me/icons/maskable.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/home/ahmed/Documents/Projects/fadfadah/twa/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1",
+  "appVersionCode": 1,
+  "shortcuts": [
+    {
+      "name": "الرسائل المستلمة",
+      "shortName": "الرسائل المس",
+      "url": "https://fadfadah.me/inbox",
+      "chosenIconUrl": "https://fadfadah.me/icons/inbox-512x512.png"
+    },
+    {
+      "name": "الرسائل المرسلة",
+      "shortName": "الرسائل المر",
+      "url": "https://fadfadah.me/outbox",
+      "chosenIconUrl": "https://fadfadah.me/icons/outbox-512x512.png"
+    },
+    {
+      "name": "الإعدادات",
+      "shortName": "الإعدادات",
+      "url": "https://fadfadah.me/settings",
+      "chosenIconUrl": "https://fadfadah.me/icons/settings-512x512.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://fadfadah.me/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "appVersion": "1"
+}

@@ -1,0 +1,6 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target" : { "namespace": "android_app", "package_name": "me.fadfadah.twa",
+               "sha256_cert_fingerprints": ["A7:7A:76:8E:19:21:B7:5C:92:1A:1C:85:FD:CB:61:27:C7:94:72:D1:9A:E6:71:DD:98:B2:8D:FE:AA:0F:66:E0"] }
+}
+]

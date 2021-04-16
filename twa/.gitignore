@@ -1,0 +1,5 @@
+*.keystore
+*.apk
+*.apk.idsig
+*.aab
+.gradlew
