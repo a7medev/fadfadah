@@ -116,7 +116,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
             )}
 
             <Dropdown drop="right">
-              <Dropdown.Toggle variant="text-dark">
+              <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
                 <FaEllipsisV size="0.9em" />
               </Dropdown.Toggle>
 
