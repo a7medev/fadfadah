@@ -2,4 +2,6 @@
 *.apk
 *.apk.idsig
 *.aab
-.gradlew
+.gradle
+.idea
+local.properties
