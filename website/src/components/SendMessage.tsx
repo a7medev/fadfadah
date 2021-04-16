@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { functions, performance } from '../config/firebase';
+import { functions } from '../config/firebase';
 import 'firebase/firestore';
 import MiniUser from '../types/MiniUser';
 import MessageBox from './MessageBox';
@@ -42,20 +42,14 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
 
     sendButton.current!.disabled = true;
     const sendMessage = functions.httpsCallable('sendMessage');
-    const sendMessageTrace = performance.trace('sendMessage');
-
-    sendMessageTrace.start();
-    sendMessageTrace.putAttribute('isAnonymous', `${isAnonymous}`);
 
     sendMessage(message)
       .then(() => {
         setError(null);
         setMessage('تم إرسال الرسالة بنجاح');
         messageContent.current?.form?.reset();
-        sendMessageTrace.putAttribute('sent', 'true');
       })
       .catch(err => {
-        sendMessageTrace.putAttribute('sent', 'false');
         console.dir(err);
         setError(
           err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
@@ -63,7 +57,6 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       })
       .finally(() => {
         sendButton.current!.disabled = false;
-        sendMessageTrace.stop();
       });
   }
 

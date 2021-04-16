@@ -4,8 +4,6 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/functions';
 import 'firebase/messaging';
-import 'firebase/analytics';
-import 'firebase/performance';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -28,8 +26,6 @@ export const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_FUNCTIONS_REGION);
 export const messaging = firebase.messaging();
-export const analytics = firebase.analytics();
-export const performance = firebase.performance();
 
 if (process.env.NODE_ENV === 'development') {
   auth.useEmulator('http://localhost:9099');
