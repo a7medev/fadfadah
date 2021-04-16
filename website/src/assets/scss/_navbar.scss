@@ -82,15 +82,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #aaa;
-
-  &:hover {
-    background-color: rgba($primary, 0.15);
-    color: lighten($primary, 10%);
-  }
+  fill: #aaa;
 
   &.active {
-    color: $primary;
+    fill: $primary;
+
+    .filled {
+      display: inline;
+    }
+    .outlined {
+      display: none;
+    }
+  }
+
+  .filled {
+    fill: $primary;
+    display: none;
   }
 }
 
@@ -117,7 +124,7 @@
   .navbar {
     background-color: $gray-800 !important;
     border-bottom-color: $gray-700;
-    
+
     @extend .navbar-dark;
 
     .bar {
@@ -130,16 +137,7 @@
   }
 
   .bottom-nav-icon {
-    color: $gray-600;
-  
-    &:hover {
-      background-color: rgba($primary, 0.05);
-      color: lighten($primary, 5%);
-    }
-
-    &.active {
-      color: $primary;
-    }
+    fill: $gray-600;
   }
 
   .main-links {
