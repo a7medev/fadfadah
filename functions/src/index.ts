@@ -64,7 +64,8 @@ export const denormalizeUserData = functions
       after.displayName === before.displayName &&
       after.photoURL === before.photoURL &&
       after.gender === before.gender &&
-      after.verified === before.verified
+      after.verified === before.verified &&
+      after.username === after.username
     ) {
       console.log('Nothing changed');
       return true;
