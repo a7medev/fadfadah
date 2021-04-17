@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-import { useAuth } from '../contexts/AuthContext';
 import { Navbar, Nav, Button } from 'react-bootstrap';
-import { auth } from '../config/firebase';
-import logo from '../assets/images/logo.svg';
+
 import Link from './Link';
+import logo from '../assets/images/logo.svg';
+import { auth } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 const Navigation: React.FC = () => {
   const { signedIn } = useAuth();
@@ -25,7 +25,7 @@ const Navigation: React.FC = () => {
       navItems.forEach(el =>
         el.removeEventListener('click', closeNavbarHandler)
       );
-  }, []);
+  }, [signedIn]);
 
   return (
     <Navbar bg="white" expand="lg" fixed="top">
