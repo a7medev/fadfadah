@@ -12,7 +12,7 @@ const Loader: React.FC<LoaderProps> = ({ style, small }) => {
   return (
     <motion.div
       style={style}
-      className={[styles.loader, small && styles.small].join('')}
+      className={[styles.loader, small && styles.small].join(' ')}
       animate={{
         x: small ? [-40, 40] : [-70, 70],
         y: small ? [0, -60] : [0, -90],

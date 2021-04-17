@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Modal, Button } from 'react-bootstrap';
 
+import styles from './MessageBox.module.scss';
+
 export interface MessageBoxProps {
   title: string;
   text: string;
@@ -35,7 +37,13 @@ const MessageBox: React.FC<MessageBoxProps> = ({
   }, [show, hideAfter]);
 
   return createPortal(
-    <div className={'modal-content message-box ' + (showBox ? 'show' : '')}>
+    <div
+      className={[
+        'modal-content',
+        styles.messageBox,
+        showBox && styles.show
+      ].join(' ')}
+    >
       <Modal.Header>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>

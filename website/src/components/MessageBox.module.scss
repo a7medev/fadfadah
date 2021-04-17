@@ -1,4 +1,4 @@
-.message-box {
+.messageBox {
   position: fixed !important;
   top: -100%;
   left: 50%;
@@ -12,24 +12,22 @@
     top: 5rem;
   }
 
-  .modal-header {
+  :global(.modal-header) {
     padding: 0.4rem;
   }
-  .modal-title {
+  :global(.modal-title) {
     font-size: 1.1rem;
   }
-  .modal-body {
+  :global(.modal-body) {
     padding: 0.4rem 0.7rem !important;
     padding-bottom: 0 !important;
   }
-  .modal-footer {
+  :global(.modal-footer) {
     padding-top: 0;
     border: 0;
   }
 }
 
-.dark {
-  .message-box {
-    box-shadow: 0 1rem 4rem -1rem rgba(0, 0, 0, 0.4);
-  }
+:global(.dark) .messageBox {
+  box-shadow: 0 1rem 4rem -1rem rgba(0, 0, 0, 0.4);
 }

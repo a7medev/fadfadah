@@ -1,18 +1,18 @@
-.safe-area {
+.safeArea {
   margin-top: calc(1rem + 40px);
   margin-bottom: calc(1rem + 40px);
   padding-bottom: 0.5rem;
   min-height: calc(100vh - 2rem - 80px);
   overflow-x: hidden;
 
-  &.no-bottom-navbar {
+  &.noBottonNavbar {
     min-height: calc(100vh - 1rem - 40px);
     margin-bottom: 0;
   }
 }
 
-@media (min-width: map-get($grid-breakpoints, 'sm')) {
-  .safe-area {
+@media (min-width: var(--breakpoint-sm)) {
+  .safeArea {
     min-height: calc(100vh - 1rem - 40px);
     margin-bottom: 0;
   }
