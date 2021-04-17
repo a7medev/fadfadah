@@ -9,22 +9,15 @@
 
 .nav-link {
   color: black !important;
-  position: relative;
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  margin-bottom: 0.25rem;
+  transition: 0.25s background-color ease-in-out, 0.25s color ease-in-out;
 
-  &:before {
-    content: '';
-    position: absolute;
-    bottom: 5px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: $primary;
-    transform: translateX(-50%);
-    transition: 0.25s ease-in-out;
-  }
-  &:hover:before,
-  &.active:before {
-    width: 25px;
+  &:hover,
+  &.active {
+    background-color: rgba($primary, 0.1);
+    color: darken($primary, 5%) !important;
   }
 }
 
@@ -73,6 +66,11 @@
 @media (min-width: map-get($grid-breakpoints, 'lg')) {
   .main-links {
     border-right: 1px solid #e2e2e2;
+  }
+
+  .nav-link {
+    margin-left: 0.25rem;
+    margin-bottom: 0;
   }
 }
 
@@ -150,5 +148,11 @@
 
   .nav-link {
     color: white !important;
+
+    &:hover,
+    &.active {
+      background-color: rgba($primary, 0.1);
+      color: $primary !important;
+    }
   }
 }
