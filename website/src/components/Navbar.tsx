@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
+import { IoIosLogOut } from 'react-icons/io';
 
+import UserDetails from './UserDetails';
 import Link from './Link';
 import logo from '../assets/images/logo.svg';
 import { auth } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navigation: React.FC = () => {
-  const { signedIn } = useAuth();
+  const { signedIn, user } = useAuth();
 
   const [collapseOffCanvas, setCollapseOffCanvas] = useState(false);
 
@@ -55,6 +57,15 @@ const Navigation: React.FC = () => {
           collapseOffCanvas ? 'open' : ''
         }`}
       >
+        {user && (
+          <div className="mt-2 mb-3 d-flex align-items-center d-lg-none">
+            <UserDetails user={user} />
+            <Button variant="text-secondary" className="fab">
+              <IoIosLogOut size={25} />
+            </Button>
+          </div>
+        )}
+
         <Nav className="main-links ml-auto mr-lg-3 pr-lg-2">
           {!signedIn && (
             <Nav.Link as={Link} to="/">
@@ -91,7 +102,7 @@ const Navigation: React.FC = () => {
           {signedIn ? (
             <Button
               onClick={() => auth.signOut()}
-              variant="text-danger"
+              variant="text-danger d-none d-lg-inline-block"
               className="ml-lg-1 mb-1 mb-lg-0"
             >
               تسجيل الخروج

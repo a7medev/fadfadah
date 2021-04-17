@@ -10,7 +10,7 @@
 .nav-link {
   color: black !important;
   border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem !important;
   margin-bottom: 0.25rem;
   transition: 0.25s background-color ease-in-out, 0.25s color ease-in-out;
 
@@ -19,10 +19,6 @@
     background-color: rgba($primary, 0.1);
     color: darken($primary, 5%) !important;
   }
-}
-
-.main-links {
-  text-align: center;
 }
 
 .navbar-toggler {
@@ -71,6 +67,7 @@
   .nav-link {
     margin-left: 0.25rem;
     margin-bottom: 0;
+    padding: 0.25rem 0.5rem !important;
   }
 }
 

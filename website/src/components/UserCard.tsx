@@ -1,12 +1,12 @@
 import React from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
-import VerifiedIcon from './VerifiedIcon';
+import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
+
 import MiniUser from '../types/MiniUser';
 import Share from './Share';
 import Block from './Block';
+import UserDetails from './UserDetails';
 import { useAuth } from '../contexts/AuthContext';
-import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
-import UserPhoto from './UserPhoto';
 
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
@@ -40,29 +40,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
   return (
     <Card className="mb-2">
       <Card.Body className="d-flex user-data">
-        <div className="d-flex align-items-center flex-grow-1">
-          <UserPhoto
-            url={user.photoURL}
-            displayName={user.displayName}
-            size={55}
-          />
-
-          <div className="mr-3">
-            <Card.Title>
-              <h5>
-                {user.displayName ?? 'مستخدم فضفضة'}
-                {user.verified && (
-                  <VerifiedIcon size="18px" className="text-primary mr-2" />
-                )}
-              </h5>
-            </Card.Title>
-            {user.username && (
-              <Card.Subtitle className="text-muted">
-                @{user.username}
-              </Card.Subtitle>
-            )}
-          </div>
-        </div>
+        <UserDetails user={user} />
 
         <Dropdown>
           <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
