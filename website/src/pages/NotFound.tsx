@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link, RouteComponentProps, useLocation } from '@reach/router';
 import { Container, Button } from 'react-bootstrap';
 import { FaArrowRight } from 'react-icons/fa';

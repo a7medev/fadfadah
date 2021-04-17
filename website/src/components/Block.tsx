@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { functions } from '../config/firebase';
 import MessageBox from './MessageBox';
 

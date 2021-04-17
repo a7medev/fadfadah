@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 import firebase from 'firebase/app';
 import 'firebase/auth';

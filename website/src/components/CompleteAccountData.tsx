@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { db, functions } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';

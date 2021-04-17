@@ -1,7 +1,7 @@
-import React from 'react';
+import { navigate } from '@reach/router';
+
 import MiniUser from '../types/MiniUser';
 import VerifiedIcon from './VerifiedIcon';
-import { navigate } from '@reach/router';
 import UserPhoto from './UserPhoto';
 
 export interface UserDataProps {
@@ -10,7 +10,12 @@ export interface UserDataProps {
 
 const UserData: React.FC<UserDataProps> = ({ user }) => {
   return (
-    <div className="d-flex align-items-center" onClick={user.username ? () => navigate(`/u/${user.username}`) : undefined}>
+    <div
+      className="d-flex align-items-center"
+      onClick={
+        user.username ? () => navigate(`/u/${user.username}`) : undefined
+      }
+    >
       <UserPhoto url={user.photoURL} displayName={user.displayName} size={40} />
       <div className="flex-grow-1 mr-2">
         <p className="mb-n1">

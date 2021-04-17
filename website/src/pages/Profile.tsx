@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, RouteComponentProps, redirectTo } from '@reach/router';
 import { Helmet } from 'react-helmet';
 import { Container, Button } from 'react-bootstrap';

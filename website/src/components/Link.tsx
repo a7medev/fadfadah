@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link as ReachLink, LinkProps as ReachLinkProps } from '@reach/router';
 
 export interface LinkProps

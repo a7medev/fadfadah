@@ -1,4 +1,3 @@
-import React from 'react';
 import { Router } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
 import loadable from '@loadable/component';

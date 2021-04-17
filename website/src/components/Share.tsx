@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { FaFacebook, FaTwitter, FaWhatsapp, FaRegCopy } from 'react-icons/fa';
 import { Button, Modal, Form } from 'react-bootstrap';
 
@@ -14,7 +14,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
   const copyToClipboard = () => {
     linkToShare.current?.select();
     document.execCommand('copy');
-  }
+  };
 
   return (
     <>
@@ -39,12 +39,14 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
             />
           </Form.Group>
 
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
-            alignItems: 'center',
-            gap: 5
-          }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+              alignItems: 'center',
+              gap: 5
+            }}
+          >
             <Button
               variant="facebook"
               href={`https://www.facebook.com/share.php?u=${link}`}
@@ -69,10 +71,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
               <FaWhatsapp size="1em" className="ml-2" />
               واتساب
             </Button>
-            <Button
-              variant="dark"
-              onClick={copyToClipboard}
-            >
+            <Button variant="dark" onClick={copyToClipboard}>
               <FaRegCopy size="1em" className="ml-2" />
               نسخ
             </Button>

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import { auth as firebaseAuth } from '../config/firebase';

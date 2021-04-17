@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card, Dropdown } from 'react-bootstrap';
 import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 

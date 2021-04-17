@@ -1,10 +1,7 @@
-import React from 'react';
 import { Card } from 'react-bootstrap';
 
-export interface UserCardSkeletonProps {
-  
-}
- 
+export interface UserCardSkeletonProps {}
+
 const UserCardSkeleton: React.FC<UserCardSkeletonProps> = () => {
   return (
     <Card className="mb-2 user-card-skeleton">
@@ -20,6 +17,6 @@ const UserCardSkeleton: React.FC<UserCardSkeletonProps> = () => {
       </Card.Body>
     </Card>
   );
-}
- 
+};
+
 export default UserCardSkeleton;

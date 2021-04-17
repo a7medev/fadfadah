@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styles from './SafeArea.module.scss';
 
 interface SafeAreaProps {

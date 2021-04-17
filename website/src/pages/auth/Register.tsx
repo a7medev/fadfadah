@@ -1,4 +1,4 @@
-import React, { useState, FormEvent } from 'react';
+import { useState, FormEvent } from 'react';
 import { Helmet } from 'react-helmet';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { RouteComponentProps, Link } from '@reach/router';

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import qs from 'qs';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps, useLocation } from '@reach/router';

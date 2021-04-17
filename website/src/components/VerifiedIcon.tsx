@@ -1,4 +1,3 @@
-import React from 'react';
 import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { v4 as uuid } from 'uuid';
 
@@ -8,17 +7,19 @@ export interface VerifiedIconProps {
   className?: string;
 }
 
-const VerifiedIcon: React.FC<VerifiedIconProps> = ({ style, size, className }) => {
+const VerifiedIcon: React.FC<VerifiedIconProps> = ({
+  style,
+  size,
+  className
+}) => {
   return (
-    <OverlayTrigger
-      overlay={<Tooltip id={uuid()}>موثق</Tooltip>}
-    >
+    <OverlayTrigger overlay={<Tooltip id={uuid()}>موثق</Tooltip>}>
       <svg
         style={style}
         width={size}
         height={size}
         viewBox="0 0 16 16"
-        className={"bi bi-patch-check-fll " + className}
+        className={'bi bi-patch-check-fll ' + className}
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
       >

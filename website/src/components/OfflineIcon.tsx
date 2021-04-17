@@ -1,4 +1,3 @@
-import React from 'react';
 import { MdPortableWifiOff } from 'react-icons/md';
 
 const Offline: React.FC = () => {

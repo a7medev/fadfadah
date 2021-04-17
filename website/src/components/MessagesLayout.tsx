@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col } from 'react-bootstrap';
 import Masonry from 'react-masonry-component';
 import type { Timestamp } from '@firebase/firestore-types';

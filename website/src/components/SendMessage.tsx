@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import { functions } from '../config/firebase';
 import 'firebase/firestore';
@@ -58,7 +58,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       .finally(() => {
         sendButton.current!.disabled = false;
       });
-  }
+  };
 
   return (
     <>

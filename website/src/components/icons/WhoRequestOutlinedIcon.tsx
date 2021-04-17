@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface WhoRequestOutlinedIconProps {
   size?: number;
   className?: string;

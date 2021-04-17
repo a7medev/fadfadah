@@ -1,5 +1,3 @@
-import React from 'react';
-
 export interface InboxOutlinedIconProps {
   size?: number;
   className?: string;

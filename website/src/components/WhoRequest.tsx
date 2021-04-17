@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { db, auth, functions } from '../config/firebase';
 import IWhoRequest from '../types/WhoRequest';
@@ -35,7 +35,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
             : 'حدثت مشكلة أثناء محاولة قبول الطلب'
         );
       });
-  }
+  };
 
   const handleDelete = () => {
     db.collection('users')
@@ -51,7 +51,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
         console.error(err);
         setMessageText('حدثت مشكلة أثناء محاولة حذف الطلب');
       });
-  }
+  };
 
   return (
     <>

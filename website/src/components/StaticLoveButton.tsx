@@ -1,4 +1,3 @@
-import React from 'react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 
 export interface StaticLoveButtonProps {
