@@ -15,6 +15,11 @@ const Navigation: React.FC = () => {
 
   const navbarToggler = useRef<HTMLButtonElement>(null);
 
+  const handleSignOut = () => {
+    auth.signOut();
+    navbarToggler.current?.click();
+  };
+
   useEffect(() => {
     const closeNavbarHandler = () => {
       navbarToggler.current?.click();
@@ -60,7 +65,7 @@ const Navigation: React.FC = () => {
         {user && (
           <div className="mt-2 mb-3 d-flex align-items-center d-lg-none">
             <UserDetails user={user} />
-            <Button variant="text-secondary" className="fab">
+            <Button variant="text-secondary" className="fab" onClick={handleSignOut}>
               <IoIosLogOut size={25} />
             </Button>
           </div>
