@@ -65,7 +65,12 @@ const Navigation: React.FC = () => {
         {user && (
           <div className="mt-2 mb-3 d-flex align-items-center d-lg-none">
             <UserDetails user={user} />
-            <Button variant="text-secondary" className="fab" onClick={handleSignOut}>
+            <Button
+              variant="text-dark"
+              className="fab"
+              onClick={handleSignOut}
+              aria-label="تسجيل الخروج"
+            >
               <IoIosLogOut size={25} />
             </Button>
           </div>
