@@ -2,10 +2,10 @@ import { Col } from 'react-bootstrap';
 import Masonry from 'react-masonry-component';
 import type { Timestamp } from '@firebase/firestore-types';
 
-import Message from '../types/Message';
+import Message from '../../types/Message';
 import MessageCard from './MessageCard';
-import OutboxIcon from './icons/OutboxIcon';
-import InboxIcon from './icons/InboxIcon';
+import OutboxIcon from '../icons/OutboxIcon';
+import InboxIcon from '../icons/InboxIcon';
 import styles from './MessagesLayout.module.css';
 
 export interface MessagesLayoutProps {

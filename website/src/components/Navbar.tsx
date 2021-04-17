@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Navbar, Nav, Button } from 'react-bootstrap';
 import { IoIosLogOut } from 'react-icons/io';
 
-import UserDetails from './UserDetails';
+import UserDetails from './user/UserDetails';
 import Link from './Link';
 import logo from '../assets/images/logo.svg';
 import { auth } from '../config/firebase';

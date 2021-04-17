@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import avatar from '../assets/images/avatar.svg';
+import avatar from '../../assets/images/avatar.svg';
 
 export interface UserPhotoProps {
   url?: string | null;

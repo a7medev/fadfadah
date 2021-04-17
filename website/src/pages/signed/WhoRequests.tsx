@@ -8,11 +8,11 @@ import PageTransition from '../../components/PageTransition';
 import Loader from '../../components/Loader';
 import WhoRequest from '../../components/WhoRequest';
 import useWhoRequests from '../../hooks/useWhoRequests';
-import withAuth from '../../components/withAuth';
+import withAuth from '../../components/auth/withAuth';
 import getErrorMessage from '../../utils/getErrorMessage';
-import SignedUserCard from '../../components/SignedUserCard';
+import SignedUserCard from '../../components/user/SignedUserCard';
 import WhoRequestIcon from '../../components/icons/WhoRequestIcon';
-import styles from '../../components/MessagesLayout.module.css';
+import styles from '../../components/messages/MessagesLayout.module.css';
 
 export interface WhoRequestsProps extends RouteComponentProps {}
 

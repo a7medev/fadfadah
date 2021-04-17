@@ -1,8 +1,8 @@
 import { Card } from 'react-bootstrap';
 
-import MiniUser from '../types/MiniUser';
+import MiniUser from '../../types/MiniUser';
 import UserPhoto from './UserPhoto';
-import VerifiedIcon from './VerifiedIcon';
+import VerifiedIcon from '../icons/VerifiedIcon';
 
 export interface UserDetailsProps {
   user: MiniUser;

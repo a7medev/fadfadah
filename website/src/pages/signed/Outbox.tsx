@@ -5,12 +5,12 @@ import { RouteComponentProps, useLocation } from '@reach/router';
 import { Container, Alert, Button } from 'react-bootstrap';
 import { motion, Variants } from 'framer-motion';
 
-import MessagesLayout from '../../components/MessagesLayout';
+import MessagesLayout from '../../components/messages/MessagesLayout';
 import Loader from '../../components/Loader';
 import PageTransition from '../../components/PageTransition';
-import SignedUserCard from '../../components/SignedUserCard';
+import SignedUserCard from '../../components/user/SignedUserCard';
 import useOutbox from '../../hooks/useOutbox';
-import withAuth from '../../components/withAuth';
+import withAuth from '../../components/auth/withAuth';
 import getErrorMessage from '../../utils/getErrorMessage';
 
 const fadeVariants: Variants = {

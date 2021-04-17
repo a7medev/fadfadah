@@ -4,8 +4,8 @@ import 'firebase/auth';
 import { Button } from 'react-bootstrap';
 import { FaFacebook } from 'react-icons/fa';
 
-import { auth as firebaseAuth } from '../config/firebase';
-import getErrorMessage from '../utils/getErrorMessage';
+import { auth as firebaseAuth } from '../../config/firebase';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export const facebookProvider = new firebase.auth.FacebookAuthProvider();
 

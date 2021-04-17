@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import { db, auth, functions } from '../config/firebase';
 import IWhoRequest from '../types/WhoRequest';
-import UserPhoto from './UserPhoto';
+import UserPhoto from './user/UserPhoto';
 import MessageBox from './MessageBox';
 
 export interface WhoRequestProps extends IWhoRequest {

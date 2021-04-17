@@ -8,12 +8,12 @@ import { Helmet } from 'react-helmet';
 import { useAuth } from '../../contexts/AuthContext';
 import { Container } from 'react-bootstrap';
 
-import Prefrences from '../../components/PrefrencesSettings';
 import MessageBox from '../../components/MessageBox';
-import Account from '../../components/AccountSettings';
-import ChangePassword from '../../components/ChangePasswordSettings';
-import DeleteAccount from '../../components/DeleteAccountSettings';
-import withAuth from '../../components/withAuth';
+import PrefrencesSettings from '../../components/settings/PrefrencesSettings';
+import AccountSettings from '../../components/settings/AccountSettings';
+import ChangePasswordSettings from '../../components/settings/ChangePasswordSettings';
+import DeleteAccount from '../../components/settings/DeleteAccountSettings';
+import withAuth from '../../components/auth/withAuth';
 
 export interface SettingsProps extends RouteComponentProps {}
 
@@ -38,15 +38,15 @@ const Settings: React.FC<SettingsProps> = () => {
           text={message!}
         />
 
-        <Prefrences
+        <PrefrencesSettings
           user={user!}
           settings={settings!}
           setSettings={setSettings}
         />
 
-        <Account setMessage={setMessage} />
+        <AccountSettings setMessage={setMessage} />
 
-        <ChangePassword setMessage={setMessage} />
+        <ChangePasswordSettings setMessage={setMessage} />
 
         <DeleteAccount />
       </Container>

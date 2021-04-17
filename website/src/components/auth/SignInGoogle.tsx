@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import firebase from 'firebase/app';
 import 'firebase/auth';
-import { auth as firebaseAuth } from '../config/firebase';
+import { auth as firebaseAuth } from '../../config/firebase';
 import { Button } from 'react-bootstrap';
 import { FaGoogle } from 'react-icons/fa';
-import getErrorMessage from '../utils/getErrorMessage';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export const googleProvider = new firebase.auth.GoogleAuthProvider();
 

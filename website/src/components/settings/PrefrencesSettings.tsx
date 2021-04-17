@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Card, Form } from 'react-bootstrap';
-import { db } from '../config/firebase';
-import useDarkMode from '../hooks/useDarkMode';
-import MiniUser from '../types/MiniUser';
-import Settings from '../types/Settings';
+
+import MiniUser from '../../types/MiniUser';
+import Settings from '../../types/Settings';
+import useDarkMode from '../../hooks/useDarkMode';
+import { db } from '../../config/firebase';
 
 export interface PrefrencesProps {
   user: MiniUser;

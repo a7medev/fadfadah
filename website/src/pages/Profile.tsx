@@ -6,11 +6,11 @@ import { FaArrowRight } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 
 import Loader from '../components/Loader';
-import UserCard from '../components/UserCard';
-import SendMessage from '../components/SendMessage';
+import UserCard from '../components/user/UserCard';
+import SendMessage from '../components/messages/SendMessage';
 import PageTransition from '../components/PageTransition';
-import UserCardSkeleton from '../components/UserCardSkeleton';
-import OfflineIcon from '../components/OfflineIcon';
+import UserCardSkeleton from '../components/user/UserCardSkeleton';
+import OfflineIcon from '../components/icons/OfflineIcon';
 import type MiniUser from '../types/MiniUser';
 import { db } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';

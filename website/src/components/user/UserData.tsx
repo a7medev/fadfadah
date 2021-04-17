@@ -1,7 +1,7 @@
 import { navigate } from '@reach/router';
 
-import MiniUser from '../types/MiniUser';
-import VerifiedIcon from './VerifiedIcon';
+import MiniUser from '../../types/MiniUser';
+import VerifiedIcon from '../icons/VerifiedIcon';
 import UserPhoto from './UserPhoto';
 
 export interface UserDataProps {

@@ -1,6 +1,6 @@
 import { Redirect } from '@reach/router';
 
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 function withAuth<TProps = {}>(
   Route: React.ComponentType<TProps>

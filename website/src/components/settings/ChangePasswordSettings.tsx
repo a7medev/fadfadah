@@ -3,8 +3,8 @@ import { Button, Card, Form } from 'react-bootstrap';
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
-import { auth } from '../config/firebase';
-import getErrorMessage from '../utils/getErrorMessage';
+import { auth } from '../../config/firebase';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export interface ChangePasswordProps {
   setMessage: React.Dispatch<React.SetStateAction<string | null>>;

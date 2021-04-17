@@ -6,9 +6,9 @@ import { RouteComponentProps, Link } from '@reach/router';
 import { auth, db } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
 import PageTransition from '../../components/PageTransition';
-import SignInFacebook from '../../components/SignInFacebook';
-import SignInGoogle from '../../components/SignInGoogle';
-import withoutAuth from '../../components/withoutAuth';
+import SignInFacebook from '../../components/auth/SignInFacebook';
+import SignInGoogle from '../../components/auth/SignInGoogle';
+import withoutAuth from '../../components/auth/withoutAuth';
 import authStyles from './Auth.module.scss';
 import getErrorMessage from '../../utils/getErrorMessage';
 

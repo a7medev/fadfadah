@@ -1,5 +1,5 @@
 import { Alert, Button } from 'react-bootstrap';
-import { auth } from '../config/firebase';
+import { auth } from '../../config/firebase';
 
 export interface EmailNotVerifiedMessageProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>

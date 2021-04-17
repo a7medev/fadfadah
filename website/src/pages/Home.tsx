@@ -6,7 +6,7 @@ import styles from './Home.module.scss';
 import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
 import Link from '../components/Link';
-import withoutAuth from '../components/withoutAuth';
+import withoutAuth from '../components/auth/withoutAuth';
 
 export interface HomeProps extends RouteComponentProps {}
 

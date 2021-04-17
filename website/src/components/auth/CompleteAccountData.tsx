@@ -1,9 +1,10 @@
 import { useState, FormEvent } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
-import { db, functions } from '../config/firebase';
-import { useAuth } from '../contexts/AuthContext';
-import Gender from '../types/Gender';
-import getErrorMessage from '../utils/getErrorMessage';
+
+import Gender from '../../types/Gender';
+import { db, functions } from '../../config/firebase';
+import { useAuth } from '../../contexts/AuthContext';
+import getErrorMessage from '../../utils/getErrorMessage';
 
 export interface CompleteAccountDataProps {
   missingUsername?: boolean;

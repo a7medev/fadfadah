@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import EmailNotVerifiedMessage from './EmailNotVerifiedMessage';
+import { useAuth } from '../../contexts/AuthContext';
+import EmailNotVerifiedMessage from '../auth/EmailNotVerifiedMessage';
 import UserCard from './UserCard';
 import { motion, Variants } from 'framer-motion';
 import UserCardSkeleton from './UserCardSkeleton';
-import CompleteAccountData from './CompleteAccountData';
-import resizePhoto from '../utils/resizePhoto';
+import CompleteAccountData from '../auth/CompleteAccountData';
+import resizePhoto from '../../utils/resizePhoto';
 
 const slideVariants: Variants = {
   out: {

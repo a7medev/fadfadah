@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Alert, Button, Card } from 'react-bootstrap';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
-import { auth } from '../config/firebase';
-import getErrorMessage from '../utils/getErrorMessage';
-import MessageBox from './MessageBox';
+import { auth } from '../../config/firebase';
+import getErrorMessage from '../../utils/getErrorMessage';
+import MessageBox from '../MessageBox';
 
 const DeleteAccount: React.FC = () => {
   const [message, setMessage] = useState<string | null>(null);

@@ -1,11 +1,11 @@
 import { Card, Dropdown } from 'react-bootstrap';
 import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 
-import MiniUser from '../types/MiniUser';
-import Share from './Share';
-import Block from './Block';
+import MiniUser from '../../types/MiniUser';
+import Share from '../Share';
+import Block from '../Block';
 import UserDetails from './UserDetails';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;

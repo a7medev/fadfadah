@@ -1,11 +1,11 @@
 import { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { functions } from '../config/firebase';
+import { functions } from '../../config/firebase';
 import 'firebase/firestore';
-import MiniUser from '../types/MiniUser';
-import MessageBox from './MessageBox';
-import { useAuth } from '../contexts/AuthContext';
-import CreateMessageDto from '../types/CreateMessageDto';
+import MiniUser from '../../types/MiniUser';
+import MessageBox from '../MessageBox';
+import { useAuth } from '../../contexts/AuthContext';
+import CreateMessageDto from '../../types/CreateMessageDto';
 import TextareaAutosize from 'react-textarea-autosize';
 
 export interface SendMessageProps {

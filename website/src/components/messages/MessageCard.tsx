@@ -1,17 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
-import type { Timestamp } from '@firebase/firestore-types';
-import Message from '../types/Message';
 import { Card, Dropdown } from 'react-bootstrap';
-import Moment from 'react-moment';
-import LoveButton from './LoveButton';
-import { db, functions } from '../config/firebase';
 import { FaQuestionCircle, FaTrashAlt, FaUserLock, FaEllipsisV } from 'react-icons/fa';
-import Block from './Block';
-import StaticLoveButton from './StaticLoveButton';
-import MessageBox from './MessageBox';
 import { motion, Variants } from 'framer-motion';
-import UserData from './UserData';
 import { Emojione as Emoji } from 'react-emoji-render';
+import Moment from 'react-moment';
+import type { Timestamp } from '@firebase/firestore-types';
+
+import Message from '../../types/Message';
+import LoveButton from './LoveButton';
+import Block from '../Block';
+import StaticLoveButton from './StaticLoveButton';
+import MessageBox from '../MessageBox';
+import UserData from '../user/UserData';
+import { db, functions } from '../../config/firebase';
 
 export interface BlockActivatorProps {
   block: () => void;

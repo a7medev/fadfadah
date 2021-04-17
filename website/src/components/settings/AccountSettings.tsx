@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
-import { auth, db, storage } from '../config/firebase';
-import { useAuth } from '../contexts/AuthContext';
+
+import { auth, db, storage } from '../../config/firebase';
+import { useAuth } from '../../contexts/AuthContext';
 
 export interface AccountProps {
   setMessage: React.Dispatch<React.SetStateAction<string | null>>;
