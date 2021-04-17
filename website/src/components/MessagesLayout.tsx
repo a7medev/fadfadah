@@ -5,18 +5,20 @@ import type { Timestamp } from '@firebase/firestore-types';
 
 import Message from '../types/Message';
 import MessageCard from './MessageCard';
-import NoMessages from './NoMessagesIcon';
+import OutboxIcon from './icons/OutboxIcon';
+import InboxIcon from './icons/InboxIcon';
+import styles from './MessagesLayout.module.css';
 
 export interface MessagesLayoutProps {
   messages: Message<Timestamp>[];
   removeMessage: (id: string) => void;
-  outbox?: boolean;
+  isOutbox?: boolean;
 }
 
 const MessagesLayout: React.FC<MessagesLayoutProps> = ({
   messages,
   removeMessage,
-  outbox
+  isOutbox
 }) => {
   return messages.length ? (
     <Masonry
@@ -25,12 +27,24 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
     >
       {messages.map(message => (
         <Col xs="12" md="6" lg="4" key={message.id}>
-          <MessageCard {...message} outbox={outbox} removeMessage={removeMessage} />
+          <MessageCard
+            {...message}
+            outbox={isOutbox}
+            removeMessage={removeMessage}
+          />
         </Col>
       ))}
     </Masonry>
   ) : (
-    <NoMessages />
+    <div className="d-flex flex-column justify-content-center align-items-center">
+      {isOutbox ? (
+        <OutboxIcon size={50} className={styles.noMessagesIcon} />
+      ) : (
+        <InboxIcon size={50} className={styles.noMessagesIcon} />
+      )}
+
+      <h5 className="mt-2 text-muted">لا يوجد رسائل</h5>
+    </div>
   );
 };
 

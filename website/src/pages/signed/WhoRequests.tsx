@@ -11,6 +11,8 @@ import useWhoRequests from '../../hooks/useWhoRequests';
 import withAuth from '../../components/withAuth';
 import getErrorMessage from '../../utils/getErrorMessage';
 import SignedUserCard from '../../components/SignedUserCard';
+import WhoRequestIcon from '../../components/icons/WhoRequestIcon';
+import styles from '../../components/MessagesLayout.module.css';
 
 export interface WhoRequestsProps extends RouteComponentProps {}
 
@@ -51,7 +53,10 @@ const WhoRequests: React.FC<WhoRequestsProps> = () => {
           whoRequests && (
             <>
               {whoRequests.length === 0 && (
-                <h5 className="text-center text-muted">لا يوجد طلبات</h5>
+                <div className="d-flex flex-column justify-content-center align-items-center">
+                  <WhoRequestIcon size={50} className={styles.noMessagesIcon} />
+                  <h5 className="mt-2 text-muted">لا يوجد طلبات</h5>
+                </div>
               )}
               {whoRequests.map(request => (
                 <WhoRequest

@@ -59,7 +59,7 @@ const Outbox: React.FC<OutboxProps> = () => {
               <MessagesLayout
                 messages={outbox}
                 removeMessage={removeMessage}
-                outbox
+                isOutbox
               />
               <div className="text-center">
                 {hasMore && !isLoadingMore && (

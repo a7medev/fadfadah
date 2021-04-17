@@ -1,0 +1,9 @@
+.noMessagesIcon {
+  fill: black;
+  width: 4rem;
+  opacity: 0.3;
+}
+
+:global(.dark) .noMessagesIcon {
+  fill: white;
+}
