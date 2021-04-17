@@ -1,6 +1,13 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target" : { "namespace": "android_app", "package_name": "me.fadfadah.twa",
-               "sha256_cert_fingerprints": ["A7:7A:76:8E:19:21:B7:5C:92:1A:1C:85:FD:CB:61:27:C7:94:72:D1:9A:E6:71:DD:98:B2:8D:FE:AA:0F:66:E0"] }
-}
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "me.fadfadah.twa",
+      "sha256_cert_fingerprints": [
+        "A7:7A:76:8E:19:21:B7:5C:92:1A:1C:85:FD:CB:61:27:C7:94:72:D1:9A:E6:71:DD:98:B2:8D:FE:AA:0F:66:E0",
+        "98:23:27:4A:0C:8E:AD:70:74:1C:54:6F:AF:5D:E8:6D:51:75:FB:93:26:B0:D1:CD:1C:C6:69:31:79:5F:EA:A9"
+      ]
+    }
+  }
 ]
