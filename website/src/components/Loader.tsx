@@ -1,6 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+import styles from './Loader.module.scss';
+
 export interface LoaderProps {
   style?: React.CSSProperties,
   small?: boolean;
@@ -10,7 +12,7 @@ const Loader: React.FC<LoaderProps> = ({ style, small }) => {
   return (
     <motion.div
       style={style}
-      className={`loader ${small && 'small'}`}
+      className={[styles.loader, small && styles.small].join('')}
       animate={{
         x: small ? [-40, 40] : [-70, 70],
         y: small ? [0, -60] : [0, -90],
