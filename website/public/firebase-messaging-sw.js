@@ -1,12 +1,12 @@
-importScripts('https://www.gstatic.com/firebasejs/7.18.0/firebase-app.js');
-importScripts('https://www.gstatic.com/firebasejs/7.18.0/firebase-messaging.js');
+importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/8.4.2/firebase-messaging.js');
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyB9QiKhNpNd0-FXrxSlYShusU_95quET8I',
-  projectId: 'fad-fadah',
-  messagingSenderId: '514590012549',
-  appId: '1:514590012549:web:d679963f9c71faebba65ec',
-  measurementId: 'G-L6L6JWXE14'
+  apiKey: 'AIzaSyC9VQy2EtTg9QBL6vIdws3178CWM136LkE',
+  projectId: 'fadfadah-app',
+  messagingSenderId: '137606338',
+  appId: '1:137606338:web:6b8fa2d11138278ab9f75b',
+  measurementId: 'G-KFX596R655'
 });
 
 const messaging = firebase.messaging();
