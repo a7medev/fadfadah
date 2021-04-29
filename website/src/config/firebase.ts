@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/functions';
-import 'firebase/messaging';
+// import 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -25,7 +25,7 @@ export const storage = firebase.storage();
 export const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_FUNCTIONS_REGION);
-export const messaging = firebase.messaging();
+// export const messaging = firebase.messaging();
 
 if (process.env.NODE_ENV === 'development') {
   auth.useEmulator('http://localhost:9099');

@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type firebase from 'firebase';
 
-import { auth, db, messaging } from '../config/firebase';
+import { auth, db } from '../config/firebase';
+// import { auth, db, messaging } from '../config/firebase';
 import MiniUser from '../types/MiniUser';
 import Settings from '../types/Settings';
 import UserData from '../types/UserData';
@@ -47,15 +48,15 @@ const AuthProvider: React.FC = ({ children }) => {
         setSignedIn(false);
         localStorage.removeItem('signedIn');
 
-        messaging
-          .getToken()
-          .then(token =>
-            Promise.all([
-              messaging.deleteToken(),
-              db.collection('devices').doc(token).delete()
-            ])
-          )
-          .catch(err => console.error(err));
+        // messaging
+        //   .getToken()
+        //   .then(token =>
+        //     Promise.all([
+        //       messaging.deleteToken(),
+        //       db.collection('devices').doc(token).delete()
+        //     ])
+        //   )
+        //   .catch(err => console.error(err));
         return;
       }
 
@@ -76,17 +77,17 @@ const AuthProvider: React.FC = ({ children }) => {
       }
 
       // Store the token of the user
-      messaging
-        .getToken()
-        .then(token =>
-          db.collection('devices').doc(token).set({
-            userId: auth.currentUser!.uid,
-            token
-          })
-        )
-        .catch(err => {
-          console.error('Error storing the device token:', err);
-        });
+      // messaging
+      //   .getToken()
+      //   .then(token =>
+      //     db.collection('devices').doc(token).set({
+      //       userId: auth.currentUser!.uid,
+      //       token
+      //     })
+      //   )
+      //   .catch(err => {
+      //     console.error('Error storing the device token:', err);
+      //   });
     });
 
     return () => unsub();
