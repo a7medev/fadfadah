@@ -47,15 +47,17 @@ const AuthProvider: React.FC = ({ children }) => {
         setSignedIn(false);
         localStorage.removeItem('signedIn');
 
-        messaging
-          .getToken()
-          .then(token =>
-            Promise.all([
-              messaging.deleteToken(),
-              db.collection('devices').doc(token).delete()
-            ])
-          )
-          .catch(err => console.error(err));
+        if (messaging) {
+          messaging
+            .getToken()
+            .then(token =>
+              Promise.all([
+                messaging?.deleteToken(),
+                db.collection('devices').doc(token).delete()
+              ])
+            )
+            .catch(err => console.error(err));
+        }
         return;
       }
 
@@ -75,18 +77,19 @@ const AuthProvider: React.FC = ({ children }) => {
         console.error(err);
       }
 
-      // Store the token of the user
-      messaging
-        .getToken()
-        .then(token =>
-          db.collection('devices').doc(token).set({
-            userId: auth.currentUser!.uid,
-            token
-          })
-        )
-        .catch(err => {
-          console.error('Error storing the device token:', err);
-        });
+      if (messaging) {
+        messaging
+          .getToken()
+          .then(token =>
+            db.collection('devices').doc(token).set({
+              userId: auth.currentUser!.uid,
+              token
+            })
+          )
+          .catch(err => {
+            console.error('Error storing the device token:', err);
+          });
+      }
     });
 
     return () => unsub();

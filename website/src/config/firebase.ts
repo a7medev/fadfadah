@@ -19,13 +19,17 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-export const auth = firebase.auth();
-export const db = firebase.firestore();
-export const storage = firebase.storage();
-export const functions = firebase
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_FUNCTIONS_REGION);
-export const messaging = firebase.messaging();
+let messaging: firebase.messaging.Messaging | null = null;
+
+if (firebase.messaging.isSupported()) {
+  messaging = firebase.messaging();
+}
 
 if (process.env.NODE_ENV === 'development') {
   auth.useEmulator('http://localhost:9099');
@@ -35,20 +39,5 @@ if (process.env.NODE_ENV === 'development') {
 
 db.enablePersistence({ synchronizeTabs: true });
 
-export const messages: { [key: string]: string } = {
-  'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بحساب آخر بالفعل',
-  'auth/weak-password': 'يجب أن تحتوي كلمة المرور على 6 حروف أو أكثر',
-  'auth/invalid-email': 'رجاءاً أدخل بريد إلكتروني صالح',
-  'auth/network-request-failed':
-    'حدثت مشكلة في الشبكة، تأكد من اتصال الإنترنت لديك',
-  'auth/user-not-found': 'هذا المستخدم غير موجود',
-  'auth/wrong-password': 'كلمة المرور غير صحيحة أو المستخدم لا يمتلك كلمة مرور',
-  'auth/popup-closed-by-user': 'لقد قمت بإغلاق النافذة المنبثقة',
-  'auth/cancelled-popup-request':
-    'تم إلغاء هذه العملية بسبب فتح نافذة منبثقة أخرى متضاربة',
-  'auth/user-mismatch':
-    ' البريد الإلكتروني أو كلمة المرور لا تتوافق مع المستخدم',
-  'auth/invalid-credential': 'البريد الإلكتروني أو كلمة المرور غير صحيحة',
-  'auth/invalid-verification-code': 'رمز التأكيد غير صحيح',
-  'permission-denied': 'غير مصرح لك بالقيام بذلك'
-};
+export { default as messages } from './firebase-messages';
+export { auth, db, functions, storage, messaging };
