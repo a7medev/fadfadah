@@ -325,62 +325,61 @@ export const removeMessageData = functions
     );
   });
 
+interface BlockUserData {
+  id: string;
+  type: 'uid' | 'username' | 'messageId';
+}
 export const blockUser = functions
   .region(REGION)
-  .https.onCall(
-    async (
-      { id, type }: { id: string; type: 'uid' | 'username' | 'messageId' },
-      context
-    ) => {
-      if (!context.auth) {
-        throw new HttpsError(
-          'unauthenticated',
-          'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
-        );
+  .https.onCall(async ({ id, type }: BlockUserData, context) => {
+    if (!context.auth) {
+      throw new HttpsError(
+        'unauthenticated',
+        'قم بالدخول إلى حسابك لتتمكن من حظر المستخدمين'
+      );
+    }
+
+    const block = (uid: string, type: 'user' | 'sender') => {
+      if (context.auth?.uid === id) {
+        throw new HttpsError('invalid-argument', 'لا يمكنك القيام بحظر نفسك');
       }
 
-      const block = (uid: string, isSender: boolean) => {
-        if (context.auth?.uid === id) {
-          throw new HttpsError('invalid-argument', 'لا يمكنك القيام بحظر نفسك');
-        }
+      return db
+        .collection('users')
+        .doc(context.auth!.uid)
+        .collection('blocked')
+        .doc(uid)
+        .set({ userId: uid, type });
+    };
 
-        return db
-          .collection('users')
-          .doc(context.auth!.uid)
-          .collection('blocked')
-          .doc(uid)
-          .set({ userId: uid, isSender });
-      };
-
-      switch (type) {
-        case 'uid':
-          return block(id, false);
-        case 'username':
-          const uid = await getUIDByUsername(id);
-          if (!uid) {
-            throw new HttpsError(
-              'not-found',
-              'لا نستطيع إيجاد المستخدم الذي تحاول حظره'
-            );
-          }
-          return block(uid, false);
-        case 'messageId':
-          const authorId = await getUIDByMessageId(id);
-          if (!authorId) {
-            throw new HttpsError(
-              'not-found',
-              'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا حظره، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
-            );
-          }
-          return block(authorId, true);
-        default:
+    switch (type) {
+      case 'uid':
+        return block(id, 'user');
+      case 'username':
+        const uid = await getUIDByUsername(id);
+        if (!uid) {
           throw new HttpsError(
-            'invalid-argument',
+            'not-found',
             'لا نستطيع إيجاد المستخدم الذي تحاول حظره'
           );
-      }
+        }
+        return block(uid, 'user');
+      case 'messageId':
+        const authorId = await getUIDByMessageId(id);
+        if (!authorId) {
+          throw new HttpsError(
+            'not-found',
+            'المستخدم الذي أرسل هذه الرسالة غير مُسَجَّل ولا يمكننا حظره، ولكن بإمكانك تعطيل استقبال الرسائل من العامة من الإعدادات'
+          );
+        }
+        return block(authorId, 'sender');
+      default:
+        throw new HttpsError(
+          'invalid-argument',
+          'لا نستطيع إيجاد المستخدم الذي تحاول حظره'
+        );
     }
-  );
+  });
 
 export const removeUserData = functions
   .region(REGION)
