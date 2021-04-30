@@ -26,9 +26,12 @@ const getOutbox = async (userId: string, last?: DocumentData | null) => {
     .filter(doc => doc.exists)
     .map(async ({ id }) => {
       const doc = await db.collection('messages').doc(id).get();
-
-      return { ...(doc.data() as Message<Timestamp>), id };
-    });
+      if (doc.exists) {
+        return { ...(doc.data() as Message<Timestamp>), id };
+      }
+      return false;
+    })
+    .filter(m => m);
 
   const result = await Promise.all(
     outboxPromises.map(p => p.catch(err => console.error(err)))
