@@ -339,7 +339,7 @@ export const blockUser = functions
       );
     }
 
-    const block = (uid: string, type: 'user' | 'sender') => {
+    const block = (uid: string, blockType: 'user' | 'sender') => {
       if (context.auth?.uid === id) {
         throw new HttpsError('invalid-argument', 'لا يمكنك القيام بحظر نفسك');
       }
@@ -349,7 +349,7 @@ export const blockUser = functions
         .doc(context.auth!.uid)
         .collection('blocked')
         .doc(uid)
-        .set({ userId: uid, type });
+        .set({ userId: uid, type: blockType });
     };
 
     switch (type) {
