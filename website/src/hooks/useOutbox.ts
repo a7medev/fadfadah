@@ -65,7 +65,6 @@ const useOutbox = () => {
         else setHasMore(false);
 
         setOutbox(outbox);
-        console.log(outbox);
       })
       .catch(err => {
         console.error(err);
