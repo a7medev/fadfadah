@@ -18,3 +18,38 @@
     border: none !important;
   }
 }
+
+.dark {
+  .react-tel-input {
+    .form-control {
+      background-color: #495057 !important;
+      border-color: #495057 !important;
+      color: white;
+
+      &:focus {
+        background: rgba(0, 0, 0, 0) !important;
+      }
+    }
+    
+    .selected-flag .arrow {
+      border-top-color: #fff;
+      &.up {
+        border-bottom-color: #fff;
+      }
+    }
+  
+    .country-list {
+      background-color: #495057;
+      color: white;
+      border-color: #586069;
+
+      li:hover, li.highlight {
+        background: rgba(255, 255, 255, 0.1)
+      }
+
+      .dial-code {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+}
