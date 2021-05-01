@@ -26,6 +26,7 @@
     "react-icons": "^3.10.0",
     "react-masonry-component": "^6.2.1",
     "react-moment": "^0.9.7",
+    "react-phone-input-2": "^2.14.0",
     "react-scripts": "4.0.3",
     "react-textarea-autosize": "^8.2.0",
     "typescript": "^4.2.4",

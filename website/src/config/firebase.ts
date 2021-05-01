@@ -37,7 +37,10 @@ if (process.env.NODE_ENV === 'development') {
   functions.useEmulator('localhost', 5001);
 }
 
+auth.useDeviceLanguage();
+
 db.enablePersistence({ synchronizeTabs: true });
 
+export const { RecaptchaVerifier } = firebase.auth;
 export { default as messages } from './firebase-messages';
 export { auth, db, functions, storage, messaging };

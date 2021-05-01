@@ -11,6 +11,7 @@ import { useAuth } from './contexts/AuthContext';
 const Home = loadable(() => import('./pages/Home'));
 const Login = loadable(() => import('./pages/auth/Login'));
 const Register = loadable(() => import('./pages/auth/Register'));
+const PhoneLogin = loadable(() => import('./pages/auth/PhoneLogin'));
 const ResetPassword = loadable(() => import('./pages/auth/ResetPassword'));
 const Profile = loadable(() => import('./pages/Profile'));
 const PrivacyPolicy = loadable(() => import('./pages/PrivacyPolicy'));
@@ -35,6 +36,7 @@ const App: React.FC = () => {
             <Home path="/" />
             <Login path="login" />
             <Register path="register" />
+            <PhoneLogin path="phone-login" />
             <ResetPassword path="reset-password" />
             {/* End No Auth */}
 
