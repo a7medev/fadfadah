@@ -120,6 +120,8 @@ const PhoneLogin: React.FC<PhoneLoginProps> = () => {
               <Form.Group controlId="code">
                 <Form.Label>كود التأكيد</Form.Label>
                 <Form.Control
+                  type="number"
+                  pattern="[0-9]*"
                   value={code}
                   onChange={e => setCode(e.target.value)}
                   placeholder="اكتب كود التأكيد المرسل إليك"
