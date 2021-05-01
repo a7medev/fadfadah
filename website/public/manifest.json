@@ -81,6 +81,27 @@
       ]
     },
     {
+      "name": "طلبات معرفة المرسل",
+      "url": "/who-requests",
+      "icons": [
+        {
+          "src": "icons/who-requests-64x64.png",
+          "type": "image/png",
+          "sizes": "64x64"
+        },
+        {
+          "src": "icons/who-requests-192x192.png",
+          "type": "image/png",
+          "sizes": "192x192"
+        },
+        {
+          "src": "icons/who-requests-512x512.png",
+          "type": "image/png",
+          "sizes": "512x512"
+        }
+      ]
+    },
+    {
       "name": "الإعدادات",
       "url": "/settings",
       "icons": [
