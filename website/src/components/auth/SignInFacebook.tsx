@@ -24,7 +24,7 @@ const SignInFacebook: React.FC<SignInFacebookProps> = ({ setError }) => {
   return (
     <Button block variant="facebook" onClick={loginWithFacebook}>
       <FaFacebook className="ml-2" />
-      الدخول باستخدم فيسبوك
+      الدخول باستخدم فيسبــــــــــــوك
     </Button>
   );
 };

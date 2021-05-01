@@ -3,13 +3,12 @@ import { Helmet } from 'react-helmet';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { RouteComponentProps, Link } from '@reach/router';
 
-import { auth } from '../../config/firebase';
+import AuthButtons from '../../components/auth/AuthButtons';
 import PageTransition from '../../components/PageTransition';
-import SignInFacebook from '../../components/auth/SignInFacebook';
-import SignInGoogle from '../../components/auth/SignInGoogle';
 import withoutAuth from '../../components/auth/withoutAuth';
 import authStyles from './Auth.module.scss';
 import getErrorMessage from '../../utils/getErrorMessage';
+import { auth } from '../../config/firebase';
 
 export interface LoginProps extends RouteComponentProps {}
 
@@ -52,6 +51,10 @@ const Login: React.FC<LoginProps> = () => {
             </Alert>
           )}
 
+          <AuthButtons setError={setError} />
+
+          <hr />
+
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="email">
               <Form.Label>البريد الإلكتروني</Form.Label>
@@ -85,14 +88,9 @@ const Login: React.FC<LoginProps> = () => {
             </Button>
           </Form>
 
-          <p className="mt-3">
+          <p className="mt-3 mb-0">
             ليس لديك حساب؟ <Link to="/register">أنشئ واحداً</Link>
           </p>
-
-          <hr />
-
-          <SignInFacebook setError={setError} />
-          <SignInGoogle setError={setError} />
         </Card>
       </Container>
     </PageTransition>

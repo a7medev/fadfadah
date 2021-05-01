@@ -3,14 +3,13 @@ import { Helmet } from 'react-helmet';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 import { RouteComponentProps, Link } from '@reach/router';
 
-import { auth, db } from '../../config/firebase';
-import { useAuth } from '../../contexts/AuthContext';
 import PageTransition from '../../components/PageTransition';
-import SignInFacebook from '../../components/auth/SignInFacebook';
-import SignInGoogle from '../../components/auth/SignInGoogle';
+import AuthButtons from '../../components/auth/AuthButtons';
 import withoutAuth from '../../components/auth/withoutAuth';
 import authStyles from './Auth.module.scss';
 import getErrorMessage from '../../utils/getErrorMessage';
+import { auth, db } from '../../config/firebase';
+import { useAuth } from '../../contexts/AuthContext';
 
 export interface RegisterProps extends RouteComponentProps {}
 
@@ -77,6 +76,10 @@ const Register: React.FC<RegisterProps> = () => {
             </Alert>
           )}
 
+          <AuthButtons setError={setError} />
+
+          <hr />
+
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="name">
               <Form.Label>الاسم كامل</Form.Label>
@@ -116,11 +119,6 @@ const Register: React.FC<RegisterProps> = () => {
           <p className="mt-3">
             لديك حساب بالفعل؟ <Link to="/login">سجّل الدخول</Link>
           </p>
-
-          <hr />
-
-          <SignInFacebook setError={setError} />
-          <SignInGoogle setError={setError} />
 
           <hr />
 
