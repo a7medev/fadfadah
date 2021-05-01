@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 
 import { auth, db, storage } from '../../config/firebase';
 import { useAuth } from '../../contexts/AuthContext';
+import styles from './AccountSettings.module.scss';
 
 export interface AccountProps {
   setMessage: React.Dispatch<React.SetStateAction<string | null>>;
@@ -11,15 +12,19 @@ export interface AccountProps {
 const Account: React.FC<AccountProps> = ({ setMessage }) => {
   const { user, setUser } = useAuth();
 
-  const [photoFileText, setPhotoFileText] = useState('اضغط لتحديد ملف الصورة');
   const [photoFile, setPhotoFile] = useState<File>();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
+  const [photoPreview, setPhotoPreview] = useState(user?.photoURL);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePhotoChange = async (event: any) => {
-    const photoFile: File = event.target.files[0];
-    setPhotoFileText(photoFile ? photoFile.name : 'اضغط لتحديد ملف الصورة');
+  const handlePhotoChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const photoFile = event.target.files?.[0];
     setPhotoFile(photoFile);
+
+    if (!photoFile) return setPhotoPreview(null);
+    const reader = new FileReader();
+    reader.onload = e => setPhotoPreview(e.target?.result as string | null);
+    reader.readAsDataURL(photoFile);
   };
 
   const changeAccountData = (event: React.FormEvent) => {
@@ -93,27 +98,38 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
   };
 
   return (
-    <Card body className="mb-4" id="account-data">
-      <h5 className="mb-3">بيانات الحساب</h5>
-
+    <Card
+      body
+      id="account-data"
+      className={['mb-4', styles.accountDataCard].join(' ')}
+    >
       <Form onSubmit={changeAccountData}>
+        <Form.Group className={styles.photoInputGroup}>
+          <label htmlFor="photo">
+            <div className={[styles.photoPicker, 'shadow-sm'].join(' ')}>
+              {photoPreview && (
+                <img
+                  src={photoPreview}
+                  alt={user?.displayName || 'مستخدم فضفضة'}
+                />
+              )}
+            </div>
+          </label>
+          <input
+            id="photo"
+            type="file"
+            accept=".png, .jpg, .jpeg"
+            onChange={handlePhotoChange}
+            className={styles.photoInput}
+          />
+        </Form.Group>
+
         <Form.Group controlId="display-name">
           <Form.Label>الاسم كامل</Form.Label>
           <Form.Control
             placeholder="اكتب اسمك هنا"
             value={displayName}
             onChange={e => setDisplayName(e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="profile-photo">
-          <Form.Label>الصورة الشخصية</Form.Label>
-          <Form.File
-            custom
-            data-browse="تحديد الصورة"
-            label={photoFileText}
-            accept=".png, .jpg, .jpeg"
-            onChange={handlePhotoChange}
           />
         </Form.Group>
 
