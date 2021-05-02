@@ -58,8 +58,8 @@ const Outbox: React.FC<OutboxProps> = () => {
             <motion.div initial="out" animate="in" variants={fadeVariants}>
               <MessagesLayout
                 messages={outbox}
-                removeMessage={removeMessage}
-                isOutbox
+                onMessageDelete={removeMessage}
+                outbox
               />
               <div className="text-center">
                 {hasMore && !isLoadingMore && (

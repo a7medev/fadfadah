@@ -57,7 +57,7 @@ const Inbox: React.FC<InboxProps> = () => {
         ) : (
           inbox && (
             <motion.div initial="out" animate="in" variants={fadeVariants}>
-              <MessagesLayout messages={inbox} removeMessage={removeMessage} />
+              <MessagesLayout messages={inbox} onMessageDelete={removeMessage} />
               <div className="text-center">
                 {hasMore && !isLoadingMore && (
                   <Button

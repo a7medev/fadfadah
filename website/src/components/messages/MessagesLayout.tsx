@@ -10,14 +10,14 @@ import styles from './MessagesLayout.module.css';
 
 export interface MessagesLayoutProps {
   messages: Message<Timestamp>[];
-  removeMessage: (id: string) => void;
-  isOutbox?: boolean;
+  onMessageDelete: (id: string) => void;
+  outbox?: boolean;
 }
 
 const MessagesLayout: React.FC<MessagesLayoutProps> = ({
   messages,
-  removeMessage,
-  isOutbox
+  onMessageDelete,
+  outbox
 }) => {
   return messages.length ? (
     <Masonry
@@ -27,16 +27,16 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
       {messages.map(message => (
         <Col xs="12" md="6" lg="4" key={message.id}>
           <MessageCard
-            {...message}
-            outbox={isOutbox}
-            removeMessage={removeMessage}
+            message={message}
+            outbox={outbox}
+            onDelete={onMessageDelete}
           />
         </Col>
       ))}
     </Masonry>
   ) : (
     <div className="d-flex flex-column justify-content-center align-items-center">
-      {isOutbox ? (
+      {outbox ? (
         <OutboxIcon size={50} className={styles.noMessagesIcon} />
       ) : (
         <InboxIcon size={50} className={styles.noMessagesIcon} />

@@ -1,34 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
-import { Card, Dropdown } from 'react-bootstrap';
-import { FaQuestionCircle, FaTrashAlt, FaUserLock, FaEllipsisV } from 'react-icons/fa';
+import { useState } from 'react';
+import { Card } from 'react-bootstrap';
 import { motion, Variants } from 'framer-motion';
 import { Emojione as Emoji } from 'react-emoji-render';
-import Moment from 'react-moment';
 import type { Timestamp } from '@firebase/firestore-types';
 
 import Message from '../../types/Message';
-import LoveButton from './LoveButton';
-import Block from '../Block';
-import StaticLoveButton from './StaticLoveButton';
 import MessageBox from '../MessageBox';
+import MessageFooter from './MessageFooter';
 import UserData from '../user/UserData';
-import { db, functions } from '../../config/firebase';
 
-export interface BlockActivatorProps {
-  block: () => void;
-}
-const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
-  <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
-    <p className="ml-auto mb-0">حظر المرسل</p>
-    <FaUserLock size="0.9em" />
-  </Dropdown.Item>
-);
-
-const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
-
-export interface MessageCardProps extends Message<Timestamp> {
-  removeMessage: (id: string) => void;
+export interface MessageCardProps {
+  message: Message<Timestamp>;
   outbox?: boolean;
+  onDelete: (id: string) => void;
 }
 
 const fadeVariants: Variants = {
@@ -37,119 +21,48 @@ const fadeVariants: Variants = {
 };
 
 const MessageCard: React.FC<MessageCardProps> = ({
-  id,
-  content,
-  createdAt,
-  from,
-  to,
-  love: initialLove,
+  message,
   outbox,
-  removeMessage
+  onDelete
 }) => {
-  const [love, setLove] = useState(initialLove);
-  const firstRender = useRef(true);
-
-  const [message, setMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (firstRender.current) firstRender.current = false;
-    else {
-      db.collection('messages').doc(id).update({ love });
-    }
-  }, [id, love]);
-
-  const deleteMessage = () => {
-    removeMessage(id!);
-    db.collection('messages').doc(id).delete();
-  }
-
-  const whoIsTheAuthor = async () => {
-    try {
-      const result = await sendWhoRequest(id);
-      if (result) setMessage('تم إرسال طلب معرفة المرسل إلى صاحب الرسالة');
-    } catch (err) {
-      setMessage(
-        err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
-      );
-    }
-  }
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   return (
     <motion.div initial="out" animate="in" variants={fadeVariants}>
       <MessageBox
         title="رسالة من الموقع"
-        text={message!}
+        text={alertMessage!}
         show={!!message}
-        onClose={() => setMessage(null)}
+        onClose={() => setAlertMessage(null)}
       />
-      <Card className="mb-3" id={id}>
-        <Card.Body className={`pb-2 ${from || outbox ? 'pt-2' : ''}`}>
-          {(from || outbox) && (
+      <Card className="mb-3" id={message.id}>
+        <Card.Body className={`pb-2 ${message.from || outbox ? 'pt-2' : ''}`}>
+          {(message.from || outbox) && (
             <>
               {outbox && (
-                <small className="mb-1 text-muted d-block">أرسلتها إلى</small>
+                <small className="mb-1 text-muted d-block">
+                  أرسلتها إلى
+                </small>
               )}
 
-              <UserData user={outbox ? to : from!} />
+              <UserData user={outbox ? message.to : message.from!} />
 
               <hr className="mt-2" />
             </>
           )}
 
           <p style={{ fontSize: 18, whiteSpace: 'pre-line' }}>
-            <Emoji text={content} />
+            <Emoji text={message.content} />
           </p>
+
           <hr className="mb-2" />
-          <div className="d-flex justify-content-between position-relative">
-            <Moment
-              locale="ar"
-              fromNow
-              className="text-muted"
-              style={{ position: 'relative', top: 4 }}
-            >
-              {createdAt.toDate()}
-            </Moment>
 
-            {outbox ? (
-              <StaticLoveButton love={love} />
-            ) : (
-              <LoveButton love={love} setLove={setLove} />
-            )}
-
-            <Dropdown drop="right">
-              <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
-                <FaEllipsisV size="0.9em" />
-              </Dropdown.Toggle>
-
-              <Dropdown.Menu>
-                {!outbox && (
-                  <>
-                    <Block
-                      activator={BlockActivator}
-                      id={id!}
-                      type="messageId"
-                    />
-                    {!from && (
-                      <Dropdown.Item
-                        className="d-inline-flex"
-                        onClick={() => whoIsTheAuthor()}
-                      >
-                        <p className="ml-auto mb-0">من المرسل ؟</p>
-                        <FaQuestionCircle size="0.9em" />
-                      </Dropdown.Item>
-                    )}
-                  </>
-                )}
-                <Dropdown.Item
-                  className="d-inline-flex"
-                  onClick={deleteMessage}
-                >
-                  <p className="ml-auto mb-0">حذف</p>
-                  <FaTrashAlt size="0.9em" />
-                </Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-          </div>
+          <MessageFooter
+            message={message}
+            outbox={outbox}
+            onDelete={onDelete}
+            onAlertMessage={setAlertMessage}
+          />
         </Card.Body>
       </Card>
     </motion.div>

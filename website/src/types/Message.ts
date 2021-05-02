@@ -1,7 +1,7 @@
 import MiniUser from "./MiniUser";
 
 interface Message<Time> {
-  id?: string;
+  id: string;
   to: MiniUser;
   from?: MiniUser;
   love: boolean;
