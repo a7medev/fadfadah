@@ -3,7 +3,6 @@ import { createContext, useContext, useMemo, useState } from 'react';
 import MessageBox from '../components/MessageBox';
 
 export interface AlertMessageContextType {
-  isAlertShown: boolean;
   showAlertMessage: (message: string) => void;
   hideAlertMessage: () => void;
 }
@@ -15,7 +14,9 @@ const AlertMessageContext = createContext<AlertMessageContextType | undefined>(
 export const useAlertMessage = () => {
   const value = useContext(AlertMessageContext);
   if (value === undefined) {
-    throw new Error('You must wrap the app with AlertMessageProvider to use useAlertMessage');
+    throw new Error(
+      'You must wrap the app with AlertMessageProvider to use useAlertMessage'
+    );
   }
   return value;
 };
@@ -31,10 +32,9 @@ const AlertMessageProvider: React.FC = ({ children }) => {
   const value = useMemo(
     () => ({
       showAlertMessage,
-      hideAlertMessage,
-      isAlertShown
+      hideAlertMessage
     }),
-    [isAlertShown]
+    []
   );
 
   return (
