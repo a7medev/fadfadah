@@ -5,9 +5,9 @@ import type {
   FirestoreError
 } from '@firebase/firestore-types';
 
-import { db } from '../config/firebase';
-import { useAuth } from '../contexts/AuthContext';
 import Message from '../types/Message';
+import { db, perf } from '../config/firebase';
+import { useAuth } from '../contexts/AuthContext';
 
 const LIMIT = 12;
 
@@ -44,6 +44,10 @@ const useInbox = () => {
   useEffect(() => {
     if (!firebaseUser) return;
 
+    const inboxTrace = perf.trace('get_inbox');
+    inboxTrace.start();
+    inboxTrace.putAttribute('is_first_time', 'true');
+
     getInbox(firebaseUser.uid)
       .then(({ inbox, lastDoc }) => {
         last.current = lastDoc;
@@ -54,16 +58,25 @@ const useInbox = () => {
         setInbox(inbox);
       })
       .catch(err => {
-        console.error(err);
         setError(err);
+        inboxTrace.putAttribute('has_error', 'true');
+        if (err.code) {
+          inboxTrace.putAttribute('error_code', err.code);
+        }
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        inboxTrace.stop();
+      });
   }, [firebaseUser]);
 
   const loadMore = useCallback(async () => {
     if (!firebaseUser) return;
 
     setIsLoadingMore(true);
+
+    const inboxTrace = perf.trace('get_inbox');
+    inboxTrace.start();
 
     try {
       const { inbox, lastDoc } = await getInbox(firebaseUser.uid, last.current);
@@ -74,10 +87,14 @@ const useInbox = () => {
 
       setInbox(currInbox => [...currInbox, ...inbox]);
     } catch (err) {
-      console.error(err);
       setError(err);
+      inboxTrace.putAttribute('has_error', 'true');
+      if (err.code) {
+        inboxTrace.putAttribute('error_code', err.code);
+      }
     } finally {
       setIsLoadingMore(false);
+      inboxTrace.stop();
     }
   }, [firebaseUser]);
 
