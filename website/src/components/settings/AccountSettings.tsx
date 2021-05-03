@@ -2,15 +2,14 @@ import { ChangeEvent, useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 
 import { auth, db, storage } from '../../config/firebase';
+import { useAlertMessage } from '../../contexts/AlertMessageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './AccountSettings.module.scss';
 
-export interface AccountProps {
-  setMessage: React.Dispatch<React.SetStateAction<string | null>>;
-}
-
-const Account: React.FC<AccountProps> = ({ setMessage }) => {
+const Account: React.FC = () => {
   const { user, setUser } = useAuth();
+
+  const { showAlertMessage } = useAlertMessage();
 
   const [photoFile, setPhotoFile] = useState<File>();
   const [displayName, setDisplayName] = useState(user?.displayName || '');
@@ -49,10 +48,10 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
             }
             return null;
           });
-          setMessage('تم تحديث الاسم بنجاح');
+          showAlertMessage('تم تحديث الاسم بنجاح');
         })
         .catch(() => {
-          setMessage('حدثت مشكلة أثناء محاولة تحديث الاسم');
+          showAlertMessage('حدثت مشكلة أثناء محاولة تحديث الاسم');
         })
         .finally(() => {
           if (!photoFile) setIsLoading(false);
@@ -65,7 +64,7 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
       const isImage = /image\/.+/.test(photoFile.type);
 
       if (!isImage || !user) {
-        setMessage('رجاءاً تأكد من تحديد ملف الصورة صالح');
+        showAlertMessage('رجاءاً تأكد من تحديد ملف الصورة صالح');
         setIsLoading(false);
         return;
       }
@@ -85,11 +84,11 @@ const Account: React.FC<AccountProps> = ({ setMessage }) => {
             ...prevUser!,
             photoURL: auth.currentUser!.photoURL
           }));
-          setMessage('تم تحديث الصورة الشخصية بنجاح');
+          showAlertMessage('تم تحديث الصورة الشخصية بنجاح');
         })
         .catch(err => {
           console.error('Error uploading profile photo', err);
-          setMessage('حدثت مشكلة أثناء محاولة تحديث الصورة الشخصية');
+          showAlertMessage('حدثت مشكلة أثناء محاولة تحديث الصورة الشخصية');
         })
         .finally(() => setIsLoading(false));
     } else {

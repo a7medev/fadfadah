@@ -14,6 +14,7 @@ import Block from '../Block';
 import StaticLoveButton from './StaticLoveButton';
 import LoveButton from './LoveButton';
 import { db, functions } from '../../config/firebase';
+import { useAlertMessage } from '../../contexts/AlertMessageContext';
 
 export interface BlockActivatorProps {
   block: () => void;
@@ -31,17 +32,17 @@ export interface MessageFooterProps {
   message: Message<Timestamp>;
   outbox?: boolean;
   onDelete: (id: string) => void;
-  onAlertMessage: (message: string) => void;
 }
 
 const MessageFooter: React.FC<MessageFooterProps> = ({
   message,
   outbox,
-  onDelete,
-  onAlertMessage
+  onDelete
 }) => {
   const [love, setLove] = useState(message.love);
   const firstRender = useRef(true);
+
+  const { showAlertMessage } = useAlertMessage();
 
   useEffect(() => {
     if (firstRender.current) firstRender.current = false;
@@ -58,9 +59,11 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
   const handleWhoRequest = async () => {
     try {
       const result = await sendWhoRequest(message.id);
-      if (result) onAlertMessage('تم إرسال طلب معرفة المرسل إلى صاحب الرسالة');
+      if (result) {
+        showAlertMessage('تم إرسال طلب معرفة المرسل إلى صاحب الرسالة');
+      }
     } catch (err) {
-      onAlertMessage(
+      showAlertMessage(
         err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
       );
     }

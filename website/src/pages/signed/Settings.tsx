@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { RouteComponentProps } from '@reach/router';
 import { Container } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
 import PageTransition from '../../components/PageTransition';
-import MessageBox from '../../components/MessageBox';
 import PrefrencesSettings from '../../components/settings/PrefrencesSettings';
 import AccountSettings from '../../components/settings/AccountSettings';
 import ChangePasswordSettings from '../../components/settings/ChangePasswordSettings';
@@ -17,8 +15,6 @@ export interface SettingsProps extends RouteComponentProps {}
 const Settings: React.FC<SettingsProps> = () => {
   const { user, settings, setSettings } = useAuth();
 
-  const [message, setMessage] = useState<string | null>(null);
-
   return (
     <PageTransition>
       <Helmet>
@@ -27,14 +23,7 @@ const Settings: React.FC<SettingsProps> = () => {
       <Container className="pt-2">
         <h4 className="mb-3">الإعدادات</h4>
 
-        <MessageBox
-          show={!!message}
-          onClose={() => setMessage(null)}
-          title="رسالة من الموقع"
-          text={message!}
-        />
-
-        <AccountSettings setMessage={setMessage} />
+        <AccountSettings />
 
         <PrefrencesSettings
           user={user!}
@@ -43,7 +32,7 @@ const Settings: React.FC<SettingsProps> = () => {
         />
 
 
-        <ChangePasswordSettings setMessage={setMessage} />
+        <ChangePasswordSettings />
 
         <DeleteAccount />
       </Container>

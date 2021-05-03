@@ -3,10 +3,10 @@ import { Helmet } from 'react-helmet';
 import { RouteComponentProps } from '@reach/router';
 import { Container, Card, Form, Button, Alert } from 'react-bootstrap';
 
-import { auth } from '../../config/firebase';
-import withoutAuth from '../../components/auth/withoutAuth';
 import PageTransition from '../../components/PageTransition';
-import MessageBox from '../../components/MessageBox';
+import { auth } from '../../config/firebase';
+import { useAlertMessage } from '../../contexts/AlertMessageContext';
+import withoutAuth from '../../components/auth/withoutAuth';
 import authStyles from './Auth.module.scss';
 import getErrorMessage from '../../utils/getErrorMessage';
 
@@ -14,15 +14,16 @@ export interface ResetPasswordProps extends RouteComponentProps {}
 
 const ResetPassword: React.FC<ResetPasswordProps> = () => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const { showAlertMessage } = useAlertMessage();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
       await auth.sendPasswordResetEmail(email);
-      setMessage(
+      showAlertMessage(
         'تم إرسال رابط إعادة تعيين كلمة المرور على بريدك الإلكتروني، افحص صندوق الوارد لمزيد من المعلومات.'
       );
     } catch (err) {
@@ -51,13 +52,6 @@ const ResetPassword: React.FC<ResetPasswordProps> = () => {
               {error}
             </Alert>
           )}
-
-          <MessageBox
-            title="رسالة من الموقع"
-            text={message!}
-            show={!!message}
-            onClose={() => setMessage(null)}
-          />
 
           <Form onSubmit={handleSubmit}>
             <Form.Group controlId="email">

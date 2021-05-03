@@ -61,7 +61,7 @@ const WhoRequests: React.FC<WhoRequestsProps> = () => {
               {whoRequests.map(request => (
                 <WhoRequest
                   {...request}
-                  removeReq={removeReq}
+                  onDelete={removeReq}
                   key={request.id}
                 />
               ))}

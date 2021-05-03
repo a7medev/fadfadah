@@ -2,6 +2,7 @@ import { Router } from '@reach/router';
 import { AnimatePresence } from 'framer-motion';
 import loadable from '@loadable/component';
 
+import AlertMessageProvider from './contexts/AlertMessageContext';
 import SafeArea from './components/SafeArea';
 import Navigation from './components/Navbar';
 import BottomNavigation from './components/BottomNavbar';
@@ -30,29 +31,31 @@ const App: React.FC = () => {
       <Navigation />
 
       <SafeArea paddingTop="10px" noBottomNavbar={!signedIn}>
-        <AnimatePresence exitBeforeEnter>
-          <Router primary={false}>
-            {/* No Auth */}
-            <Home path="/" />
-            <Login path="login" />
-            <Register path="register" />
-            <PhoneLogin path="phone-login" />
-            <ResetPassword path="reset-password" />
-            {/* End No Auth */}
+        <AlertMessageProvider>
+          <AnimatePresence exitBeforeEnter>
+            <Router primary={false}>
+              {/* No Auth */}
+              <Home path="/" />
+              <Login path="login" />
+              <Register path="register" />
+              <PhoneLogin path="phone-login" />
+              <ResetPassword path="reset-password" />
+              {/* End No Auth */}
 
-            {/* Auth */}
-            <Inbox path="inbox" />
-            <Outbox path="outbox" />
-            <WhoRequests path="who-requests" />
-            <Settings path="settings" />
-            {/* End Auth */}
+              {/* Auth */}
+              <Inbox path="inbox" />
+              <Outbox path="outbox" />
+              <WhoRequests path="who-requests" />
+              <Settings path="settings" />
+              {/* End Auth */}
 
-            <Profile path="u/:username" />
-            <PrivacyPolicy path="privacy-policy" />
+              <Profile path="u/:username" />
+              <PrivacyPolicy path="privacy-policy" />
 
-            <NotFound default />
-          </Router>
-        </AnimatePresence>
+              <NotFound default />
+            </Router>
+          </AnimatePresence>
+        </AlertMessageProvider>
       </SafeArea>
 
       {signedIn && <BottomNavigation />}

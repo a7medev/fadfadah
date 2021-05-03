@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { functions } from '../config/firebase';
-import MessageBox from './MessageBox';
+import { useAlertMessage } from '../contexts/AlertMessageContext';
 
 export interface BlockProps {
   id: string;
@@ -11,34 +10,22 @@ export interface BlockProps {
 const blockUser = functions.httpsCallable('blockUser');
 
 const Block: React.FC<BlockProps> = ({ activator: Activator, id, type }) => {
-  const [message, setMessage] = useState<string | null>(null);
+  const { showAlertMessage } = useAlertMessage();
 
   const block = () => {
     blockUser({ id, type })
       .then(() => {
-        setMessage('تم حظر المستخدم بنجاح');
+        showAlertMessage('تم حظر المستخدم بنجاح');
       })
       .catch(err => {
-        console.dir(err);
-        setMessage(
+        showAlertMessage(
           err.code !== 'internal'
             ? err.message
             : 'حدثت مشكلة ما أثناء حظر المستخدم'
         );
       });
-  }
-  return (
-    <>
-      <Activator block={block} />
-
-      <MessageBox
-        show={!!message}
-        onClose={() => setMessage(null)}
-        title="رسالة من الموقع"
-        text={message!}
-      />
-    </>
-  );
+  };
+  return <Activator block={block} />;
 };
 
 export default Block;

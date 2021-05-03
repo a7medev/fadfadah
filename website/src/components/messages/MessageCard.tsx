@@ -1,11 +1,9 @@
-import { useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { motion, Variants } from 'framer-motion';
 import { Emojione as Emoji } from 'react-emoji-render';
 import type { Timestamp } from '@firebase/firestore-types';
 
 import Message from '../../types/Message';
-import MessageBox from '../MessageBox';
 import MessageFooter from './MessageFooter';
 import UserData from '../user/UserData';
 
@@ -25,16 +23,8 @@ const MessageCard: React.FC<MessageCardProps> = ({
   outbox,
   onDelete
 }) => {
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-
   return (
     <motion.div initial="out" animate="in" variants={fadeVariants}>
-      <MessageBox
-        title="رسالة من الموقع"
-        text={alertMessage!}
-        show={!!message}
-        onClose={() => setAlertMessage(null)}
-      />
       <Card className="mb-3" id={message.id}>
         <Card.Body className={`pb-2 ${message.from || outbox ? 'pt-2' : ''}`}>
           {(message.from || outbox) && (
@@ -61,7 +51,6 @@ const MessageCard: React.FC<MessageCardProps> = ({
             message={message}
             outbox={outbox}
             onDelete={onDelete}
-            onAlertMessage={setAlertMessage}
           />
         </Card.Body>
       </Card>

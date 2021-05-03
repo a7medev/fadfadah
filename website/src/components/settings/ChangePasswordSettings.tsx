@@ -4,13 +4,12 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 
 import { auth } from '../../config/firebase';
+import { useAlertMessage } from '../../contexts/AlertMessageContext';
 import getErrorMessage from '../../utils/getErrorMessage';
 
-export interface ChangePasswordProps {
-  setMessage: React.Dispatch<React.SetStateAction<string | null>>;
-}
+const ChangePassword: React.FC = () => {
+  const { showAlertMessage } = useAlertMessage();
 
-const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
   const changePasswordButton = useRef<HTMLButtonElement>(null);
   const newPassword = useRef<HTMLInputElement>(null);
   const currentPassword = useRef<HTMLInputElement>(null);
@@ -21,11 +20,12 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
 
     const user = auth.currentUser!;
     const emailProvider = user?.providerData.find(
-      provider => provider?.providerId === firebase.auth.EmailAuthProvider.PROVIDER_ID
+      provider =>
+        provider?.providerId === firebase.auth.EmailAuthProvider.PROVIDER_ID
     );
 
     if (!emailProvider)
-      return setMessage(
+      return showAlertMessage(
         'يمكن للأشخاص الذين يملكون حساباً مربوطاً بالبريد الإلكتروني فقط تغيير كلمة المرور'
       );
 
@@ -37,15 +37,15 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({ setMessage }) => {
       .reauthenticateWithCredential(cred)
       .then(() => user.updatePassword(newPassword.current?.value!))
       .then(() => {
-        setMessage('تم تغيير كلمة المرور بنجاح');
+        showAlertMessage('تم تغيير كلمة المرور بنجاح');
       })
       .catch(err => {
-        setMessage(getErrorMessage(err.code));
+        showAlertMessage(getErrorMessage(err.code));
       })
       .finally(() => {
         changePasswordButton.current!.disabled = false;
       });
-  }
+  };
 
   return (
     <Card body className="mb-4" id="change-password">

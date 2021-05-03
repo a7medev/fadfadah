@@ -1,12 +1,12 @@
 import { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import { functions } from '../../config/firebase';
-import 'firebase/firestore';
-import MiniUser from '../../types/MiniUser';
-import MessageBox from '../MessageBox';
-import { useAuth } from '../../contexts/AuthContext';
-import CreateMessageDto from '../../types/CreateMessageDto';
 import TextareaAutosize from 'react-textarea-autosize';
+
+import MiniUser from '../../types/MiniUser';
+import CreateMessageDto from '../../types/CreateMessageDto';
+import { useAlertMessage } from '../../contexts/AlertMessageContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { functions } from '../../config/firebase';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -15,7 +15,8 @@ export interface SendMessageProps {
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const messageContent = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+
+  const { showAlertMessage } = useAlertMessage();
 
   const { user: currentUser, signedIn } = useAuth();
 
@@ -46,7 +47,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     sendMessage(message)
       .then(() => {
         setError(null);
-        setMessage('تم إرسال الرسالة بنجاح');
+        showAlertMessage('تم إرسال الرسالة بنجاح');
         messageContent.current?.form?.reset();
       })
       .catch(err => {
@@ -61,51 +62,43 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   };
 
   return (
-    <>
-      <MessageBox
-        show={!!message}
-        onClose={() => setMessage(null)}
-        title="رسالة من الموقع"
-        text={message!}
-      />
-      <Card body className="mb-2">
-        <Card.Title>
-          <h4>كتابة رسالة</h4>
-        </Card.Title>
+    <Card body className="mb-2">
+      <Card.Title>
+        <h4>كتابة رسالة</h4>
+      </Card.Title>
 
-        {error && (
-          <Alert variant="danger" onClose={() => setError(null)} dismissible>
-            {error}
-          </Alert>
-        )}
+      {error && (
+        <Alert variant="danger" onClose={() => setError(null)} dismissible>
+          {error}
+        </Alert>
+      )}
 
-        <Form onSubmit={sendMessage}>
-          <Form.Group className="mb-2">
-            <Form.Control
-              as={TextareaAutosize}
-              minRows={5}
-              ref={messageContent}
-              placeholder="اكتب رسالتك هنا"
+      <Form onSubmit={sendMessage}>
+        <Form.Group className="mb-2">
+          <Form.Control
+            as={TextareaAutosize}
+            minRows={5}
+            ref={messageContent}
+            placeholder="اكتب رسالتك هنا"
+          />
+        </Form.Group>
+
+        {signedIn && (
+          <Form.Group>
+            <Form.Switch
+              id="is-anonymous-switch"
+              checked={isAnonymous}
+              onChange={() => setIsAnonymous(prev => !prev)}
+              label="رسالة مجهولة المصدر"
             />
           </Form.Group>
+        )}
 
-          {signedIn && (
-            <Form.Group>
-              <Form.Switch
-                id="is-anonymous-switch"
-                checked={isAnonymous}
-                onChange={() => setIsAnonymous(prev => !prev)}
-                label="رسالة مجهولة المصدر"
-              />
-            </Form.Group>
-          )}
-
-          <Button type="submit" ref={sendButton}>
-            إرسال
-          </Button>
-        </Form>
-      </Card>
-    </>
+        <Button type="submit" ref={sendButton}>
+          إرسال
+        </Button>
+      </Form>
+    </Card>
   );
 };
 

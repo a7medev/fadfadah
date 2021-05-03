@@ -6,7 +6,6 @@ import PhoneInput from 'react-phone-input-2';
 import firebase from 'firebase/app';
 
 import PageTransition from '../../components/PageTransition';
-import MessageBox from '../../components/MessageBox';
 import authStyles from './Auth.module.scss';
 import getErrorMessage from '../../utils/getErrorMessage';
 import withoutAuth from '../../components/auth/withoutAuth';
@@ -20,9 +19,6 @@ export interface PhoneLoginProps extends RouteComponentProps {}
 
 const PhoneLogin: React.FC<PhoneLoginProps> = () => {
   const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
   const [code, setCode] = useState('');
   const [
     confirmationResult,
@@ -30,6 +26,7 @@ const PhoneLogin: React.FC<PhoneLoginProps> = () => {
   ] = useState<firebase.auth.ConfirmationResult>();
   const [recaptcha, setRecaptcha] = useState<firebase.auth.RecaptchaVerifier>();
   const recapchaElement = useRef<HTMLDivElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handlePhoneLogin = async (event: FormEvent) => {
     event.preventDefault();
@@ -92,13 +89,6 @@ const PhoneLogin: React.FC<PhoneLoginProps> = () => {
               {error}
             </Alert>
           )}
-
-          <MessageBox
-            title="رسالة من الموقع"
-            text={message!}
-            show={!!message}
-            onClose={() => setMessage(null)}
-          />
 
           <Form
             onSubmit={confirmationResult ? handleConfirmCode : handlePhoneLogin}
