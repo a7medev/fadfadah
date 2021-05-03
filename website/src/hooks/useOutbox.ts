@@ -5,7 +5,7 @@ import type {
   FirestoreError
 } from '@firebase/firestore-types';
 
-import { db } from '../config/firebase';
+import { db, perf } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
 import Message from '../types/Message';
 
@@ -57,6 +57,10 @@ const useOutbox = () => {
   useEffect(() => {
     if (!firebaseUser) return;
 
+    const outboxTrace = perf.trace('get_outbox');
+    outboxTrace.start();
+    outboxTrace.putAttribute('is_first_time', 'true');
+
     getOutbox(firebaseUser.uid)
       .then(({ outbox, lastDoc }) => {
         last.current = lastDoc;
@@ -67,16 +71,25 @@ const useOutbox = () => {
         setOutbox(outbox);
       })
       .catch(err => {
-        console.error(err);
         setError(err);
+        outboxTrace.putAttribute('has_error', 'true');
+        if (err.code) {
+          outboxTrace.putAttribute('error_code', err.code);
+        }
       })
-      .finally(() => setIsLoading(false));
+      .finally(() => {
+        setIsLoading(false);
+        outboxTrace.stop();
+      });
   }, [firebaseUser]);
 
   const loadMore = useCallback(async () => {
     if (!firebaseUser) return;
 
     setIsLoadingMore(true);
+
+    const outboxTrace = perf.trace('get_inbox');
+    outboxTrace.start();
 
     try {
       const { outbox, lastDoc } = await getOutbox(
@@ -90,10 +103,14 @@ const useOutbox = () => {
 
       setOutbox(currInbox => [...currInbox, ...outbox]);
     } catch (err) {
-      console.error(err);
       setError(err);
+      outboxTrace.putAttribute('has_error', 'true');
+      if (err.code) {
+        outboxTrace.putAttribute('error_code', err.code);
+      }
     } finally {
       setIsLoadingMore(false);
+      outboxTrace.stop();
     }
   }, [firebaseUser]);
 
