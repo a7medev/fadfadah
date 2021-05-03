@@ -33,8 +33,6 @@ const MessageCard: React.FC<MessageCardProps> = ({
             <Emoji text={message.content} />
           </p>
 
-          <hr className="mb-2" />
-
           <MessageFooter
             message={message}
             outbox={outbox}

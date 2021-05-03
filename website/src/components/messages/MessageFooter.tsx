@@ -66,53 +66,57 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
   };
 
   return (
-    <div className="d-flex justify-content-between position-relative">
-      <Moment
-        locale="ar"
-        fromNow
-        className="text-muted"
-        style={{ position: 'relative', top: 4 }}
-      >
-        {message.createdAt.toDate()}
-      </Moment>
+    <>
+      <hr className="mb-2" />
 
-      {outbox ? (
-        <StaticLoveButton love={love} />
-      ) : (
-        <LoveButton love={love} onLove={setLove} />
-      )}
+      <div className="d-flex justify-content-between position-relative">
+        <Moment
+          locale="ar"
+          fromNow
+          className="text-muted"
+          style={{ position: 'relative', top: 4 }}
+        >
+          {message.createdAt.toDate()}
+        </Moment>
 
-      <Dropdown drop="right">
-        <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
-          <FaEllipsisV size="0.9em" />
-        </Dropdown.Toggle>
+        {outbox ? (
+          <StaticLoveButton love={love} />
+        ) : (
+          <LoveButton love={love} onLove={setLove} />
+        )}
 
-        <Dropdown.Menu>
-          {!outbox && (
-            <>
-              <Dropdown.Item className="d-inline-flex" onClick={handleBlock}>
-                <p className="ml-auto mb-0">حظر المرسل</p>
-                <FaUserLock size="0.9em" />
-              </Dropdown.Item>
+        <Dropdown drop="right">
+          <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
+            <FaEllipsisV size="0.9em" />
+          </Dropdown.Toggle>
 
-              {!message.from && (
-                <Dropdown.Item
-                  className="d-inline-flex"
-                  onClick={() => handleWhoRequest()}
-                >
-                  <p className="ml-auto mb-0">من المرسل ؟</p>
-                  <FaQuestionCircle size="0.9em" />
+          <Dropdown.Menu>
+            {!outbox && (
+              <>
+                <Dropdown.Item className="d-inline-flex" onClick={handleBlock}>
+                  <p className="ml-auto mb-0">حظر المرسل</p>
+                  <FaUserLock size="0.9em" />
                 </Dropdown.Item>
-              )}
-            </>
-          )}
-          <Dropdown.Item className="d-inline-flex" onClick={handleDelete}>
-            <p className="ml-auto mb-0">حذف</p>
-            <FaTrashAlt size="0.9em" />
-          </Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
+
+                {!message.from && (
+                  <Dropdown.Item
+                    className="d-inline-flex"
+                    onClick={() => handleWhoRequest()}
+                  >
+                    <p className="ml-auto mb-0">من المرسل ؟</p>
+                    <FaQuestionCircle size="0.9em" />
+                  </Dropdown.Item>
+                )}
+              </>
+            )}
+            <Dropdown.Item className="d-inline-flex" onClick={handleDelete}>
+              <p className="ml-auto mb-0">حذف</p>
+              <FaTrashAlt size="0.9em" />
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+    </>
   );
 };
 
