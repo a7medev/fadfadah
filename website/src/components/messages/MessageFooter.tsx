@@ -15,6 +15,7 @@ import LoveButton from './LoveButton';
 import useBlock from '../../hooks/useBlock';
 import { db, functions } from '../../config/firebase';
 import { useAlertMessage } from '../../contexts/AlertMessageContext';
+import styles from './MessageFooter.module.css';
 
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 
@@ -73,8 +74,7 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
         <Moment
           locale="ar"
           fromNow
-          className="text-muted"
-          style={{ position: 'relative', top: 4 }}
+          className={['text-muted', styles.date].join(' ')}
         >
           {message.createdAt.toDate()}
         </Moment>
