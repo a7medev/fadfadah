@@ -86,7 +86,7 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
         )}
 
         <Dropdown drop="right">
-          <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
+          <Dropdown.Toggle variant="outline-dark" aria-label="خيارات">
             <FaEllipsisV size="0.9em" />
           </Dropdown.Toggle>
 

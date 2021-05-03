@@ -49,7 +49,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
       </Modal.Header>
       <Modal.Body className="py-4 text-center">{text}</Modal.Body>
       <Modal.Footer>
-        <Button variant="text-dark" size="sm" onClick={onClose}>
+        <Button variant="outline-dark" size="sm" onClick={onClose}>
           إغلاق
         </Button>
       </Modal.Footer>

@@ -74,7 +74,7 @@ const WhoRequest: React.FC<WhoRequestProps> = ({
           <Button className="ml-1" size="sm" onClick={handleAccept}>
             قبول
           </Button>
-          <Button variant="text-dark" size="sm" onClick={handleDelete}>
+          <Button variant="outline-dark" size="sm" onClick={handleDelete}>
             حذف
           </Button>
         </div>

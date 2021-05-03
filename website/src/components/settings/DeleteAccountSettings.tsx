@@ -31,7 +31,7 @@ const DeleteAccount: React.FC = () => {
         إذا قمت بحذف الحساب فلن تتمكن من استعادته مرة أخرى.
       </Alert>
 
-      <Button variant="text-danger" onClick={deleteAccount}>
+      <Button variant="outline-danger" onClick={deleteAccount}>
         أريد حذف حسابي
       </Button>
     </Card>

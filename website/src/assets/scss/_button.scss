@@ -1,15 +1,64 @@
-@each $color, $value in $theme-colors {
-  .btn-#{$color} {
-    border-color: transparent !important;
-  }
+.btn {
+  border-color: transparent !important;
+}
 
-  .btn-text-#{$color} {
+.btn-facebook,
+.btn-google,
+.btn-twitter,
+.btn-whatsapp {
+  color: #fff;
+}
+
+.btn-facebook {
+  background-color: #006cf9;
+
+  &:hover,
+  &:focus {
+    background-color: #0772ff;
+    color: #fff;
+  }
+}
+.btn-google {
+  background-color: #ea4335;
+
+  &:hover,
+  &:focus {
+    background-color: #e12717;
+    color: #fff;
+  }
+}
+.btn-twitter {
+  background-color: #1da1f2;
+
+  &:hover,
+  &:focus {
+    background-color: #0d8ddc;
+    color: #fff;
+  }
+}
+.btn-whatsapp {
+  background-color: #25d366;
+
+  &:hover,
+  &:focus {
+    background-color: #1fb256;
+    color: #fff;
+  }
+}
+
+@each $color, $value in $theme-colors {
+  .btn-outline-#{$color} {
     background-color: rgba($value, 0.1);
     color: $value;
 
     &:hover {
       background-color: rgba($value, 0.2);
       color: darken($value, 5%);
+    }
+
+    &:active {
+      background-color: rgba($value, 0.2) !important;
+      color: darken($value, 5%) !important;
     }
 
     &.active {
@@ -23,10 +72,14 @@
   .btn-dark {
     @extend .btn-light;
   }
-  .btn-text-dark {
-    @extend .btn-text-light;
-  }
   .btn-outline-dark {
     @extend .btn-outline-light;
+  }
+  .btn-outline-danger {
+    color: lighten($danger, 15%);
+
+    &:active {
+      color: lighten($danger, 10%) !important;
+    }
   }
 }

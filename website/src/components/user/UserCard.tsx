@@ -38,7 +38,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
         <UserDetails user={user} />
 
         <Dropdown>
-          <Dropdown.Toggle variant="text-dark" aria-label="خيارات">
+          <Dropdown.Toggle variant="outline-dark" aria-label="خيارات">
             <FaEllipsisV size="0.9em" />
           </Dropdown.Toggle>
 

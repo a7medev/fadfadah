@@ -66,7 +66,7 @@ const Navigation: React.FC = () => {
           <div className="mt-2 mb-3 d-flex align-items-center d-lg-none">
             <UserDetails user={user} />
             <Button
-              variant="text-dark"
+              variant="outline-dark"
               className="fab"
               onClick={handleSignOut}
               aria-label="تسجيل الخروج"
@@ -112,7 +112,7 @@ const Navigation: React.FC = () => {
           {signedIn ? (
             <Button
               onClick={() => auth.signOut()}
-              variant="text-danger d-none d-lg-inline-block"
+              variant="outline-danger d-none d-lg-inline-block"
               className="ml-lg-1 mb-1 mb-lg-0"
             >
               تسجيل الخروج
@@ -120,14 +120,14 @@ const Navigation: React.FC = () => {
           ) : (
             <>
               <Button
-                variant="text-primary"
+                variant="outline-primary"
                 className="ml-lg-1 mb-1 mb-lg-0"
                 as={Link}
                 to="/login"
               >
                 تسجيل الدخول
               </Button>
-              <Button variant="text-primary" as={Link} to="/register">
+              <Button variant="outline-primary" as={Link} to="/register">
                 إنشاء حساب
               </Button>
             </>

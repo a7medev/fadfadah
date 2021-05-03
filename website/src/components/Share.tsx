@@ -78,7 +78,7 @@ const Share: React.FC<ShareProps> = ({ activator: Activator, link }) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="text-dark" onClick={() => setShow(false)}>
+          <Button variant="outline-dark" onClick={() => setShow(false)}>
             إغلاق
           </Button>
         </Modal.Footer>

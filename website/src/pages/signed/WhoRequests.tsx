@@ -69,7 +69,7 @@ const WhoRequests: React.FC<WhoRequestsProps> = () => {
               <div className="text-center">
                 {hasMore && !isLoadingMore && (
                   <Button
-                    variant="text-primary"
+                    variant="outline-primary"
                     className="rounded-pill"
                     onClick={() => loadMore()}
                   >

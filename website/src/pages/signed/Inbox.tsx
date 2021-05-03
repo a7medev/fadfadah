@@ -61,7 +61,7 @@ const Inbox: React.FC<InboxProps> = () => {
               <div className="text-center">
                 {hasMore && !isLoadingMore && (
                   <Button
-                    variant="text-primary"
+                    variant="outline-primary"
                     className="rounded-pill"
                     onClick={() => loadMore()}
                   >

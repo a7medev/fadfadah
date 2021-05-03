@@ -3,14 +3,6 @@ $font-family-sans-serif: 'JF Flat', -apple-system, BlinkMacSystemFont,
   'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
 $primary: #00cf95;
-
-$theme-colors: (
-  'facebook': #2d88ff,
-  'google': #ea4335,
-  'twitter': #1da1f2,
-  'whatsapp': #25d366
-);
-
 $body-bg: #eaebef;
 
 @import '~bootstrap/scss/bootstrap';
