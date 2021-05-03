@@ -10,21 +10,11 @@ import {
 import type { Timestamp } from '@firebase/firestore-types';
 
 import Message from '../../types/Message';
-import Block from '../Block';
 import StaticLoveButton from './StaticLoveButton';
 import LoveButton from './LoveButton';
+import useBlock from '../../hooks/useBlock';
 import { db, functions } from '../../config/firebase';
 import { useAlertMessage } from '../../contexts/AlertMessageContext';
-
-export interface BlockActivatorProps {
-  block: () => void;
-}
-const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
-  <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
-    <p className="ml-auto mb-0">حظر المرسل</p>
-    <FaUserLock size="0.9em" />
-  </Dropdown.Item>
-);
 
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 
@@ -42,6 +32,8 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
   const [love, setLove] = useState(message.love);
   const firstRender = useRef(true);
 
+  const block = useBlock();
+
   const { showAlertMessage } = useAlertMessage();
 
   useEffect(() => {
@@ -54,6 +46,10 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
   const handleDelete = () => {
     onDelete(message.id);
     db.collection('messages').doc(message.id).delete();
+  };
+
+  const handleBlock = () => {
+    block({ id: message.id, type: 'messageId' });
   };
 
   const handleWhoRequest = async () => {
@@ -94,11 +90,11 @@ const MessageFooter: React.FC<MessageFooterProps> = ({
         <Dropdown.Menu>
           {!outbox && (
             <>
-              <Block
-                activator={BlockActivator}
-                id={message.id}
-                type="messageId"
-              />
+              <Dropdown.Item className="d-inline-flex" onClick={handleBlock}>
+                <p className="ml-auto mb-0">حظر المرسل</p>
+                <FaUserLock size="0.9em" />
+              </Dropdown.Item>
+
               {!message.from && (
                 <Dropdown.Item
                   className="d-inline-flex"

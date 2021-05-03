@@ -3,8 +3,8 @@ import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 
 import MiniUser from '../../types/MiniUser';
 import Share from '../Share';
-import Block from '../Block';
 import UserDetails from './UserDetails';
+import useBlock from '../../hooks/useBlock';
 import { useAuth } from '../../contexts/AuthContext';
 
 export interface ShareActivatorProps {
@@ -17,16 +17,6 @@ const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => (
   </Dropdown.Item>
 );
 
-export interface BlockActivatorProps {
-  block: () => void;
-}
-const BlockActivator: React.FC<BlockActivatorProps> = ({ block }) => (
-  <Dropdown.Item className="d-inline-flex" onClick={() => block()}>
-    <p className="ml-auto mb-0">حظر</p>
-    <FaUserLock size="0.9em" />
-  </Dropdown.Item>
-);
-
 export interface UserCardProps {
   user: MiniUser;
 }
@@ -35,6 +25,12 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
   const link = 'https://share.fadfadah.me/u/' + user.username;
 
   const { user: currentUser } = useAuth();
+
+  const block = useBlock();
+  const handleBlock = () => {
+    if (!user.username) return;
+    block({ id: user.username, type: 'username' });
+  };
 
   return (
     <Card className="mb-2">
@@ -49,11 +45,10 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
           <Dropdown.Menu>
             <Share activator={ShareActivator} link={link} />
             {currentUser && user.username !== currentUser.username && (
-              <Block
-                activator={BlockActivator}
-                id={user.username ?? ''}
-                type="username"
-              />
+              <Dropdown.Item className="d-inline-flex" onClick={handleBlock()}>
+                <p className="ml-auto mb-0">حظر</p>
+                <FaUserLock size="0.9em" />
+              </Dropdown.Item>
             )}
           </Dropdown.Menu>
         </Dropdown>

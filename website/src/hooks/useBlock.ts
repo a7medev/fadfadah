@@ -1,19 +1,20 @@
+import { useCallback } from 'react';
+
 import { functions } from '../config/firebase';
 import { useAlertMessage } from '../contexts/AlertMessageContext';
 
-export interface BlockProps {
+export interface BlockOptions {
   id: string;
   type: 'uid' | 'username' | 'messageId';
-  activator: React.ComponentType<any>;
 }
 
 const blockUser = functions.httpsCallable('blockUser');
 
-const Block: React.FC<BlockProps> = ({ activator: Activator, id, type }) => {
+const useBlock = () => {
   const { showAlertMessage } = useAlertMessage();
 
-  const block = () => {
-    blockUser({ id, type })
+  const block = useCallback((options: BlockOptions) => {
+    blockUser(options)
       .then(() => {
         showAlertMessage('تم حظر المستخدم بنجاح');
       })
@@ -24,8 +25,9 @@ const Block: React.FC<BlockProps> = ({ activator: Activator, id, type }) => {
             : 'حدثت مشكلة ما أثناء حظر المستخدم'
         );
       });
-  };
-  return <Activator block={block} />;
+  }, [showAlertMessage]);
+
+  return block;
 };
 
-export default Block;
+export default useBlock;
