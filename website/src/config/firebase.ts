@@ -4,6 +4,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import 'firebase/functions';
 import 'firebase/messaging';
+import 'firebase/analytics';
 import 'firebase/performance';
 
 const firebaseConfig = {
@@ -25,6 +26,7 @@ const storage = firebase.storage();
 const functions = firebase
   .app()
   .functions(process.env.REACT_APP_FIREBASE_FUNCTIONS_REGION);
+const analytics = firebase.analytics();
 const perf = firebase.performance();
 let messaging: firebase.messaging.Messaging | null = null;
 
@@ -44,4 +46,4 @@ db.enablePersistence({ synchronizeTabs: true });
 
 export const { RecaptchaVerifier } = firebase.auth;
 export { default as messages } from './firebase-messages';
-export { auth, db, functions, storage, messaging, perf };
+export { auth, db, functions, storage, messaging, analytics, perf };
