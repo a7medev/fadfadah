@@ -45,7 +45,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
           <Dropdown.Menu>
             <Share activator={ShareActivator} link={link} />
             {currentUser && user.username !== currentUser.username && (
-              <Dropdown.Item className="d-inline-flex" onClick={handleBlock()}>
+              <Dropdown.Item className="d-inline-flex" onClick={handleBlock}>
                 <p className="ml-auto mb-0">حظر</p>
                 <FaUserLock size="0.9em" />
               </Dropdown.Item>
