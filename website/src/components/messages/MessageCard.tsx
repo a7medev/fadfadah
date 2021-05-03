@@ -6,6 +6,7 @@ import type { Timestamp } from '@firebase/firestore-types';
 import type Message from '../../types/Message';
 import MessageHeader from './MessageHeader';
 import MessageFooter from './MessageFooter';
+import styles from './MessageCard.module.css';
 
 export interface MessageCardProps {
   message: Message<Timestamp>;
@@ -29,7 +30,7 @@ const MessageCard: React.FC<MessageCardProps> = ({
         <Card.Body className={`pb-2 ${message.from || outbox ? 'pt-2' : ''}`}>
           <MessageHeader message={message} outbox={outbox} />
 
-          <p style={{ fontSize: 18, whiteSpace: 'pre-line' }}>
+          <p className={styles.messageText}>
             <Emoji text={message.content} />
           </p>
 
