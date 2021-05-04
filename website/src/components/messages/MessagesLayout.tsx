@@ -6,6 +6,7 @@ import MessageCard from './MessageCard';
 import OutboxIcon from '../icons/OutboxIcon';
 import InboxIcon from '../icons/InboxIcon';
 import styles from './MessagesLayout.module.css';
+import RecordingMessageCard from './RecordingMessageCard';
 
 export interface MessagesLayoutProps {
   messages: Message[];
@@ -25,11 +26,19 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
     >
       {messages.map(message => (
         <Col xs="12" md="6" lg="4" key={message.id}>
-          <MessageCard
-            message={message}
-            outbox={outbox}
-            onDelete={onMessageDelete}
-          />
+          {message.recordingURL ? (
+            <RecordingMessageCard
+              message={message}
+              outbox={outbox}
+              onDelete={onMessageDelete}
+            />
+          ) : (
+            <MessageCard
+              message={message}
+              outbox={outbox}
+              onDelete={onMessageDelete}
+            />
+          )}
         </Col>
       ))}
     </Masonry>

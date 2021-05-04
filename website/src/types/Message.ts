@@ -8,7 +8,8 @@ interface Message<Time = Timestamp> {
   from?: MiniUser;
   love: boolean;
   isAnonymous?: boolean;
-  content: string;
+  content?: string;
+  recordingURL?: string;
   createdAt: Time;
 }
 
