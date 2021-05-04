@@ -1,4 +1,5 @@
 import Message from '../../types/Message';
+import AudioPlayer from '../audio/AudioPlayer';
 import MessageContainer from './MessageContainer';
 
 export interface RecordingMessageCardProps {
@@ -13,12 +14,9 @@ const RecordingMessageCard: React.FC<RecordingMessageCardProps> = ({
   onDelete
 }) => {
   return (
-    <MessageContainer
-      message={message}
-      outbox={outbox}
-      onDelete={onDelete}
-    >
-      <audio src={message.recordingURL} controls />
+    <MessageContainer message={message} outbox={outbox} onDelete={onDelete}>
+      {/* <audio src={message.recordingURL} controls /> */}
+      <AudioPlayer url={message.recordingURL} />
     </MessageContainer>
   );
 };
