@@ -7,7 +7,6 @@ import {
   FaQuestionCircle,
   FaTrashAlt
 } from 'react-icons/fa';
-import type { Timestamp } from '@firebase/firestore-types';
 
 import Message from '../../types/Message';
 import StaticLoveButton from './StaticLoveButton';
@@ -20,7 +19,7 @@ import styles from './MessageFooter.module.css';
 const sendWhoRequest = functions.httpsCallable('sendWhoRequest');
 
 export interface MessageFooterProps {
-  message: Message<Timestamp>;
+  message: Message;
   outbox?: boolean;
   onDelete: (id: string) => void;
 }

@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import type {
-  DocumentData,
-  Timestamp,
-  FirestoreError
-} from '@firebase/firestore-types';
+import type { DocumentData, FirestoreError } from '@firebase/firestore-types';
 
 import { db, perf } from '../config/firebase';
 import { useAuth } from '../contexts/AuthContext';
@@ -27,7 +23,7 @@ const getOutbox = async (userId: string, last?: DocumentData | null) => {
     .map(async ({ id }) => {
       const doc = await db.collection('messages').doc(id).get();
       if (doc.exists) {
-        return { ...(doc.data() as Message<Timestamp>), id };
+        return { ...(doc.data() as Message), id };
       }
       return false;
     })
@@ -37,7 +33,7 @@ const getOutbox = async (userId: string, last?: DocumentData | null) => {
     outboxPromises.map(p => p.catch(err => console.error(err)))
   );
 
-  const outbox = result.filter(m => m) as Message<Timestamp>[];
+  const outbox = result.filter(m => m) as Message[];
 
   const lastDoc = docs.length === LIMIT ? docs[docs.length - 1] : null;
 
@@ -45,7 +41,7 @@ const getOutbox = async (userId: string, last?: DocumentData | null) => {
 };
 
 const useOutbox = () => {
-  const [outbox, setOutbox] = useState<Message<Timestamp>[]>([]);
+  const [outbox, setOutbox] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

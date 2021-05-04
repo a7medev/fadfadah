@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import type {
-  DocumentData,
-  Timestamp,
-  FirestoreError
-} from '@firebase/firestore-types';
+import type { DocumentData, FirestoreError } from '@firebase/firestore-types';
 
 import Message from '../types/Message';
 import { db, perf } from '../config/firebase';
@@ -22,7 +18,7 @@ const getInbox = async (userId: string, last?: DocumentData | null) => {
 
   const { docs } = await ref.get();
   const inbox = docs.map(doc => ({
-    ...(doc.data() as Message<Timestamp>),
+    ...(doc.data() as Message),
     id: doc.id
   }));
 
@@ -32,7 +28,7 @@ const getInbox = async (userId: string, last?: DocumentData | null) => {
 };
 
 const useInbox = () => {
-  const [inbox, setInbox] = useState<Message<Timestamp>[]>([]);
+  const [inbox, setInbox] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isLoading, setIsLoading] = useState(true);

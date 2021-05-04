@@ -1,6 +1,5 @@
 import { Col } from 'react-bootstrap';
 import Masonry from 'react-masonry-component';
-import type { Timestamp } from '@firebase/firestore-types';
 
 import Message from '../../types/Message';
 import MessageCard from './MessageCard';
@@ -9,7 +8,7 @@ import InboxIcon from '../icons/InboxIcon';
 import styles from './MessagesLayout.module.css';
 
 export interface MessagesLayoutProps {
-  messages: Message<Timestamp>[];
+  messages: Message[];
   onMessageDelete: (id: string) => void;
   outbox?: boolean;
 }

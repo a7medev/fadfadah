@@ -1,12 +1,11 @@
 import { Emojione as Emoji } from 'react-emoji-render';
-import type { Timestamp } from '@firebase/firestore-types';
 
 import type Message from '../../types/Message';
 import MessageContainer from './MessageContainer';
 import styles from './MessageCard.module.css';
 
 export interface MessageCardProps {
-  message: Message<Timestamp>;
+  message: Message;
   outbox?: boolean;
   onDelete: (id: string) => void;
 }

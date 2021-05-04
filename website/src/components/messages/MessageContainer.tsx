@@ -1,5 +1,4 @@
 import { Card } from 'react-bootstrap';
-import type { Timestamp } from '@firebase/firestore-types';
 
 import type Message from '../../types/Message';
 import MessageHeader from './MessageHeader';
@@ -7,7 +6,7 @@ import MessageFooter from './MessageFooter';
 import FadeTransition from '../FadeTransition';
 
 export interface MessageContainerProps {
-  message: Message<Timestamp>;
+  message: Message;
   outbox?: boolean;
   onDelete: (id: string) => void;
 }

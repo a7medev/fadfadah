@@ -1,6 +1,8 @@
-import MiniUser from "./MiniUser";
+import type { Timestamp } from '@firebase/firestore-types';
 
-interface Message<Time> {
+import MiniUser from './MiniUser';
+
+interface Message<Time = Timestamp> {
   id: string;
   to: MiniUser;
   from?: MiniUser;

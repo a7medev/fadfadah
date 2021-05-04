@@ -1,10 +1,8 @@
-import type { Timestamp } from '@firebase/firestore-types';
-
 import Message from '../../types/Message';
 import UserData from '../user/UserData';
 
 export interface MessageHeaderProps {
-  message: Message<Timestamp>;
+  message: Message;
   outbox?: boolean;
 }
 
