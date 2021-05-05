@@ -2,7 +2,7 @@ import { Col } from 'react-bootstrap';
 import Masonry from 'react-masonry-component';
 
 import Message from '../../types/Message';
-import MessageCard from './MessageCard';
+import TextMessageCard from './TextMessageCard';
 import OutboxIcon from '../icons/OutboxIcon';
 import InboxIcon from '../icons/InboxIcon';
 import styles from './MessagesLayout.module.css';
@@ -33,7 +33,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
               onDelete={onMessageDelete}
             />
           ) : (
-            <MessageCard
+            <TextMessageCard
               message={message}
               outbox={outbox}
               onDelete={onMessageDelete}
