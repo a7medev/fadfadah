@@ -325,7 +325,14 @@ export const setUsername = functions
 export const removeMessageData = functions
   .region(REGION)
   .firestore.document('/messages/{messageId}')
-  .onDelete(async (__, { params }) => {
+  .onDelete(async (snapshot, { params }) => {
+    const { recording } = snapshot.data();
+
+    if (recording) {
+      const bucket = storage.bucket();
+      await bucket.file(recording).delete();
+    }
+
     const { docs: messages } = await db
       .collectionGroup('messages')
       .where('messageId', '==', params.messageId)
