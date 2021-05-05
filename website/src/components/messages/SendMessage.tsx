@@ -72,8 +72,8 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       )}
 
       <Form onSubmit={sendMessage}>
-        <div className="d-flex align-items-start mb-2">
-          <Form.Group className="m-0 ml-2 flex-grow-1 align-items-start">
+        <div className="d-flex align-items-end mb-2">
+          <Form.Group className="m-0 ml-2 flex-grow-1">
             <Form.Control
               as={TextareaAutosize}
               value={content}
