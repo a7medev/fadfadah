@@ -14,6 +14,7 @@ import getUIDByMessageId from './utils/getUIDByMessageId';
 import getUIDByUsername from './utils/getUIDByUsername';
 import getUserById from './utils/getUserById';
 import sendNotification from './utils/sendNotification';
+import changeAudio from './utils/changeAudio';
 import getSender from './utils/getSender';
 import Message from './types/Message';
 
@@ -641,3 +642,44 @@ export const resizeProfilePhoto = functions
 
     return fs.remove(workingDir);
   });
+
+export const changeRecordingAudio = functions.region(REGION).storage.object().onFinalize(async object => {
+  if (object.metadata?.audioChanged === 'true') {
+    return false;
+  }
+  const bucket = storage.bucket(object.bucket);
+  const filePath = object.name;
+
+  if (!filePath) {
+    console.error('object.name is not defined');
+    return false;
+  }
+
+  const recordingPathRegex = /^[^/]+\/recordings\/[^/]+$/;;
+  if (!recordingPathRegex.test(filePath)) {
+    return false;
+  }
+
+  const recordingName = filePath.split('/').pop()!;
+
+  const workingDir = path.join(os.tmpdir(), 'recordings');
+  const tmpFilePath = path.join(workingDir, 'source.mp3');
+
+  await fs.ensureDir(workingDir);
+
+  await bucket.file(filePath).download({
+    destination: tmpFilePath
+  });
+
+  const recordingPath = path.join(workingDir, recordingName);
+
+  await changeAudio(tmpFilePath, recordingPath);
+
+  await bucket.upload(recordingPath, {
+    destination: filePath,
+    metadata: {
+      metadata: { audioChanged: 'true' }
+    }
+  });
+  return fs.remove(workingDir);
+});
