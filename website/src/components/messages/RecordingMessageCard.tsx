@@ -32,7 +32,7 @@ const RecordingMessageCard: React.FC<RecordingMessageCardProps> = ({
 
   return (
     <MessageContainer message={message} outbox={outbox} onDelete={onDelete}>
-      <AudioPlayer url={message.recording} />
+      <AudioPlayer url={recordingURL} />
     </MessageContainer>
   );
 };
