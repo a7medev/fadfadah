@@ -1,0 +1,4 @@
+.sendButton {
+  margin-right: 2px;
+  transform: rotateZ(180deg);
+}

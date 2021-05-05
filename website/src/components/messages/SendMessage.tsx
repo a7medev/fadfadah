@@ -1,19 +1,21 @@
 import { useState, useRef } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import TextareaAutosize from 'react-textarea-autosize';
+import { MdSend } from 'react-icons/md';
 
 import MiniUser from '../../types/MiniUser';
 import CreateMessageDto from '../../types/CreateMessageDto';
 import { useAlertMessage } from '../../contexts/AlertMessageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { functions } from '../../config/firebase';
+import styles from './SendMessage.module.css';
 
 export interface SendMessageProps {
   user: MiniUser;
 }
 
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
-  const messageContent = useRef<HTMLTextAreaElement>(null);
+  const [content, setContent] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const { showAlertMessage } = useAlertMessage();
@@ -29,7 +31,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
 
     const message: CreateMessageDto = {
       to: user.uid,
-      content: messageContent.current?.value!,
+      content,
       isAnonymous
     };
 
@@ -47,8 +49,8 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     sendMessage(message)
       .then(() => {
         setError(null);
+        setContent('');
         showAlertMessage('تم إرسال الرسالة بنجاح');
-        messageContent.current?.form?.reset();
       })
       .catch(err => {
         console.dir(err);
@@ -64,7 +66,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   return (
     <Card body className="mb-2">
       <Card.Title>
-        <h4>كتابة رسالة</h4>
+        <h4>إرسال رسالة</h4>
       </Card.Title>
 
       {error && (
@@ -74,29 +76,29 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       )}
 
       <Form onSubmit={sendMessage}>
-        <Form.Group className="mb-2">
-          <Form.Control
-            as={TextareaAutosize}
-            minRows={5}
-            ref={messageContent}
-            placeholder="اكتب رسالتك هنا"
-          />
-        </Form.Group>
-
-        {signedIn && (
-          <Form.Group>
-            <Form.Switch
-              id="is-anonymous-switch"
-              checked={isAnonymous}
-              onChange={() => setIsAnonymous(prev => !prev)}
-              label="رسالة مجهولة المصدر"
+        <div className="d-flex align-items-start mb-2">
+          <Form.Group className="m-0 ml-2 flex-grow-1 align-items-start">
+            <Form.Control
+              as={TextareaAutosize}
+              value={content}
+              onChange={e => setContent(e.target.value)}
+              minRows={1}
+              placeholder="اكتب رسالتك هنا"
             />
           </Form.Group>
-        )}
+          <Button type="submit" className="fab">
+            <MdSend size={20} className={styles.sendButton} />
+          </Button>
+        </div>
 
-        <Button type="submit" ref={sendButton}>
-          إرسال
-        </Button>
+        {signedIn && (
+          <Form.Switch
+            id="is-anonymous-switch"
+            checked={isAnonymous}
+            onChange={() => setIsAnonymous(prev => !prev)}
+            label="رسالة مجهولة المصدر"
+          />
+        )}
       </Form>
     </Card>
   );
