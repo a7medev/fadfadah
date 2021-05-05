@@ -9,6 +9,7 @@ import { useAlertMessage } from '../../contexts/AlertMessageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { functions } from '../../config/firebase';
 import styles from './SendMessage.module.css';
+import SendRecording from './SendRecording';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -37,8 +38,9 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     if (
       message.content.trim().length < 5 ||
       message.content.trim().length > 500
-    )
+    ) {
       return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
+    }
 
     setIsLoading(true);
 
@@ -82,9 +84,13 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
               placeholder="اكتب رسالتك هنا"
             />
           </Form.Group>
-          <Button type="submit" className="fab" disabled={isLoading}>
-            <MdSend size={20} className={styles.sendButton} />
-          </Button>
+          {content ? (
+            <Button type="submit" className="fab" disabled={isLoading}>
+              <MdSend size={20} className={styles.sendButton} />
+            </Button>
+          ) : (
+            <SendRecording onSend={() => {}} />
+          )}
         </div>
 
         {signedIn && (
