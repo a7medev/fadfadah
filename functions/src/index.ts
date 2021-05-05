@@ -681,7 +681,7 @@ export const changeRecordingAudio = functions
     const recordingName = filePath.split('/').pop()!;
 
     const workingDir = path.join(os.tmpdir(), 'recordings');
-    const tmpFilePath = path.join(workingDir, 'source.mp3');
+    const tmpFilePath = path.join(workingDir, 'source.webm');
 
     await fs.ensureDir(workingDir);
 

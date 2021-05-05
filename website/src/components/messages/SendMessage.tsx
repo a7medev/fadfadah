@@ -51,7 +51,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
 
   const handleSendRecording = async (url: string) => {
     const file = await getBlobFile(url);
-    const filePath = `${user.uid}/recordings/${uuid()}.mp3`;
+    const filePath = `${user.uid}/recordings/${uuid()}.webm`;
     const fileRef = storage.ref(filePath);
 
     try {
