@@ -14,7 +14,10 @@ const useRecorder = () => {
       if (isRecording) {
         requestRecorder()
           .then(setRecorder)
-          .catch(() => showAlertMessage('فشل الوصول إلى الميكروفون'));
+          .catch(() => {
+            showAlertMessage('فشل الوصول إلى الميكروفون');
+            setIsRecording(false);
+          });
       }
       return;
     }
@@ -25,7 +28,8 @@ const useRecorder = () => {
       recorder.stop();
     }
 
-    const handleData = (e: BlobEvent) => setAudioURL(URL.createObjectURL(e.data));
+    const handleData = (e: BlobEvent) =>
+      setAudioURL(URL.createObjectURL(e.data));
     recorder.addEventListener('dataavailable', handleData);
 
     return () => recorder.removeEventListener('dataavailable', handleData);
