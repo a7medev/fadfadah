@@ -64,9 +64,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({ url }) => {
 
   return (
     <>
-      <audio ref={audioElement}>
-        <source src={url} />
-      </audio>
+      <audio ref={audioElement} src={url}/>
 
       <div className={styles.container}>
         <PlayButton
