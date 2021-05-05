@@ -13,6 +13,8 @@ const changeAudio = (input: string, output: string) =>
     const value = genRandom().toFixed(3);
 
     ffmpeg(input)
+      .map('0:a:0')
+      .noVideo()
       .audioFilters([
         `asetrate=44100*${value}`,
         'aresample=44100',
