@@ -12,6 +12,7 @@ export interface SendRecordingProps {
 const SendRecording: React.FC<SendRecordingProps> = ({ onSend }) => {
   const {
     audioURL,
+    hasPermission,
     isRecording,
     startRecording,
     stopRecording
@@ -20,7 +21,10 @@ const SendRecording: React.FC<SendRecordingProps> = ({ onSend }) => {
 
   const handleStop = () => {
     stopRecording();
-    setShowModal(true);
+
+    if (hasPermission) {
+      setShowModal(true);
+    }
   };
 
   const handleSend = () => {

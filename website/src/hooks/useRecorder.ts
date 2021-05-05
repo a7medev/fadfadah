@@ -7,16 +7,22 @@ const useRecorder = () => {
   const [audioURL, setAudioURL] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
+  const [hasPermission, setHasPermission] = useState(false);
   const { showAlertMessage } = useAlertMessage();
 
   useEffect(() => {
     if (!recorder) {
       if (isRecording) {
+        setIsRecording(false);
+
         requestRecorder()
-          .then(setRecorder)
+          .then(recorder => {
+            setHasPermission(true);
+            setRecorder(recorder);
+          })
           .catch(() => {
+            setHasPermission(false);
             showAlertMessage('فشل الوصول إلى الميكروفون');
-            setIsRecording(false);
           });
       }
       return;
@@ -25,7 +31,9 @@ const useRecorder = () => {
     if (isRecording) {
       recorder.start();
     } else {
-      recorder.stop();
+      if (recorder.state === 'recording') {
+        recorder.stop();
+      }
     }
 
     const handleData = (e: BlobEvent) =>
@@ -35,10 +43,24 @@ const useRecorder = () => {
     return () => recorder.removeEventListener('dataavailable', handleData);
   }, [recorder, isRecording, showAlertMessage]);
 
-  const startRecording = () => setIsRecording(true);
-  const stopRecording = () => setIsRecording(false);
+  const startRecording = () => {
+    if (!isRecording) {
+      setIsRecording(true);
+    }
+  };
+  const stopRecording = () => {
+    if (isRecording) {
+      setIsRecording(false);
+    }
+  };
 
-  return { audioURL, isRecording, startRecording, stopRecording };
+  return {
+    audioURL,
+    hasPermission,
+    isRecording,
+    startRecording,
+    stopRecording
+  };
 };
 
 export default useRecorder;

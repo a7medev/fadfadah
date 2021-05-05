@@ -8,6 +8,7 @@ import Navigation from './components/Navbar';
 import BottomNavigation from './components/BottomNavbar';
 import useDarkMode from './hooks/useDarkMode';
 import { useAuth } from './contexts/AuthContext';
+import SendRecording from './components/messages/SendRecording';
 
 const Home = loadable(() => import('./pages/Home'));
 const Login = loadable(() => import('./pages/auth/Login'));
@@ -30,8 +31,10 @@ const App: React.FC = () => {
     <>
       <Navigation />
 
+
       <SafeArea paddingTop="10px" noBottomNavbar={!signedIn}>
         <AlertMessageProvider>
+      <SendRecording onSend={() => {}} />
           <AnimatePresence exitBeforeEnter>
             <Router primary={false}>
               {/* No Auth */}
