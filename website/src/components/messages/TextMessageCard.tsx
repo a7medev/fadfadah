@@ -2,7 +2,7 @@ import { Emojione as Emoji } from 'react-emoji-render';
 
 import type Message from '../../types/Message';
 import MessageContainer from './MessageContainer';
-import styles from './MessageCard.module.css';
+import styles from './TextMessageCard.module.css';
 
 export interface MessageCardProps {
   message: Message;
