@@ -119,8 +119,8 @@ export const denormalizeUserData = functions
 
 export const sendMessage = functions
   .region(REGION)
-  .https.onCall(async ({ content, to, isAnonymous }, context) => {
-    if (!content || !to) {
+  .https.onCall(async ({ content, recording, to, isAnonymous }, context) => {
+    if (!(content || recording) || !to) {
       throw new HttpsError(
         'invalid-argument',
         'رجاءاً تأكد من إدخال بيانات صحيحة'
@@ -134,7 +134,12 @@ export const sendMessage = functions
       );
     }
 
-    if (content.trim().length < 5 || content.trim().length > 500) {
+    const isRecording = !!recording;
+
+    if (
+      !isRecording &&
+      (content.trim().length < 5 || content.trim().length > 500)
+    ) {
       throw new HttpsError(
         'invalid-argument',
         'يجب أن تحتوي الرسالة على 5 إلى 500 حرف'
@@ -202,10 +207,15 @@ export const sendMessage = functions
         verified: reciever.verified,
         username: reciever.username
       },
-      content: content.trim(),
       love: false,
       createdAt: firestore.FieldValue.serverTimestamp()
     };
+
+    if (isRecording) {
+      doc.recording = recording;
+    } else {
+      doc.content = content;
+    }
 
     if (!isAnonymous) {
       const senderId = context.auth!.uid;
@@ -224,11 +234,16 @@ export const sendMessage = functions
 
     const snap = await db.collection('messages').add(doc);
 
+    const notificationBody = isRecording
+      ? 'تم استلام تسجيل صوتي جديد'
+      : content.length > 100
+      ? content.substring(0, 100) + '...'
+      : content;
+
     sendNotification(to, {
       notification: {
         title: 'فضفضة: رسالة جديدة',
-        body:
-          content.length > 100 ? content.substring(0, 100) + '...' : content,
+        body: notificationBody,
         icon: '/icons/android-chrome-192x192.png',
         clickAction: `/inbox?goto=${snap.id}`
       }
@@ -643,43 +658,46 @@ export const resizeProfilePhoto = functions
     return fs.remove(workingDir);
   });
 
-export const changeRecordingAudio = functions.region(REGION).storage.object().onFinalize(async object => {
-  if (object.metadata?.audioChanged === 'true') {
-    return false;
-  }
-  const bucket = storage.bucket(object.bucket);
-  const filePath = object.name;
-
-  if (!filePath) {
-    console.error('object.name is not defined');
-    return false;
-  }
-
-  const recordingPathRegex = /^[^/]+\/recordings\/[^/]+$/;;
-  if (!recordingPathRegex.test(filePath)) {
-    return false;
-  }
-
-  const recordingName = filePath.split('/').pop()!;
-
-  const workingDir = path.join(os.tmpdir(), 'recordings');
-  const tmpFilePath = path.join(workingDir, 'source.mp3');
-
-  await fs.ensureDir(workingDir);
-
-  await bucket.file(filePath).download({
-    destination: tmpFilePath
-  });
-
-  const recordingPath = path.join(workingDir, recordingName);
-
-  await changeAudio(tmpFilePath, recordingPath);
-
-  await bucket.upload(recordingPath, {
-    destination: filePath,
-    metadata: {
-      metadata: { audioChanged: 'true' }
+export const changeRecordingAudio = functions
+  .region(REGION)
+  .storage.object()
+  .onFinalize(async object => {
+    if (object.metadata?.audioChanged === 'true') {
+      return false;
     }
+    const bucket = storage.bucket(object.bucket);
+    const filePath = object.name;
+
+    if (!filePath) {
+      console.error('object.name is not defined');
+      return false;
+    }
+
+    const recordingPathRegex = /^[^/]+\/recordings\/[^/]+$/;
+    if (!recordingPathRegex.test(filePath)) {
+      return false;
+    }
+
+    const recordingName = filePath.split('/').pop()!;
+
+    const workingDir = path.join(os.tmpdir(), 'recordings');
+    const tmpFilePath = path.join(workingDir, 'source.mp3');
+
+    await fs.ensureDir(workingDir);
+
+    await bucket.file(filePath).download({
+      destination: tmpFilePath
+    });
+
+    const recordingPath = path.join(workingDir, recordingName);
+
+    await changeAudio(tmpFilePath, recordingPath);
+
+    await bucket.upload(recordingPath, {
+      destination: filePath,
+      metadata: {
+        metadata: { audioChanged: 'true' }
+      }
+    });
+    return fs.remove(workingDir);
   });
-  return fs.remove(workingDir);
-});

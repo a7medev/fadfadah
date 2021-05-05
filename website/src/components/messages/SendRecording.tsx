@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Button, Modal } from 'react-bootstrap';
+import { Alert, Badge, Button, Modal } from 'react-bootstrap';
 
 import AudioPlayer from '../audio/AudioPlayer';
 import RecordButton from './RecordButton';
@@ -38,7 +38,10 @@ const SendRecording: React.FC<SendRecordingProps> = ({ onSend }) => {
 
       <Modal centered show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header>
-          <Modal.Title>إرسال تسجيل صوتي</Modal.Title>
+          <Modal.Title>
+            إرسال تسجيل صوتي
+            <Badge variant="warning">تجريبي</Badge>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body className="py-4">
           <p>هل تود إرسال هذا التسجيل الصوتي؟</p>

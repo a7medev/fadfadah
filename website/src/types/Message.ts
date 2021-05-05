@@ -9,7 +9,7 @@ interface Message<Time = Timestamp> {
   love: boolean;
   isAnonymous?: boolean;
   content?: string;
-  recordingURL?: string;
+  recording?: string;
   createdAt: Time;
 }
 

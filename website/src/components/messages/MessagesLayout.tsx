@@ -26,7 +26,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
     >
       {messages.map(message => (
         <Col xs="12" md="6" lg="4" key={message.id}>
-          {message.recordingURL ? (
+          {message.recording ? (
             <RecordingMessageCard
               message={message}
               outbox={outbox}

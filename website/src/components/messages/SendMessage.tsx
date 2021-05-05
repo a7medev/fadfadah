@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
 import { MdSend } from 'react-icons/md';
 import TextareaAutosize from 'react-textarea-autosize';
+import { v4 as uuid } from 'uuid';
 
-import MiniUser from '../../types/MiniUser';
-import CreateMessageDto from '../../types/CreateMessageDto';
+import type MiniUser from '../../types/MiniUser';
+import type CreateMessagePayload from '../../types/CreateMessagePayload';
+import SendRecording from './SendRecording';
 import { useAlertMessage } from '../../contexts/AlertMessageContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { functions } from '../../config/firebase';
+import { functions, storage } from '../../config/firebase';
+import getBlobFile from '../../utils/getFileBlob';
 import styles from './SendMessage.module.css';
-import SendRecording from './SendRecording';
 
 export interface SendMessageProps {
   user: MiniUser;
@@ -24,23 +26,8 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const { showAlertMessage } = useAlertMessage();
   const { user: currentUser, signedIn } = useAuth();
 
-  const sendMessage = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const message: CreateMessageDto = {
-      to: user.uid,
-      content,
-      isAnonymous
-    };
-
+  const send = (message: CreateMessagePayload) => {
     if (!isAnonymous && currentUser) message.from = currentUser?.uid;
-
-    if (
-      message.content.trim().length < 5 ||
-      message.content.trim().length > 500
-    ) {
-      return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
-    }
 
     setIsLoading(true);
 
@@ -61,6 +48,46 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       .finally(() => setIsLoading(false));
   };
 
+  const handleSendRecording = async (url: string) => {
+    const file = await getBlobFile(url);
+    const filePath = `${user.uid}/recordings/${uuid()}.mp3`;
+    const fileRef = storage.ref(filePath);
+
+    try {
+      await fileRef.put(file);
+
+      const message = {
+        to: user.uid,
+        recording: filePath,
+        isAnonymous
+      };
+
+      send(message);
+    } catch (err) {
+      setError('حدثت مشكلة ما');
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendText = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const message = {
+      to: user.uid,
+      content,
+      isAnonymous
+    };
+
+    if (
+      message.content.trim().length < 5 ||
+      message.content.trim().length > 500
+    ) {
+      return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
+    }
+
+    send(message);
+  };
+
   return (
     <Card body className="mb-2">
       <Card.Title>
@@ -73,7 +100,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
         </Alert>
       )}
 
-      <Form onSubmit={sendMessage}>
+      <Form onSubmit={handleSendText}>
         <div className="d-flex align-items-end mb-2">
           <Form.Group className="m-0 ml-2 flex-grow-1">
             <Form.Control
@@ -89,7 +116,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
               <MdSend size={20} className={styles.sendButton} />
             </Button>
           ) : (
-            <SendRecording onSend={() => {}} />
+            <SendRecording onSend={handleSendRecording} />
           )}
         </div>
 
