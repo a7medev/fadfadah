@@ -3,8 +3,14 @@ service firebase.storage {
   match /b/{bucket}/o {
     match /{userId}/profile_photo/{fileName} {
       allow read;
-      allow write: if request.auth.uid == userId &&
-        request.resource.contentType.matches('image/.+');
+      allow write: if request.auth.uid == userId
+                   && request.resource.contentType.matches('image/.+');
+    }
+    match /{userId}/recordings/{fileName} {
+      allow read: if request.auth.uid == userId
+                  && resource.metadata.audioChanged == 'true';
+      allow create: if request.resource.contentType == 'audio/mpeg'
+                    && request.resource.size < 10 * 1024 * 1024; // less than 10mb
     }
   }
 }
