@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Card, Form, Button, Alert } from 'react-bootstrap';
-import TextareaAutosize from 'react-textarea-autosize';
 import { MdSend } from 'react-icons/md';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import MiniUser from '../../types/MiniUser';
 import CreateMessageDto from '../../types/CreateMessageDto';
@@ -17,14 +17,11 @@ export interface SendMessageProps {
 const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
   const [content, setContent] = useState('');
   const [error, setError] = useState<string | null>(null);
-
-  const { showAlertMessage } = useAlertMessage();
-
-  const { user: currentUser, signedIn } = useAuth();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [isAnonymous, setIsAnonymous] = useState(true);
 
-  const sendButton = useRef<HTMLButtonElement>(null);
+  const { showAlertMessage } = useAlertMessage();
+  const { user: currentUser, signedIn } = useAuth();
 
   const sendMessage = (event: React.FormEvent) => {
     event.preventDefault();
@@ -43,7 +40,8 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
     )
       return setError('يجب أن تحتوي الرسالة على 5 إلى 500 حرف');
 
-    sendButton.current!.disabled = true;
+    setIsLoading(true);
+
     const sendMessage = functions.httpsCallable('sendMessage');
 
     sendMessage(message)
@@ -58,9 +56,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
           err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
         );
       })
-      .finally(() => {
-        sendButton.current!.disabled = false;
-      });
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -86,7 +82,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
               placeholder="اكتب رسالتك هنا"
             />
           </Form.Group>
-          <Button type="submit" className="fab">
+          <Button type="submit" className="fab" disabled={isLoading}>
             <MdSend size={20} className={styles.sendButton} />
           </Button>
         </div>
