@@ -41,7 +41,6 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       })
       .catch(err => {
         console.dir(err);
-        alert(err.message);
         setError(
           err.code.toLowerCase() !== 'internal' ? err.message : 'حدثت مشكلة ما'
         );
@@ -66,7 +65,6 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
       send(message);
     } catch (err) {
       setError('حدثت مشكلة ما');
-      alert(err.message);
       setIsLoading(false);
     }
   };
