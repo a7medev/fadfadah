@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback } from 'react';
 
 import requestRecorder from '../utils/requestRecorder';
 import { useAlertMessage } from '../contexts/AlertMessageContext';
@@ -7,56 +7,42 @@ const useRecorder = () => {
   const [audioURL, setAudioURL] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [recorder, setRecorder] = useState<MediaRecorder | null>(null);
-  const [hasPermission, setHasPermission] = useState(false);
   const { showAlertMessage } = useAlertMessage();
 
-  useEffect(() => {
-    if (!recorder) {
-      if (isRecording) {
-        setIsRecording(false);
+  const handleAudioData = useCallback((e: BlobEvent) => {
+    setAudioURL(URL.createObjectURL(e.data));
+  }, []);
 
-        requestRecorder()
-          .then(recorder => {
-            setHasPermission(true);
-            setRecorder(recorder);
-          })
-          .catch(() => {
-            setHasPermission(false);
-            showAlertMessage('فشل الوصول إلى الميكروفون');
-          });
-      }
-      return;
+  const forceStartRcording = useCallback(() => {
+    recorder?.start();
+    setIsRecording(true);
+    recorder?.addEventListener('dataavailable', handleAudioData);
+  }, [recorder, handleAudioData]);
+
+  const startRecording = useCallback(async () => {
+    if (recorder) {
+      return forceStartRcording();
     }
 
-    if (isRecording) {
-      recorder.start();
-    } else {
-      if (recorder.state === 'recording') {
-        recorder.stop();
-      }
+    try {
+      const recorder = await requestRecorder();
+      setRecorder(recorder);
+      forceStartRcording();
+    } catch (err) {
+      showAlertMessage('فشل الوصول إلى الميكروفون');
     }
+  }, [recorder, forceStartRcording, showAlertMessage]);
 
-    const handleData = (e: BlobEvent) =>
-      setAudioURL(URL.createObjectURL(e.data));
-    recorder.addEventListener('dataavailable', handleData);
-
-    return () => recorder.removeEventListener('dataavailable', handleData);
-  }, [recorder, isRecording, showAlertMessage]);
-
-  const startRecording = () => {
-    if (!isRecording) {
-      setIsRecording(true);
-    }
-  };
-  const stopRecording = () => {
-    if (isRecording) {
+  const stopRecording = useCallback(async () => {
+    if (recorder?.state === 'recording') {
+      recorder.stop();
       setIsRecording(false);
+      recorder.removeEventListener('dataavailable', handleAudioData);
     }
-  };
+  }, [recorder, handleAudioData]);
 
   return {
     audioURL,
-    hasPermission,
     isRecording,
     startRecording,
     stopRecording
