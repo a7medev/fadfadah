@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type firebase from 'firebase';
 
 import { auth, db, messaging } from '../config/firebase';
@@ -32,52 +32,62 @@ export const useAuth = () => {
 };
 
 const AuthProvider: React.FC = ({ children }) => {
-  const initialSignedIn = !!localStorage.getItem('signedIn');
-  const [signedIn, setSignedIn] = useState<boolean>(initialSignedIn);
+  const [signedIn, setSignedIn] = useState<boolean>(
+    () => !!localStorage.getItem('signedIn')
+  );
 
   const [user, setUser] = useState<MiniUser | null>();
   const [firebaseUser, setFirebaseUser] = useState<firebase.User | null>();
   const [settings, setSettings] = useState<Settings | null>();
 
-  useEffect(() => {
-    const unsub = auth.onAuthStateChanged(async user => {
-      setFirebaseUser(user);
+  const [isLoading, setIsLoading] = useState(true);
 
-      if (!user) {
-        setSignedIn(false);
-        localStorage.removeItem('signedIn');
-
-        if (messaging) {
-          messaging
-            .getToken()
-            .then(token =>
-              Promise.all([
-                messaging?.deleteToken(),
-                db.collection('devices').doc(token).delete()
-              ])
-            )
-            .catch(err => console.error(err));
+  useEffect(
+    () => {
+      return auth.onAuthStateChanged(user => {
+        if (isLoading) {
+          setIsLoading(false);
         }
-        return;
-      }
+        setFirebaseUser(user);
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
 
-      const { uid } = user;
+  // Set signed in state
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
+
+    if (firebaseUser) {
       setSignedIn(true);
       localStorage.setItem('signedIn', 'true');
+    } else {
+      setSignedIn(false);
+      localStorage.removeItem('signedIn');
+    }
+  }, [firebaseUser, isLoading]);
 
-      try {
-        const userDoc = await db.collection('users').doc(uid).get();
+  // Handle messaging tokens
+  useEffect(() => {
+    if (isLoading) {
+      return;
+    }
 
-        // FIXME: it's broken when signup
-        const { settings, ...miniUser } = userDoc.data() as UserData;
-
-        setSettings(settings);
-        setUser(miniUser);
-      } catch (err) {
-        console.error(err);
-      }
-
-      if (messaging) {
+    if (messaging) {
+      if (!firebaseUser) {
+        messaging
+          .getToken()
+          .then(token =>
+            Promise.all([
+              messaging?.deleteToken(),
+              db.collection('devices').doc(token).delete()
+            ])
+          )
+          .catch(err => console.error(err));
+      } else {
         messaging
           .getToken()
           .then(token =>
@@ -90,10 +100,35 @@ const AuthProvider: React.FC = ({ children }) => {
             console.error('Error storing the device token:', err);
           });
       }
-    });
+    }
+  }, [firebaseUser, isLoading]);
 
-    return () => unsub();
-  }, []);
+  // Get user data
+  useEffect(() => {
+    if (!firebaseUser) {
+      setUser(null);
+      setSettings(null);
+      return;
+    }
+
+    const { uid } = firebaseUser;
+
+    return db
+      .collection('users')
+      .doc(uid)
+      .onSnapshot(snapshot => {
+        if (!snapshot.exists) {
+          setUser(null);
+          setSettings(null);
+          return;
+        }
+
+        const { settings, ...miniUser } = snapshot.data() as UserData;
+
+        setUser(miniUser);
+        setSettings(settings);
+      });
+  }, [firebaseUser]);
 
   return (
     <AuthContext.Provider
