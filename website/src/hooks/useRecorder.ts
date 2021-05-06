@@ -38,7 +38,9 @@ const useRecorder = () => {
       recorder.stop();
       setIsRecording(false);
       recorder.removeEventListener('dataavailable', handleAudioData);
+      return true;
     }
+    return false;
   }, [recorder, handleAudioData]);
 
   return {
