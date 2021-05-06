@@ -26,10 +26,6 @@ const RecordingMessageCard: React.FC<RecordingMessageCardProps> = ({
       .catch(() => setRecordingURL(''));
   }, [message.recording]);
 
-  if (!recordingURL) {
-    return null;
-  }
-
   return (
     <MessageContainer message={message} outbox={outbox} onDelete={onDelete}>
       <AudioPlayer url={recordingURL} />
