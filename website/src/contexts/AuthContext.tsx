@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useRef } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type firebase from 'firebase';
 
 import { auth, db, messaging } from '../config/firebase';
