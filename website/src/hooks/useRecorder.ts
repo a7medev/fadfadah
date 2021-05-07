@@ -25,9 +25,12 @@ const useRecorder = () => {
     }
 
     try {
-      const { state: permissionState } = await navigator.permissions.query({
-        name: 'microphone'
-      });
+      const supportsPermissions = 'permissions' in navigator;
+      const { state: permissionState } = supportsPermissions
+        ? await navigator.permissions.query({
+            name: 'microphone'
+          })
+        : { state: 'unknown' };
 
       requestRecorder().then(recorder => {
         setRecorder(recorder);
