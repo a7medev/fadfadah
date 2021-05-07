@@ -18,8 +18,8 @@ const SendRecording: React.FC<SendRecordingProps> = ({ onSend }) => {
   } = useRecorder();
   const [showModal, setShowModal] = useState(false);
 
-  const handleStop = () => {
-    const isStopped = stopRecording();
+  const handleStop = async () => {
+    const isStopped = await stopRecording();
 
     if (isStopped) {
       setShowModal(true);

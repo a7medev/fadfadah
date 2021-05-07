@@ -13,27 +13,37 @@ const useRecorder = () => {
     setAudioURL(URL.createObjectURL(e.data));
   }, []);
 
-  const forceStartRcording = useCallback(() => {
-    recorder?.start();
+  const forceStartRcording = (recorder: MediaRecorder) => {
+    recorder.start();
+    recorder.addEventListener('dataavailable', e => handleAudioData(e));
     setIsRecording(true);
-    recorder?.addEventListener('dataavailable', handleAudioData);
-  }, [recorder, handleAudioData]);
+  };
 
   const startRecording = useCallback(async () => {
     if (recorder) {
-      return forceStartRcording();
+      return forceStartRcording(recorder);
     }
 
     try {
-      const recorder = await requestRecorder();
-      setRecorder(recorder);
-      forceStartRcording();
+      const { state: permissionState } = await navigator.permissions.query({
+        name: 'microphone'
+      });
+
+      requestRecorder().then(recorder => {
+        setRecorder(recorder);
+
+        if (permissionState === 'granted') {
+          forceStartRcording(recorder);
+        }
+      });
     } catch (err) {
       showAlertMessage('فشل الوصول إلى الميكروفون');
     }
-  }, [recorder, forceStartRcording, showAlertMessage]);
 
-  const stopRecording = useCallback(async () => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recorder]);
+
+  const stopRecording = async () => {
     if (recorder?.state === 'recording') {
       recorder.stop();
       setIsRecording(false);
@@ -41,7 +51,7 @@ const useRecorder = () => {
       return true;
     }
     return false;
-  }, [recorder, handleAudioData]);
+  };
 
   return {
     audioURL,
