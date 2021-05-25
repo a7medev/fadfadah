@@ -1,5 +1,6 @@
-import { Button, Card, Dropdown } from 'react-bootstrap';
-import { FaEllipsisV, FaShareAlt, FaUserLock } from 'react-icons/fa';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { Button, Card, Dropdown, Popover, Overlay } from 'react-bootstrap';
+import { FaEllipsisV, FaShare, FaUserLock } from 'react-icons/fa';
 
 import MiniUser from '../../types/MiniUser';
 import Share from '../Share';
@@ -10,12 +11,51 @@ import { useAuth } from '../../contexts/AuthContext';
 export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => (
-  <Button onClick={() => setShow(true)}>
-    <FaShareAlt size="1em" className="ml-2" />
-    مشاركة
-  </Button>
-);
+const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => {
+  const [isSeen, setIsSeen] = useState(true);
+  const target = useRef<HTMLButtonElement | null>(null);
+  const container = useRef<HTMLDivElement | null>(null);
+
+  const handleDismiss = () => {
+    localStorage.setItem('seen_share_message', 'true');
+    setIsSeen(true);
+  };
+
+  useLayoutEffect(() => {
+    setTimeout(() => {
+      const isSeen = localStorage.getItem('seen_share_message');
+      return setIsSeen(!!isSeen);
+    }, 2000);
+  }, []);
+
+  return (
+    <div ref={container}>
+      <Button
+        variant="outline-primary"
+        onClick={() => setShow(true)}
+        ref={target}
+      >
+        <FaShare size="1em" className="ml-sm-2" />
+        <span className="d-none d-sm-inline">مشاركة</span>
+      </Button>
+      <Overlay
+        show={!isSeen}
+        target={target.current!}
+        container={container.current!}
+        placement="bottom"
+      >
+        <Popover id="share-popover" className="p-2">
+          <p className="mb-1">
+            شارك رابط حسابك مع أصدقائك وابدأ بتلقي الرسائل.
+          </p>
+          <Button onClick={handleDismiss} size="sm" className="d-block mr-auto">
+            فهمت
+          </Button>
+        </Popover>
+      </Overlay>
+    </div>
+  );
+};
 
 export interface UserCardProps {
   user: MiniUser;
