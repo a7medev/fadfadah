@@ -1,5 +1,5 @@
-import { Card, Dropdown } from 'react-bootstrap';
-import { FaShare, FaEllipsisV, FaUserLock } from 'react-icons/fa';
+import { Button, Card, Dropdown } from 'react-bootstrap';
+import { FaEllipsisV, FaShareAlt, FaUserLock } from 'react-icons/fa';
 
 import MiniUser from '../../types/MiniUser';
 import Share from '../Share';
@@ -11,10 +11,10 @@ export interface ShareActivatorProps {
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const ShareActivator: React.FC<ShareActivatorProps> = ({ setShow }) => (
-  <Dropdown.Item className="d-inline-flex" onClick={() => setShow(true)}>
-    <p className="ml-auto mb-0">مشاركة</p>
-    <FaShare size="0.9em" />
-  </Dropdown.Item>
+  <Button onClick={() => setShow(true)}>
+    <FaShareAlt size="1em" className="ml-2" />
+    مشاركة
+  </Button>
 );
 
 export interface UserCardProps {
@@ -32,26 +32,31 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
     block({ id: user.username, type: 'username' });
   };
 
+  const isCurrentUser = currentUser && user.username === currentUser.username;
+
   return (
     <Card className="mb-2">
       <Card.Body className="d-flex user-data">
         <UserDetails user={user} />
 
-        <Dropdown>
-          <Dropdown.Toggle variant="outline-dark" aria-label="خيارات">
-            <FaEllipsisV size="0.9em" />
-          </Dropdown.Toggle>
+        {isCurrentUser ? (
+          <Share activator={ShareActivator} link={link} />
+        ) : (
+          currentUser && (
+            <Dropdown>
+              <Dropdown.Toggle variant="outline-dark" aria-label="خيارات">
+                <FaEllipsisV size="0.9em" />
+              </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Share activator={ShareActivator} link={link} />
-            {currentUser && user.username !== currentUser.username && (
-              <Dropdown.Item className="d-inline-flex" onClick={handleBlock}>
-                <p className="ml-auto mb-0">حظر</p>
-                <FaUserLock size="0.9em" />
-              </Dropdown.Item>
-            )}
-          </Dropdown.Menu>
-        </Dropdown>
+              <Dropdown.Menu>
+                <Dropdown.Item className="d-inline-flex" onClick={handleBlock}>
+                  <p className="ml-auto mb-0">حظر</p>
+                  <FaUserLock size="0.9em" />
+                </Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          )
+        )}
       </Card.Body>
     </Card>
   );
