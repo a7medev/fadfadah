@@ -45,10 +45,10 @@ const AuthProvider: React.FC = ({ children }) => {
   useEffect(
     () => {
       return auth.onAuthStateChanged(user => {
+        setFirebaseUser(user);
         if (isLoading) {
           setIsLoading(false);
         }
-        setFirebaseUser(user);
       });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
