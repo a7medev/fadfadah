@@ -485,7 +485,8 @@ export const sendWhoRequest = functions
         },
         message: {
           id: messageId,
-          content: message.content
+          // TODO: who requests for recordings
+          content: message.recording ? 'تسجيل صوتي' : message.content
         },
         sentAt: firestore.FieldValue.serverTimestamp()
       })
