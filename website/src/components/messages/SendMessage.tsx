@@ -9,7 +9,7 @@ import type CreateMessagePayload from '../../types/CreateMessagePayload';
 import SendRecording from './SendRecording';
 import { useAlertMessage } from '../../contexts/AlertMessageContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { functions, storage } from '../../config/firebase';
+import { analytics, functions, storage } from '../../config/firebase';
 import getBlobFile from '../../utils/getFileBlob';
 import styles from './SendMessage.module.css';
 
@@ -38,7 +38,10 @@ const SendMessage: React.FC<SendMessageProps> = ({ user }) => {
         setError(null);
         setContent('');
         showAlertMessage('تم إرسال الرسالة بنجاح');
-        window.location.href = 'https://phaurtuh.net/4/4327150';
+        analytics.logEvent('send_message');
+        setTimeout(() => {
+          window.location.href = 'https://phaurtuh.net/4/4327150';
+        }, 1000);
       })
       .catch(err => {
         console.dir(err);
